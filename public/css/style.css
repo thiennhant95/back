@@ -1,0 +1,15 @@
+.tooltip-inner {
+    background-color: #ac4949;
+}
+.tooltip.top .tooltip-arrow {
+    border-top-color: #ac4949;
+}
+.tooltip.bottom .tooltip-arrow, .tooltip.bottom-left .tooltip-arrow, .tooltip.bottom-right .tooltip-arrow {
+    border-bottom-color: #ac4949;
+}
+.tooltip.left .tooltip-arrow {
+    border-left-color: #ac4949;
+}
+.tooltip.right .tooltip-arrow {
+    border-right-color: #ac4949;
+}
