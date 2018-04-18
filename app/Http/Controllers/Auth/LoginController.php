@@ -7,18 +7,19 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-/*
-   |--------------------------------------------------------------------------
-   | Login Controller
-   |--------------------------------------------------------------------------
-   |
-   | This controller handles authenticating users for the application and
-   | redirecting them to your home screen. The controller uses a trait
-   | to conveniently provide its functionality to your applications.
-   |
-   */
 class LoginController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Login Controller
+    |--------------------------------------------------------------------------
+    |
+    | This controller handles authenticating users for the application and
+    | redirecting them to your home screen. The controller uses a trait
+    | to conveniently provide its functionality to your applications.
+    |
+    */
+
     use AuthenticatesUsers;
 
     /**
@@ -66,7 +67,7 @@ class LoginController extends Controller
         ]);
 
         #check username password in database
-        if (Auth::attempt(['username'=>$request->username,'password'=>$request->password]))
+        if (Auth::attempt(['username'=>$request->username,'password'=>hash('sha256', $request->password)]))
         {
             return redirect()->route('order');
         }

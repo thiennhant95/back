@@ -4,37 +4,7 @@
 @endsection
 @section('script')
 <script type="text/javascript">
-//<![CDATA[
-$(function(){
-// 都道府県選択
-  $(document).on('click', '.prefSelectExtension_link', function(){
-    var pref_href = $(this).attr('href');
-    var pref_id = pref_href.slice(47, -3);
-    $.ajax({
-      type: 'POST',
-      url: '/crm/Areas/output_areas',
-      datatype: 'json',
-      data: {
-        'pref_id' : pref_id
-      }
-    })
-      .done(function(data){
-        if (data != '') {
-          var json = $.parseJSON(data);
 
-          $('select.area_code').children().remove();
-          $('select.area_code').append('<option value="">----------</option>');
-          for (var i in json) {
-            $('select.area_code').append('<option value="' + json[i].area_code + '">' + json[i].area_name + '</option>');
-          }
-        }
-      })
-      .fail(function(jqXHR, textStatus) {
-      });
-  });
-});
-
-//]]>
 </script>
 @endsection
 @section('content')
@@ -45,7 +15,7 @@ $(function(){
     <div class="col col-md-12">
       <blockquote>現地査定員</blockquote>
     </div>
-    <div class="col col-md-12"> <a href="/crm/Photographers/add" class="btn btn-primary btn-small" style="margin: 0px 15px 20px 0px;"><span class="glyphicon glyphicon-plus"></span> 新規査定員登録</a></div>
+    <div class="col col-md-12"> <a href="/assess/add" class="btn btn-primary btn-small" style="margin: 0px 15px 20px 0px;"><span class="glyphicon glyphicon-plus"></span> 新規査定員登録</a></div>
     <div class="row" style="margin-right: 0px; margin-left: 0px;">
       <form action="/assess" class="form-horizontal" id="PhotographerIndexForm" method="post" accept-charset="utf-8">
         <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -88,29 +58,24 @@ $(function(){
                   <div class="col col-md-8">
                     <select name="data[Photographer][pref_id]" class="form-control input-sm pref_name" id="PhotographerPrefId">
                       <option value="">----------</option>
-                       @foreach($list_zone as $key_zone => $zone)
-                       <optgroup label="{{ $zone->name }}">
-                        @foreach($list_erea as $key_ereas => $ereas)
-                          @if($key_ereas == $key_zone)
-                            @foreach($ereas as $erea)
-                              <option value="{{ $erea->id }}">{{ $erea->name }}</option>
-                            @endforeach
-                          @endif
-                        @endforeach
-                      </optgroup>
-                       @endforeach
+                      @foreach($list_zone as $key_zone => $zone)
+                        <optgroup label="{{ $zone->name }}">
+                          @foreach($list_erea as $key_ereas => $ereas)
+                            @if($key_ereas == $key_zone)
+                              @foreach($ereas as $erea)
+                                <option value="{{ $erea->id }}">{{ $erea->name }}</option>
+                              @endforeach
+                            @endif
+                          @endforeach
+                        </optgroup>
+                      @endforeach
                     </select>
                   </div>
                 </div>
                 <div class="form-group col col-md-3">
-                  <label for="PhotographerAreaCode" class="col col-md-4 control-label">市区町村名</label>
+                  <label for="PhotographerAreaCode" class="col col-md-4 control-label">住所</label>
                   <div class="col col-md-8">
-                    <select name="data[Photographer][area_code]" class="form-control input-sm area_code" id="PhotographerAreaCode">
-                      <option value="">----------</option>
-                      @foreach($list_zone as $zone)
-                            <option value="{{ $zone->id }}">{{ $zone->name }}</option>
-                      @endforeach
-                    </select>
+                    <input name="data[Photographer][address]" class="form-control input-sm ime-disabled" maxlength="100" placeholder="" type="text"/>
                   </div>
                 </div>
               </div>
@@ -149,9 +114,18 @@ $(function(){
         <tbody>
           @foreach($list_assess as $assess)
           <tr>
-            <td><a href="/crm/Photographers/edit/1">{{ $assess->id }}</a></td>
-            <td>{{ $assess->name }}</td>
-            <td><div class="col col-md-10 text-left" style="padding-left: 0px; border-bottom: 1px dashed rgb(192, 192, 192);">{{ $assess->phonetic }}</div>
+            <td><a href="/assess/edit/{{ $assess->id }}">{{ $assess->id }}</a></td>
+            <?php 
+              $name = explode('|',$assess->name);
+              $family_name = $name[0];
+              $first_name = '';
+              if(isset($name[1]))
+              {
+                $first_name = $name[1];
+              }
+            ?>
+            <td>{{ $family_name }}{{ $first_name }}</td>
+            <td><div class="col col-md-10 text-left" style="padding-left: 0px; border-bottom: 1px dashed rgb(192, 192, 192);">{{ $assess->phone1 }}</div>
               <div class="col col-md-2 text-center" style="border-bottom: 1px dashed rgb(192, 192, 192);"> <a href="/crm/Photographers" class="call_phone" incoming_number="{{ $assess->phonetic }}" dial_number="0676706005" speaker_cd="{{ $assess->id }}"><span class="glyphicon glyphicon-phone-alt"></span></a> <br>
               </div></td>
             <td><div class="col col-md-12 text-left" style="padding-left: 0px; border-bottom: 1px dashed rgb(192, 192, 192);">{{ $assess->email1 }}<br>
@@ -160,7 +134,7 @@ $(function(){
             <td>{{ $assess->assessment_frequency }}</td>
             <td>{{ $assess->report_delivery_method }}</td>
             <td class="text-right" style="vertical-align: middle;">{{ $assess->number_complain }}回</td>
-            <td class="text-center" style="vertical-align: middle;"><form action="/crm/Photographers/delete/1" name="post_5a793d5ccfac9381289341" id="post_5a793d5ccfac9381289341" style="display:none;" method="post">
+            <td class="text-center" style="vertical-align: middle;"><form action="/assess/delete/{{ $assess->id }}" name="post_5a793d5ccfac9381289341" id="post_5a793d5ccfac9381289341" style="display:none;" method="post">
                 <input type="hidden" name="_method" value="POST"/>
               </form>
               <a href="#" class="btn btn-danger btn-xs" onclick="if (confirm(&#039;削除してよろしいですか？ # I0000?&#039;)) { document.post_5a793d5ccfac9381289341.submit(); } event.returnValue = false; return false;">削除</a></td>
@@ -175,69 +149,5 @@ $(function(){
       </div>
     </div>
   </div>
-  <script type="text/javascript">
-    function show_pointer(id) {
-  $(".sort").css({"cursor":"pointer"});
-}
-  $(".sort").click(function()
-  {
-    $.ajaxSetup({
-  headers: {
-    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  }
-});
-    if(!$(this).hasClass('asc'))
-    {
-      $(this).addClass("asc");
-      $(this).removeClass("desc");
-    }
-    else
-    {
-      $(this).removeClass("asc");
-      $(this).addClass("desc");
-    }
-    if($(this).hasClass('asc')) 
-    {
-      //Sort ASC
-      var current_token = '{{csrf_token()}}';
-      var column = $(this).attr('id');
-      $.ajax({
-          url: '/assess-sort',
-          dataType: 'text',
-          type: 'post',
-          contentType: 'application/x-www-form-urlencoded',
-          data: {column: column, sort: 'asc', fuel_csrf_token: current_token},
-          success: function( data, textStatus, jQxhr ){
-              var result = JSON.parse(data);
-              $('.ajax-sort tbody').html(result['content']);
-              $('.pagination').html(result['pagination']);
-          },
-          error: function( jqXhr, textStatus, errorThrown ){
-              console.log( errorThrown );
-          }
-      });
-    }
-    if($(this).hasClass('desc'))
-    {
-      //Sort DESC
-      var current_token = '{{csrf_token()}}';
-      var column = $(this).attr('id');
-      $.ajax({
-          url: '/assess-sort',
-          dataType: 'text',
-          type: 'post',
-          contentType: 'application/x-www-form-urlencoded',
-          data: {column: column, sort: 'desc', fuel_csrf_token: current_token},
-          success: function( data, textStatus, jQxhr ){
-              var result = JSON.parse(data);
-              $('.ajax-sort tbody').html(result['content']);
-              $('.pagination').html(result['pagination']);
-          },
-          error: function( jqXhr, textStatus, errorThrown ){
-              console.log( errorThrown );
-          }
-      });
-    }
-  })
-  </script>
+<script type="text/javascript" src="{{ url('js/back_office/assess/assess_index.js')}}"></script>
 @endsection

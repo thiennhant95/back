@@ -3,15 +3,24 @@
 namespace App\Repositories;
 
 use Illuminate\Database\Eloquent\Model as Model;
-
+/*****************************************************************************
+* Base repository
+****************************************************************************
+* This is base repository
+* Status: Not yet complete
+**************************************************************************
+* @author: Nguyen
+****************************************************************************/
 class BaseRepository
 {
+
     /**
      * The Model name.
      *
      * @var \Illuminate\Database\Eloquent\Model;
      */
     protected $model;
+    public $remember_token=false;
     public function __construct(){
         $this->model = new Model();
     }
@@ -40,6 +49,18 @@ class BaseRepository
         return $this->model->create($inputs);
     }
 
+     /**
+     * Get all record
+     *
+     * @param 
+     *
+     * @return Model instance
+     */
+    public function getAll()
+    {
+        return $this->model->get();
+    }
+
     /**
      * FindOrFail Model and return the instance.
      *
@@ -49,9 +70,23 @@ class BaseRepository
      *
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
-    public function getById($id)
+    public function getById($p_id)
     {
-        return $this->model->find($id);
+        return $this->model->find($p_id);
+    }
+
+    /**
+     * Insert the model in the database.
+     *
+     * @param $id
+     * @param array $inputs
+     */
+    public function insert($p_obj)
+    {
+       foreach ($p_obj as $key => $value) {
+           $this->model->$key = $value;
+       }
+       return $this->model->save();
     }
 
     /**
@@ -60,9 +95,9 @@ class BaseRepository
      * @param $id
      * @param array $inputs
      */
-    public function update($id, array $inputs)
+    public function update($p_id, array $p_inputs)
     {
-        $this->getById($id)->update($inputs);
+       return $this->getById($p_id)->update($p_inputs);
     }
 
     /**
@@ -74,7 +109,19 @@ class BaseRepository
      */
     public function destroy($id)
     {
-        $this->getById($id)->delete();
+       return $this->getById($id)->delete();
+    }
+
+    /**
+     * Delete the model from the database.
+     *
+     * @param int $id
+     *
+     * @throws \Exception
+     */
+    public function destroyByWhere($p_arr)
+    {
+       return $this->model->where($p_arr)->delete();
     }
 
     /**

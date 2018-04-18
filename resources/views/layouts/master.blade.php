@@ -46,13 +46,16 @@
           <p class="navbar-text"></p>
         </li>
         <li>
-          <p class="navbar-text">2018年2月6日 (火)</p>
+            <?php
+            $days = array("日","月","火","水","木","金","土");
+            ?>
+          <p class="navbar-text">{{date('Y').'年'.date('m').'月'.date('d').'日'.'('.($days[@date("w")]).')'}}</p>
         </li>
         <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> 阿部 薫 <b class="caret"></b> </a>
           <ul class="dropdown-menu">
-            <li><a href="/crm/Employees/cp">パスワード変更</a></li>
+            <li><a href="#">パスワード変更</a></li>
             <li class="divider"></li>
-            <li><a href="/crm/Employees/logout">ログアウト</a></li>
+            <li><a href="{{url('logout')}}">ログアウト</a></li>
           </ul>
         </li>
       </ul>

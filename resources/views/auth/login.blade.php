@@ -55,13 +55,20 @@
 <div id="container">
   <div id="header"></div>
   <div id="content">
+    @if(count($errors)>0)
+      <div class="alert alert-danger">
+        @foreach($errors->all() as $err)
+          {{$err}}<br>
+      @endforeach
+      </div>
+    @endif
     @if(session('message'))
-      <div class="alert alert-success">
+      <div class="alert alert-danger">
       {{session('message')}}
       </div>
     @endif
     <form action="checkLogin" class="well form-horizontal" id="EmployeeLoginForm" method="post" accept-charset="utf-8">
-      {{ csrf_field() }}
+      <input type="hidden" name="_token" value="{{csrf_token()}}">
       <div style="display:none;">
         <input type="hidden" name="_method" value="POST"/>
       </div>
@@ -82,7 +89,7 @@
             <th>パスワード</th>
             <td><div class="form-group">
                 <div class="col col-md-9">
-                  <input name="password" class="form-control" minlength="8" type="password" required="required" id="EmployeePassword"/>
+                  <input name="password" class="form-control" minlength="6" type="password" required="required" id="EmployeePassword"/>
                 </div>
               </div></td>
           </tr>
@@ -131,3 +138,4 @@ DIV#flashMessage.message{
 </div>
 </body>
 </html>
+

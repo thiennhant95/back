@@ -16,6 +16,7 @@ class CreateAssessesTable extends Migration
         Schema::create('assesses', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
+            $table->rememberToken();
         });
     }
 

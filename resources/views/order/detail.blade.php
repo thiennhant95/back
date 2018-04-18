@@ -21,7 +21,9 @@ var token = "{{csrf_token()}}";
 <script type="text/javascript" src="{{ url('js/clicktocall.js') }}"></script><script type="text/javascript"></script>
 <script type="text/javascript" src="{{ url('js/back_office/order/detail_index.js') }}"></script>
 <script type="text/javascript" src="{{ url('js/back_office/order/seller.js') }}"></script>
-
+<script type="text/javascript" src="{{ url('js/back_office/order/status.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/back_office/order/document.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/back_office/order/account.js') }}"></script>
 @endsection
 
 @section('content')
@@ -34,17 +36,18 @@ var token = "{{csrf_token()}}";
     <div class="col col-md-12">
       <blockquote>出品詳細</blockquote>
     </div>
-    <form id="seller_form" accept-charset="utf-8">
+    
       <div class="row MR0 ML0">
         <div class="col col-md-4">
           <div>
+          <form id="seller_form" accept-charset="utf-8">
             <table class="table table-bordered table-condensed info_table">
               <thead>
                 <tr class="info">
                   <th colspan="2"> <div class="col col-md-10 lead PL0 MB0"><strong>顧客情報</strong></div>
                     <div class="col col-md-2 text-center edit_seller_button_div"> <a href="#" class="btn btn-primary btn-sm edit_seller" id="edit_seller">編集</a> </div>
-                    <input type="hidden" name="seller_seller_id" value="380180"/>
-                    <input type="hidden" name="seller_seller_cd" id="seller_cd" value="U04799576"/>
+                    <input type="hidden" name="seller_seller_id" id="seller_seller_id" value="{{$seller->id}}"/>
+                    <input type="hidden" name="seller_seller_cd" id="seller_seller_cd" value="U04799576"/>
                   </th>
                 </tr>
               </thead>
@@ -112,7 +115,7 @@ var token = "{{csrf_token()}}";
                     </div>
                     <div class="col col-md-1 col-md-offset-1">
                       <div class="checkbox">
-                         <input type="checkbox" name="seller_seller_phone_check3"  id="seller_seller_phone_check3" {{ $seller->phone_check4 == 1?'checked':''}}/>
+                         <input type="checkbox" name="seller_seller_phone_check3"  id="seller_seller_phone_check3" {{ $seller->phone_check3 == 1?'checked':''}}/>
                       </div>
                     </div></td>
                 </tr>
@@ -263,7 +266,7 @@ var token = "{{csrf_token()}}";
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">免許証番号</td>
                   <td style="background-color: #f9f9f9;"><div class="col col-md-3 PL0">
-                      <input name="seller_seller_license" id="seller_seller_license" class="form-control input-sm" maxlength="10" id="{{$seller->license}}" type="tel"/>
+                      <input name="seller_seller_license" id="seller_seller_license" class="form-control input-sm" maxlength="10" value="{{$seller->license}}" type="tel"/>
                     </div></td>
                 </tr>
                 <tr style="height: 41px;">
@@ -278,20 +281,17 @@ var token = "{{csrf_token()}}";
                       <input name="seller_seller_register_date" class="form-control input-sm　ime-disabled" maxlength="15" id="seller_seller_register_date" type="tel" value="{{$seller->register_date}}"/>
                     </div></td>
                 </tr>
-                <tr style="height: 41px;">
-                  <td class="active" style="width: 120px; vertical-align: middle;">メルマガ配信</td>
-                  <td style="vertical-align: middle; background-color: #f9f9f9;"><div class="col col-md-10 mailmagazine PL0">{{$seller->delivery_email}}</div>
-                    <div class="col col-md-2 text-center"> <a href="/crm/AgreementOrders/edit/118262" class="btn btn-danger btn-xs reject_mailmagazine" seller_id="380180">停止</a> </div></td>
-                </tr>
               </tbody>
             </table>
+            </form>
           </div>
           <div>
+            <form id="account_form" >
             <table class="table table-bordered table-condensed info_table" id="table-AgreementOrderAccount">
               <thead>
                 <tr class="info">
                   <th colspan="2"> <div class="col col-md-10 lead PL0 MB0"><strong>口座情報</strong></div>
-                    <div class="col col-md-2 text-center edit_account_button_div"> <a href="javascript:void(0);" class="btn btn-primary btn-sm edit_account" agreement_order_id="118262" seller_cd="U04799576">編集</a> </div>
+                    <div class="col col-md-2 text-center edit_account_button_div"> <a href="#" class="btn btn-primary btn-sm edit_account" id="edit_account">編集</a> </div>
                   </th>
                 </tr>
               </thead>
@@ -299,71 +299,71 @@ var token = "{{csrf_token()}}";
                 <tr>
                   <td class="active" style="width: 120px;">銀行名</td>
                   <td class="bank_td"><div class="col col-md-6 PL0">
-                      <input name="data[Account][bank]" class="form-control input-sm" maxlength="30" id="bank" type="text"/>
+                      <input name="account_bank_name" class="form-control input-sm" maxlength="30" id="account_bank_name" type="text" value="{{$seller->bank_name}}"/>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active">銀行コード</td>
                   <td class="bank_code_td"><div class="col col-md-3 PL0">
-                      <input name="data[Account][bank_code]" class="form-control input-sm" maxlength="4" id="bank_code" type="tel"/>
+                      <input name="account_bank_code" class="form-control input-sm" maxlength="4" id="account_bank_code" type="tel" value="{{$seller->bank_code}}"/>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active">支店名</td>
                   <td class="branch_name_td"><div class="col col-md-6 PL0">
-                      <input name="data[Account][branch_name]" class="form-control input-sm" maxlength="30" id="branch_name" type="text"/>
+                      <input name="account_branch_name" class="form-control input-sm" maxlength="30" id="account_branch_name" type="text" value="{{$seller->branch_name}}"/>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active">支店番号</td>
                   <td class="branch_number_td"><div class="col col-md-2 PL0">
-                      <input name="data[Account][branch_number]" class="form-control input-sm ime-disabled" maxlength="3" id="branch_number" type="tel"/>
+                      <input name="account_branch_code" class="form-control input-sm ime-disabled" maxlength="3" id="account_branch_code" type="tel" value="{{$seller->branch_name}}"/>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active">口座種別</td>
                   <td class="account_classification_td"><div class="col col-md-12" style="padding: 6px 0px;">
-                      <input type="hidden" name="data[Account][account_classification]" id="AccountAccountClassification_" value=""/>
-                      <label class="radio-inline" for="AccountAccountClassification1">
-                        <input type="radio" name="data[Account][account_classification]" id="AccountAccountClassification1" value="1" />
+                      <label class="radio-inline" for="account_account_type1">
+                        <input type="radio" name="account_account_type" id="account_account_type1" {{$seller->account_type == 1?'checked':''}} />
                         普通 </label>
-                      <label class="radio-inline" for="AccountAccountClassification2">
-                        <input type="radio" name="data[Account][account_classification]" id="AccountAccountClassification2" value="2" />
+                      <label class="radio-inline" for="account_account_type2">
+                        <input type="radio" name="account_account_type" id="account_account_type2" {{$seller->account_type == 2?'checked':''}}  />
                         当座 </label>
-                      <label class="radio-inline" for="AccountAccountClassification4">
-                        <input type="radio" name="data[Account][account_classification]" id="AccountAccountClassification4" value="4" />
+                      <label class="radio-inline" for="account_account_type3">
+                        <input type="radio" name="account_account_type" id="account_account_type3" {{$seller->account_type == 3?'checked':''}}  />
                         貯蓄 </label>
-                      <label class="radio-inline" for="AccountAccountClassification9">
-                        <input type="radio" name="data[Account][account_classification]" id="AccountAccountClassification9" value="9" />
+                      <label class="radio-inline" for="account_account_type4">
+                        <input type="radio" name="account_account_type" id="account_account_type4" {{$seller->account_type == 4?'checked':''}}  />
                         その他 </label>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active">口座番号</td>
                   <td class="account_number_td"><div class="col col-md-3 PL0">
-                      <input name="data[Account][account_number]" class="form-control input-sm ime-disabled" maxlength="7" id="account_number" type="tel"/>
+                      <input name="account_account_number" class="form-control input-sm ime-disabled" maxlength="7" id="account_account_number" type="tel" value="{{$seller->account_number}}"/>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active">口座名義人 (カナ)</td>
-                  <td class="nominee_name_td"><input name="data[Account][nominee_name]" class="form-control input-sm katakana" maxlength="50" id="nominee_name" type="text"/></td>
+                  <td class="nominee_name_td"><input name="account_account_holder" class="form-control input-sm katakana" maxlength="50" id="account_account_holder" type="text" value="{{$seller->account_holder}}"/></td>
                 </tr>
                 <tr>
                   <td class="active">振込状態</td>
                  <td>
-                      <label class="radio-inline" for="sent_stt01">
-                        <input type="radio" name="data[Account][sent_stt]" id="sent_stt01" value="0" />
+                      <label class="radio-inline" for="account_transfer_status1">
+                        <input type="radio" name="account_transfer_status" id="account_transfer_status1" {{$seller->transfer_status == 1?'checked':''}} />
                         未 </label>
-                      <label class="radio-inline" for="sent_stt02">
-                        <input type="radio" name="data[Account][sent_stt]" id="sent_stt02" value="1" />
+                      <label class="radio-inline" for="account_transfer_status2">
+                        <input type="radio" name="account_transfer_status" id="account_transfer_status2" {{$seller->transfer_status == 2?'checked':''}} />
                         振込待ち </label>
-                      <label class="radio-inline" for="sent_stt03">
-                        <input type="radio" name="data[Account][sent_stt]" id="sent_stt03" value="2" />
+                      <label class="radio-inline" for="account_transfer_status3">
+                        <input type="radio" name="account_transfer_status" id="account_transfer_status3" {{$seller->transfer_status == 3?'checked':''}} />
                         振込済 </label>
                     </div></td>
                 </tr>
               </tbody>
             </table>
+            </form>
           </div>
           <div>
             <table class="table table-bordered table-condensed table-striped info_table">
@@ -2026,12 +2026,13 @@ var token = "{{csrf_token()}}";
         </div>
         <div class="col col-md-4">
           <div>
+          	<form id="status_form" accept-charset="utf-8">
             <table class="table table-bordered table-condensed info_table" id="table-Inquiry">
               <thead>
                 <tr class="info">
                   <th colspan="2"> <div class="col col-md-10 lead PL0 MB0"><strong>案件状況</strong></div>
-                    <div class="col col-md-2 text-center"> <a href="javascript:void(0);" class="btn btn-primary btn-sm edit_inquiry" data-inquiry_id="388102">編集</a>
-                      <input type="hidden" name="data[Inquiry][id]" value="388102"/>
+                    <div class="col col-md-2 text-center"> <a href="#" class="btn btn-primary btn-sm edit_inquiry" id="edit_status" >編集</a>
+                      <input type="hidden" name="status_id" id="status_id" value="{{$status->id}}"/>
                     </div>
                   </th>
                 </tr>
@@ -2039,26 +2040,26 @@ var token = "{{csrf_token()}}";
               <tbody>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">初回問合日</td>
-                  <td style="vertical-align: middle;">2018年2月6日 (火)</td>
+                  <td style="vertical-align: middle;">{{ $status->first_inquiry_date}}</td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">案件ステータス</td>
                   <td style="background-color: #f9f9f9; vertical-align: middle;">
 					<div class="col col-md-4 PL0">
-						<select name="data[AgreementOrder][project-status]" class="form-control input-sm" id="ProjectStatus">
+						<select name="status_status" class="form-control input-sm" id="status_status">
 						  <option value="">----------</option>
-						  <option value="1">失注</option>
-						  <option value="2">新規</option>
-						  <option value="3">要再TEL</option>
-						  <option value="4">後追い長期不在</option>
-						  <option value="5">新規長期不在</option>
-						  <option value="6">査定サービス中</option>
-						  <option value="7">出品中</option>
-						  <option value="8">出品後回答待ち</option>
-						  <option value="9">必要書類待ち</option>
-						  <option value="10">車両引取待ち</option>
-						  <option value="11">振込待ち</option>
-						  <option value="12">完了済み</option>
+						  <option {{ $status->status == 1?'selected':'' }} value="1">失注</option>
+						  <option {{ $status->status == 2?'selected':'' }} value="2">新規</option>
+						  <option {{ $status->status == 3?'selected':'' }} value="3">要再TEL</option>
+						  <option {{ $status->status == 4?'selected':'' }} value="4">後追い長期不在</option>
+						  <option {{ $status->status == 5?'selected':'' }} value="5">新規長期不在</option>
+						  <option {{ $status->status == 6?'selected':'' }} value="6">査定サービス中</option>
+						  <option {{ $status->status == 7?'selected':'' }} value="7">出品中</option>
+						  <option {{ $status->status == 8?'selected':'' }} value="8">出品後回答待ち</option>
+						  <option {{ $status->status == 9?'selected':'' }} value="9">必要書類待ち</option>
+						  <option {{ $status->status == 10?'selected':'' }} value="10">車両引取待ち</option>
+						  <option {{ $status->status == 11?'selected':'' }} value="11">振込待ち</option>
+						  <option {{ $status->status == 12?'selected':'' }} value="12">完了済み</option>
 						</select>
 					</div>
 				　　</td>
@@ -2066,23 +2067,23 @@ var token = "{{csrf_token()}}";
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">出品確度</td>
                   <td><div class="col col-md-12 P6_0">
-                      <label class="radio-inline" for="ProductComfirm0">
-                        <input type="radio" name="data[Inquiry][pro-comfirm]" id="ProductComfirm0" value="0" checked="checked" />
+                      <label class="radio-inline" for="status_listing_accuracy1">
+                        <input type="radio" name="status_listing_accuracy" {{$status->listing_accuracy == 1?'checked':''}} id="status_listing_accuracy1" value="1" />
                         S</label>
-                      <label class="radio-inline" for="ProductComfirm1">
-                        <input type="radio" name="data[Inquiry][pro-comfirm]" id="ProductComfirm1" value="1" />
+                      <label class="radio-inline" for="status_listing_accuracy2">
+                        <input type="radio" name="status_listing_accuracy" {{$status->listing_accuracy == 2?'checked':''}}  id="status_listing_accuracy2" value="2" />
                         A</label>
-                      <label class="radio-inline" for="ProductComfirm2">
-                        <input type="radio" name="data[Inquiry][pro-comfirm]" id="ProductComfirm2" value="2" />
+                      <label class="radio-inline" for="status_listing_accuracy3">
+                        <input type="radio" name="status_listing_accuracy" {{$status->listing_accuracy == 3?'checked':''}}  id="status_listing_accuracy3" value="3" />
                         B</label>
-                      <label class="radio-inline" for="ProductComfirm3">
-                        <input type="radio" name="data[Inquiry][pro-comfirm]" id="ProductComfirm3" value="2" />
+                      <label class="radio-inline" for="status_listing_accuracy4">
+                        <input type="radio" name="status_listing_accuracy" {{$status->listing_accuracy == 4?'checked':''}}  id="status_listing_accuracy4" value="4" />
                         C</label>
-                      <label class="radio-inline" for="ProductComfirm4">
-                        <input type="radio" name="data[Inquiry][pro-comfirm]" id="ProductComfirm4" value="2" />
+                      <label class="radio-inline" for="status_listing_accuracy5">
+                        <input type="radio" name="status_listing_accuracy" {{$status->listing_accuracy == 5?'checked':''}}  id="status_listing_accuracy5" value="5" />
                         D</label>
-                      <label class="radio-inline" for="ProductComfirm5">
-                        <input type="radio" name="data[Inquiry][pro-comfirm]" id="ProductComfirm5" value="2" />
+                      <label class="radio-inline" for="status_listing_accuracy6">
+                        <input type="radio" name="status_listing_accuracy" {{$status->listing_accuracy == 6?'checked':''}}  id="status_listing_accuracy6" value="6" />
                         NG</label>
                     </div></td>
                 </tr>
@@ -2090,37 +2091,37 @@ var token = "{{csrf_token()}}";
                    <td class="active" style="width: 120px; vertical-align: middle;">再TEL予定日</td>
                   <td style="background-color: #f9f9f9; vertical-align: middle;">
 					  <div class="col col-md-4 PL0">
-						  <input name="data[Trade][tel_date]" class="form-control input-sm ime-disabled" maxlength="10" id="tel_date" autocomplete="off" type="tel" value="2018-03-23"/>
+						  <input name="status_re_tel_date" class="form-control input-sm ime-disabled" maxlength="10" id="status_re_tel_date" autocomplete="off" type="tel" value="{{$status->re_tel_date}}"/>
 					  </div>
 				  </td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">再TEL回数</td>
                   <td style="vertical-align: middle;">
-					<div class="col col-md-2 PL0">
-						<select name="data[AgreementOrder][calltime]" class="form-control input-sm" id="calltime">
+					<div class="col col-md-4 PL0">
+						<select name="status_tel_number_again" class="form-control input-sm" id="status_tel_number_again">
 						  <option value="">----------</option>
-						  <option value="0">0</option>
-						  <option value="1">4</option>
-						  <option value="2">2</option>
-						  <option value="3">3</option>
-						  <option value="4">4</option>
-						  <option value="5">5</option>
-						  <option value="6">6</option>
-						  <option value="7">7</option>
-						  <option value="8">8</option>
-						  <option value="9">9</option>
-						  <option value="10">10</option>
-						  <option value="11">11</option>
-						  <option value="12">12</option>
-						  <option value="12">13</option>
-						  <option value="12">14</option>
-						  <option value="12">15</option>
-						  <option value="12">16</option>
-						  <option value="12">17</option>
-						  <option value="12">18</option>
-						  <option value="12">19</option>
-						  <option value="12">20</option>
+						  <option {{$status->tel_number_again == 0?'selected':''}} value="0">0</option>
+						  <option {{$status->tel_number_again == 1?'selected':''}} value="1">1</option>
+						  <option {{$status->tel_number_again == 2?'selected':''}} value="2">2</option>
+						  <option {{$status->tel_number_again == 3?'selected':''}} value="3">3</option>
+						  <option {{$status->tel_number_again == 4?'selected':''}} value="4">4</option>
+						  <option {{$status->tel_number_again == 5?'selected':''}} value="5">5</option>
+						  <option {{$status->tel_number_again == 6?'selected':''}} value="6">6</option>
+						  <option {{$status->tel_number_again == 7?'selected':''}} value="7">7</option>
+						  <option {{$status->tel_number_again == 8?'selected':''}} value="8">8</option>
+						  <option {{$status->tel_number_again == 9?'selected':''}} value="9">9</option>
+						  <option {{$status->tel_number_again == 10?'selected':''}} value="10">10</option>
+						  <option {{$status->tel_number_again == 11?'selected':''}} value="11">11</option>
+						  <option {{$status->tel_number_again == 12?'selected':''}} value="12">12</option>
+						  <option {{$status->tel_number_again == 13?'selected':''}} value="13">13</option>
+						  <option {{$status->tel_number_again == 14?'selected':''}} value="14">14</option>
+						  <option {{$status->tel_number_again == 15?'selected':''}} value="15">15</option>
+						  <option {{$status->tel_number_again == 16?'selected':''}} value="16">16</option>
+						  <option {{$status->tel_number_again == 17?'selected':''}} value="17">17</option>
+						  <option {{$status->tel_number_again == 18?'selected':''}} value="18">18</option>
+						  <option {{$status->tel_number_again == 19?'selected':''}} value="19">19</option>
+						  <option {{$status->tel_number_again == 20?'selected':''}} value="20">20</option>
 						</select>
 					</div>
 				  </td>
@@ -2129,22 +2130,19 @@ var token = "{{csrf_token()}}";
                   <td class="active" style="width: 120px; vertical-align: middle;">追跡</td>
                   <td class="form-horizontal" style="background-color: #f9f9f9;"><div class="col col-md-1 text-center" style="padding: 0px;">
                       <div class="checkbox">
-                        <input type="hidden" name="data[Inquiry][repeater]" id="repeater_" value="0"/>
-                        <input type="checkbox" name="data[Inquiry][repeater]"  id="repeater" value="1"/>
+                        <input type="checkbox" name="status_pursuit"  id="status_pursuit1" {{$status->pursuit[0] == 1?'checked':''}} value="1"/>
                       </div>
                     </div>
                     <div class="col col-md-3 P6_0" style="margin: 0px -15px;"> リピーター</div>
                     <div class="col col-md-1 text-center" style="padding: 0px;">
                       <div class="checkbox">
-                        <input type="hidden" name="data[Inquiry][plurality]" id="plurality_" value="0"/>
-                        <input type="checkbox" name="data[Inquiry][plurality]"  id="plurality" value="1"/>
+                        <input type="checkbox" name="status_pursuit"  id="status_pursuit2" {{$status->pursuit[1] == 1?'checked':''}} value="2"/>
                       </div>
                     </div>
                     <div class="col col-md-3 P6_0" style="margin: 0px -15px;"> 複数台口</div>
                     <div class="col col-md-1 text-center" style="padding: 0px;">
                       <div class="checkbox">
-                        <input type="hidden" name="data[Inquiry][radio]" id="radio_" value="0"/>
-                        <input type="checkbox" name="data[Inquiry][radio]"  id="radio" value="1"/>
+                        <input type="checkbox" name="status_pursuit"  id="status_pursuit3" {{$status->pursuit[2] == 1?'checked':''}} value="3"/>
                       </div>
                     </div>
                     <div class="col col-md-3 P6_0" style="margin: 0px -15px;"> ラジオ</div></td>
@@ -2152,49 +2150,50 @@ var token = "{{csrf_token()}}";
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">キャンペーン提示</td>
                   <td><div class="col col-md-12 P6_0">
-                      <label class="radio-inline" for="InquiryCampaignProposal0">
-                        <input type="radio" name="data[Inquiry][campaign_proposal]" id="InquiryCampaignProposal0" value="0" checked="checked" />
+                      <label class="radio-inline" for="status_offer_presentation1">
+                        <input type="radio" name="status_offer_presentation" id="status_offer_presentation1" {{$status->offer_presentation == 1?'checked':''}} value="1" />
                         未提案</label>
-                      <label class="radio-inline" for="InquiryCampaignProposal1">
-                        <input type="radio" name="data[Inquiry][campaign_proposal]" id="InquiryCampaignProposal1" value="1" />
+                      <label class="radio-inline" for="status_offer_presentation2">
+                        <input type="radio" name="status_offer_presentation" id="status_offer_presentation2" {{$status->offer_presentation == 2?'checked':''}} value="2" />
                         インバウンド</label>
-                      <label class="radio-inline" for="InquiryCampaignProposal2">
-                        <input type="radio" name="data[Inquiry][campaign_proposal]" id="InquiryCampaignProposal2" value="2" />
+                      <label class="radio-inline" for="status_offer_presentation3">
+                        <input type="radio" name="status_offer_presentation" id="status_offer_presentation3" {{$status->offer_presentation == 3?'checked':''}} value="3" />
                         アウトバウンド</label>
                     </div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">キャンペーン</td>
                   <td style="background-color: #f9f9f9;"><div class="col col-md-12 P6_0">
-                      <label class="radio-inline" for="InquiryCampaign0">
-                        <input type="radio" name="data[Inquiry][campaign]" id="InquiryCampaign0" value="0" checked="checked" />
+                      <label class="radio-inline" for="status_campaign1">
+                        <input type="radio" name="status_campaign" id="status_campaign1" {{$status->campaign == 1?'checked':''}} value="1" />
                         未</label>
-                      <label class="radio-inline" for="InquiryCampaign1">
-                        <input type="radio" name="data[Inquiry][campaign]" id="InquiryCampaign1" value="1" />
+                      <label class="radio-inline" for="status_campaign2">
+                        <input type="radio" name="status_campaign" id="status_campaign2" {{$status->campaign == 2?'checked':''}} value="2" />
                         早得</label>
-                      <label class="radio-inline" for="InquiryCampaign2">
-                        <input type="radio" name="data[Inquiry][campaign]" id="InquiryCampaign2" value="2" />
+                      <label class="radio-inline" for="status_campaign3">
+                        <input type="radio" name="status_campaign" id="status_campaign3" {{$status->campaign == 3?'checked':''}} value="3" />
                         紹介</label>
-                      <label class="radio-inline" for="InquiryCampaign3">
-                        <input type="radio" name="data[Inquiry][campaign]" id="InquiryCampaign3" value="3" />
+                      <label class="radio-inline" for="status_campaign4">
+                        <input type="radio" name="status_campaign" id="status_campaign4" {{$status->campaign == 4?'checked':''}} value="4" />
                         リピート</label>
-                      <label class="radio-inline" for="InquiryCampaign4">
-                        <input type="radio" name="data[Inquiry][campaign]" id="InquiryCampaign4" value="4" />
+                      <label class="radio-inline" for="status_campaign5">
+                        <input type="radio" name="status_campaign" id="status_campaign5" {{$status->campaign == 5?'checked':''}} value="5" />
                         セット</label>
-                      <label class="radio-inline" for="InquiryCampaign5">
-                        <input type="radio" name="data[Inquiry][campaign]" id="InquiryCampaign5" value="5" />
+                      <label class="radio-inline" for="status_campaign6">
+                        <input type="radio" name="status_campaign" id="status_campaign6" {{$status->campaign == 6?'checked':''}} value="6" />
                         持込</label>
-                      <label class="radio-inline" for="InquiryCampaign6">
-                        <input type="radio" name="data[Inquiry][campaign]" id="InquiryCampaign6" value="6" />
+                      <label class="radio-inline" for="status_campaign7">
+                        <input type="radio" name="status_campaign" id="status_campaign7" {{$status->campaign == 7?'checked':''}} value="7" />
                         福利厚生</label>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">一言備考</td>
-                  <td><input name="data[Inquiry][note]" class="form-control input-sm" maxlength="50" id="note" type="text" value="●28　耳が遠い　大きい声で案内必要"/></td>
+                  <td><input name="status_word_preparation" class="form-control input-sm" maxlength="50" id="status_word_preparation" type="text" value="{{$status->word_preparation}}"/></td>
                 </tr>
               </tbody>
             </table>
+            </form>
           </div>
           <div>
             <table class="table table-bordered table-condensed info_table" style="margin-bottom: 0px;">
@@ -2666,12 +2665,13 @@ var token = "{{csrf_token()}}";
         </div>
         <div class="col col-md-4">
           <div>
+            <form id="document_form" >
             <table class="table table-striped table-bordered table-condensed info_table" id="table-Document">
               <thead>
                 <tr class="info">
                   <th colspan="2"> <div class="col col-md-10 lead PL0 MB0"><strong>書類管理</strong></div>
-                    <input type="hidden" name="data[Document][id]" value="105217"/>
-                    <div class="col col-md-2 text-center send_seeking_photographer_mail_button_div"> <a href="javascript: void(0);" class="btn btn-primary btn-sm send_seeking_photographer_mail" agreement_order_id="118262">編集</a> </div>
+                    <input type="hidden" name="document_id" id="document_id" value="{{$document->id}}"/>
+                    <div class="col col-md-2 text-center send_seeking_photographer_mail_button_div"> <a href="#" class="btn btn-primary btn-sm send_seeking_photographer_mail" id="edit_document">編集</a> </div>
                   </th>
                 </tr>
               </thead>
@@ -2680,10 +2680,10 @@ var token = "{{csrf_token()}}";
                   <td class="active">抹消種別</td>
                   <td colspan="2">
 					<div class="col col-md-4 PL0">
-						<select name="data[AgreementOrder][cancel-status]" class="form-control input-sm" id="CancelStatus">
+						<select name="document_cancel_type" class="form-control input-sm" id="document_cancel_type">
 						  <option value="">----------</option>
-						  <option value="1">当社抹消</option>
-						  <option value="2">業者抹消</option>
+						  <option {{$document->cancel_type == 1?'selected':''}} value="1">当社抹消</option>
+						  <option {{$document->cancel_type == 2?'selected':''}} value="2">業者抹消</option>
 						</select>
 					</div>
                    </td>
@@ -2694,13 +2694,13 @@ var token = "{{csrf_token()}}";
 
 						<div class="col col-md-12">
 							<label class="radio-inline" for="document1">
-								<input type="radio" name="data[Trade][trade_schedule_time]" id="document1" value="0"  checked="checked"/>未着</label>
+								<input type="radio" name="document_document_arrival" id="document_document_arrival1" {{$document->document_arrival == 1 ?'checked':''}} />未着</label>
 
 							<label class="radio-inline" for="document2">
-								<input type="radio" name="data[Trade][trade_schedule_time]" id="document2" value="0"  checked="checked"/>不備</label>
+								<input type="radio" name="document_document_arrival" id="document_document_arrival2" {{$document->document_arrival == 2 ?'checked':''}} />不備</label>
 
 							<label class="radio-inline" for="document3">
-								<input type="radio" name="data[Trade][trade_schedule_time]" id="document3" value="0"  checked="checked"/>完備</label>
+								<input type="radio" name="document_document_arrival" id="document_document_arrival3" {{$document->document_arrival == 3 ?'checked':''}} />完備</label>
                     </div>
 
 
@@ -2709,8 +2709,7 @@ var token = "{{csrf_token()}}";
                 <tr>
                   <td colspan="2" class="form-horizontal" style="vertical-align: middle; background-color: #ffffff; border-bottom-style: none;"><div class="col col-md-1 text-center" style="padding: 0px;">
                       <div class="checkbox">
-                        <input type="hidden" name="data[Document][inspection_certificate]" id="inspection_certificate_" value="0"/>
-                        <input type="checkbox" name="data[Document][inspection_certificate]"  id="inspection_certificate" value="1" />
+                        <input type="checkbox" name="document_vehicle_license"  id="document_vehicle_license" {{$document->vehicle_license == 1 ?'checked':''}} />
                       </div>
                     </div>
                     <div class="col col-md-7" style="padding: 6px 0px;">
@@ -2721,8 +2720,7 @@ var token = "{{csrf_token()}}";
                 <tr>
                   <td colspan="2" class="form-horizontal" style="vertical-align: middle; background-color: #ffffff; border-top-style: none; border-bottom-style: none;"><div class="col col-md-1 text-center" style="padding: 0px;">
                       <div class="checkbox">
-                        <input type="hidden" name="data[Document][insurance]" id="insurance_" value="0"/>
-                        <input type="checkbox" name="data[Document][insurance]"  id="insurance" value="1" />
+                        <input type="checkbox" name="document_insurance_card"  id="document_insurance_card" {{$document->insurance_card == 1 ?'checked':''}} />
                       </div>
                     </div>
                     <div class="col col-md-7" style="padding: 6px 0px;">
@@ -2733,8 +2731,7 @@ var token = "{{csrf_token()}}";
                 <tr>
                   <td colspan="2" class="form-horizontal" style="vertical-align: middle; background-color: #ffffff; border-top-style: none; border-bottom-style: none;"><div class="col col-md-1 text-center" style="padding: 0px;">
                       <div class="checkbox">
-                        <input type="hidden" name="data[Document][recycle]" id="recycle_" value="0"/>
-                        <input type="checkbox" name="data[Document][recycle]"  id="recycle" value="1" />
+                        <input type="checkbox" name="document_recycling_ticket"  id="document_recycling_ticket" {{$document->recycling_ticket == 1 ?'checked':''}} />
                       </div>
                     </div>
                     <div class="col col-md-7" style="padding: 6px 0px;">
@@ -2745,8 +2742,7 @@ var token = "{{csrf_token()}}";
                 <tr>
                   <td colspan="2" class="form-horizontal" style="vertical-align: middle; background-color: #ffffff; border-top-style: none; border-bottom-style: none;"><div class="col col-md-1 text-center" style="padding: 0px;">
                       <div class="checkbox">
-                        <input type="hidden" name="data[Document][seal_impression]" id="seal_impression_" value="0"/>
-                        <input type="checkbox" name="data[Document][seal_impression]"  id="seal_impression" value="1" />
+                        <input type="checkbox" name="document_seal_certificate"  id="document_seal_certificate" {{$document->seal_certificate == 1 ?'checked':''}} />
                       </div>
                     </div>
                     <div class="col col-md-7" style="padding: 6px 0px;">
@@ -2757,8 +2753,7 @@ var token = "{{csrf_token()}}";
                 <tr>
                   <td colspan="2" class="form-horizontal" style="vertical-align: middle; background-color: #ffffff; border-top-style: none; border-bottom-style: none;"><div class="col col-md-1 text-center" style="padding: 0px;">
                       <div class="checkbox">
-                        <input type="hidden" name="data[Document][assignment]" id="assignment_" value="0"/>
-                        <input type="checkbox" name="data[Document][assignment]"  id="assignment" value="1" />
+                        <input type="checkbox" name="document_transfer_certificate"  id="document_transfer_certificate" {{$document->transfer_certificate == 1 ?'checked':''}} />
                       </div>
                     </div>
                     <div class="col col-md-7" style="padding: 6px 0px;">
@@ -2769,8 +2764,7 @@ var token = "{{csrf_token()}}";
                 <tr>
                   <td colspan="2" class="form-horizontal" style="vertical-align: middle; background-color: #ffffff; border-top-style: none; border-bottom-style: none;"><div class="col col-md-1 text-center" style="padding: 0px;">
                       <div class="checkbox">
-                        <input type="hidden" name="data[Document][commission]" id="commission_" value="0"/>
-                        <input type="checkbox" name="data[Document][commission]"  id="commission" value="1" />
+                        <input type="checkbox" name="document_power_attorney"  id="document_power_attorney" {{$document->power_attorney == 1 ?'checked':''}} />
                       </div>
                     </div>
                     <div class="col col-md-7" style="padding: 6px 0px;">
@@ -2782,8 +2776,7 @@ var token = "{{csrf_token()}}";
                  <td colspan="2" class="form-horizontal" style="vertical-align: middle; background-color: #ffffff; border-top-style: none; border-bottom-style: none;">
                      <div class="col col-md-1 text-center" style="padding: 0px;">
                       <div class="checkbox">
-                        <input type="hidden" name="data[Document][regidents_card]" id="regidents_card_" value="0" disabled="disabled"/>
-                        <input type="checkbox" name="data[Document][regidents_card]"  id="regidents_card" value="1" disabled="disabled"/>
+                        <input type="checkbox" name="document_resident_card"  id="document_resident_card" {{$document->resident_card == 1 ?'checked':''}} disabled="disabled"/>
                       </div>
                     </div>
                     <div class="col col-md-7" style="padding: 6px 0px;">
@@ -2796,23 +2789,21 @@ var token = "{{csrf_token()}}";
                 <tr>
                   <td colspan="2" class="form-horizontal" style="vertical-align: middle; background-color: #ffffff; border-top-style: none;"><div class="col col-md-1 text-center" style="padding: 0px;">
                       <div class="checkbox">
-                        <input type="hidden" name="data[Document][inheritance]" id="inheritance_" value="0" disabled="disabled"/>
-                        <input type="checkbox" name="data[Document][inheritance]"  id="inheritance" value="1" disabled="disabled"/>
+                        <input type="checkbox" name="document_inheritance"  id="document_inheritance" {{$document->inheritance == 1 ?'checked':''}} disabled="disabled"/>
                       </div>
                     </div>
                     <div class="col col-md-7" style="padding: 6px 0px;">
                       <label for="inheritance" style="margin:0;font-weight:normal;"> <del><span class="text-muted">遺産分割協議書</span></del> </label>
                     </div>
-                    <input type="hidden" name="data[Document][inheritance]" value="9"/>
                     <div class="col col-md-4" style="padding: 6px 0px;"> </div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">ナンバープレート</td>
                   <td style="vertical-align: middle;"><div class="col col-md-4 PL0">
-						<select name="data[AgreementOrder][License_Plate]" class="form-control input-sm" id="Licenseplate">
+						<select name="document_license_plate" class="form-control input-sm" id="document_license_plate">
 						  <option value="">----------</option>
-						  <option value="1">未着</option>
-						  <option value="2">到着</option>
+						  <option {{$document->license_plate == 1 ?'selected':''}} value="1">未着</option>
+						  <option {{$document->license_plate == 2 ?'selected':''}} value="2">到着</option>
 						</select>
 					</div>
 				  </td>
@@ -2820,13 +2811,13 @@ var token = "{{csrf_token()}}";
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">書類備考</td>
                   <td><div class="col col-md-10" style="padding-left: 0px;">
-                      <textarea name="data[Document][remark]" class="form-control input-sm" rows="3" cols="30" id="DocumentRemark">確認書（2/5吉成）
-2/6　上記書類発送（郵便）　山岡</textarea>
+                      <textarea name="document_remark" class="form-control input-sm" rows="3" cols="30" id="document_remark">{{$document->remark}}</textarea>
                     </div>
                    </td>
                 </tr>
               </tbody>
             </table>
+            </form>
           </div>
           <div>
             <table class="table table-bordered table-condensed info_table" style="margin-top: 20px;">

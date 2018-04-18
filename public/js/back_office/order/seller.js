@@ -16,14 +16,21 @@ $(document).ready(function() {
         	data: getSellerData(),
         	method:"POST",
         	success:function(result){
-        		
+        		if(result != null && result['status'] == true){
+        			alert("success");
+        		}else{
+        			alert("fail");
+        		}
+        	},
+        	error:function(result){
+
         	}
         })
         return false;
 	})
 	function getSellerData(){
 		var data = {};
-		data.id = $("#seller_id").val();
+		data.id = $("#seller_seller_id").val();
 		data.name = $("#seller_seller_name").val();
 		data.kana_name = $("#seller_seller_kana_name").val();
 		data.participant = $("#seller_seller_participant").val();
@@ -35,10 +42,10 @@ $(document).ready(function() {
 		data.home_phone2 = $("#seller_seller_home_phone2").val();
 		data.home_phone3 = $("#seller_seller_home_phone3").val();
 		data.home_phone4 = $("#seller_seller_home_phone4").val();
-		data.phone_check1 = $("#seller_seller_phone_check1").val();
-		data.phone_check2 = $("#seller_seller_phone_check2").val();
-		data.phone_check3 = $("#seller_seller_phone_check3").val();
-		data.phone_check4 = $("#seller_seller_phone_check4").val();
+		data.phone_check1 = $("#seller_seller_phone_check1").is(":checked")?1:0;
+		data.phone_check2 = $("#seller_seller_phone_check2").is(":checked")?1:0;
+		data.phone_check3 = $("#seller_seller_phone_check3").is(":checked")?1:0;
+		data.phone_check4 = $("#seller_seller_phone_check4").is(":checked")?1:0;
 		data.fax = $("#seller_seller_fax").val();
 		data.zip_code = $("#seller_seller_zip_code").val();
 		data.erea = $("#seller_seller_erea").val();

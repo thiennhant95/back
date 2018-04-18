@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 /*****************************************************************************
 * Helper
 ****************************************************************************
-* Executes the validate request, which is the superclass
+* Executes the validate request, which is the baseclass
 *
 **************************************************************************
 * @author: Nguyen
@@ -14,26 +14,28 @@ use Illuminate\Http\Request;
 
 abstract class ValidateRequest
 {
-	protected static $arr_rule = [];
+	protected static $_arr_rule = [];
 	protected function __construct(){
-    	$this->arr_rule = [
+    	$this->_arr_rule = [
     		'email' => 'email',
-    		'email1' => 'email'
+    		'email1' => 'email',
+    		'email2' => 'email',
+    		'zip_code' => 'number'
     	];
     }
 
-   	public static function setRule($arr){
-   		foreach ($arr as $key => $value) {
-   			if(!isset(self::$arr_rule[$key])){
-   				self::$arr_rule[$key] = "";
+   	public static function setRule($p_arrRule){
+   		foreach ($p_arrRule as $key => $value) {
+   			if(!isset(self::$_arr_rule[$key])){
+   				self::$_arr_rule[$key] = "";
    			}else{
-   				self::$arr_rule[$key] .= "|";
+   				self::$_arr_rule[$key] .= "|";
    			}
-   			self::$arr_rule[$key] .= $value;
+   			self::$_arr_rule[$key] .= $value;
    		}
    	}
 
 	public static function validate(Request $request){
-		$request->validate(self::$arr_rule);
+		$request->validate(self::$_arr_rule);
 	}
 }

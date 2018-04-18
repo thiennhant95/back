@@ -337,7 +337,7 @@ $(function(){
 
 
 // 対応履歴入力
-	$(document).on('click', '.add_inquiry_detail', function(){
+	/*$(document).on('click', '.add_inquiry_detail', function(){
 		var add_link = $(this);
 		var div = $(this).parent();
 		var inquiry_id = add_link.attr('inquiry_id');
@@ -393,7 +393,7 @@ $(function(){
 				calling_input.attr('readonly', false);
 			});
 		return false;
-	});
+	});*/
 
 // SMS送信
 	$(document).on('click', '.send_short_message', function(){
@@ -795,7 +795,7 @@ $(function(){
 		return false;
 	});
 
-	$(document).on('click', '#edit_own_car_photos', function(){
+	/*$(document).on('click', '#edit_own_car_photos', function(){
 		// 順位指定に重複無いかチェック
 		var positions = [0,
 				0,
@@ -830,7 +830,7 @@ $(function(){
 				return false;
 			}
 		}
-	});
+	});*/
 	$(".colorbox").colorbox({photo: true, rel:'gal', maxWidth:'90%'});
 	$('.inline_colorbox').colorbox({
 		inline:true
@@ -1575,7 +1575,7 @@ $(function(){
 	});
 
 // 顧客情報編集
-	$(document).on('click', '.edit_customer', function(){
+/*	$(document).on('click', '.edit_customer', function(){
 		var edit_link = $(this);
 		var div = $(this).parent();
 		var id = edit_link.attr('customer_id');
@@ -1745,10 +1745,10 @@ $(function(){
 				div.html(prev_html);
 			});
 		return false;
-	});
+	});*/
 
 // 口座情報編集
-	$(document).on('click', '.edit_account', function(){
+/*	$(document).on('click', '.edit_account', function(){
 		var edit_link = $(this);
 		var div = $(this).parent();
 		var agreement_order_id = edit_link.attr('agreement_order_id');
@@ -1806,10 +1806,10 @@ $(function(){
 			div.html(prev_html);
 		});
 		return false;
-	});
+	});*/
 
 // 引取情報編集
-	$(document).on('click', '.edit_trade', function(){
+	/*$(document).on('click', '.edit_trade', function(){
 		var edit_link = $(this);
 		var div = $(this).parent();
 		var trade_id = edit_link.attr('trade_id');
@@ -1928,7 +1928,7 @@ $(function(){
 			});
 		return false;
 	});
-
+*/
 // 第二引取情報編集
 	$(document).on('click', '.edit_second_trade', function(){
 		var edit_link = $(this);
@@ -3072,7 +3072,7 @@ $(function(){
 	});
 
 // 車両情報編集
-	$(document).on('click', '.edit_own_car', function(event){
+	/*$(document).on('click', '.edit_own_car', function(event){
 		var own_car = {};
 		var inquiry = {};
 		var agreement_order = {};
@@ -3261,10 +3261,10 @@ $(function(){
 		});
 
 		return false;
-	});
+	});*/
 
 //問い合わせ情報編集
-	$(document).on('click', '.edit_inquiry', function(event){
+/*	$(document).on('click', '.edit_inquiry', function(event){
 		event.preventDefault();
 		var inquiry = {};
 
@@ -3313,7 +3313,7 @@ $(function(){
 		});
 
 		return false;
-	});
+	});*/
 
 //引取完了差戻し
 	$(document).on('click','.revert_trade',function(){

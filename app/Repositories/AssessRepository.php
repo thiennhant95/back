@@ -28,12 +28,13 @@ class AssessRepository extends BaseRepository
     ***************************************************************************
     */
 
-    public function GetSearchAssess($photographer_cd=null,$name=null,$phone_number=null,$email=null,$erea_id=null,$zone_id=null,$n)
+    public function GetSearchAssess($photographer_cd=null,$name=null,$phone_number=null,$email=null,$erea_id=null,$address=null,$n)
     {
     	$name = '%'.$name.'%';
     	$phone_number = '%'.$phone_number.'%';
     	$email = '%'.$email.'%';
-    	$query = Assess::select('assess.*')->where('assess.name','like',$name)->where('phonetic','like',$phone_number)->where('email1','like',$email);
+        $address = '%'.$address.'%';
+    	$query = Assess::select('assess.*')->where('assess.name','like',$name)->where('phone1','like',$phone_number)->where('email1','like',$email)->where('address','like',$address);
 		if($photographer_cd != '')
     	{
     		$query = $query->where('assess.id','=',$photographer_cd);
@@ -41,10 +42,6 @@ class AssessRepository extends BaseRepository
     	if($erea_id != '')
     	{
     		$query = $query->where('erea_id','=',$erea_id);
-    	}
-    	if($zone_id != '')
-    	{
-    		$query = $query->join('erea', 'erea.id', '=', 'assess.erea_id')->where('erea.zone_id','=',$zone_id);
     	}
     	$query = $query->paginate($n);
     	return $query;

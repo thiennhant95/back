@@ -6,6 +6,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesResources;
 use Illuminate\Support\Facades\Auth;
 
 class Controller extends BaseController
@@ -16,10 +17,9 @@ class Controller extends BaseController
     {
         $this->CheckLogin();
     }
-
     /**
      *
-     * Check user logged/not logged in
+     *
      * @access public
      * @author Tran Thien Nhan- VietVang JSC
      */
@@ -29,7 +29,7 @@ class Controller extends BaseController
         {
         }
         else{
-            return redirect()->route('login.html');
+            return redirect('login.html');
         }
     }
 }
