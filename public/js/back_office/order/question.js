@@ -1,15 +1,9 @@
 $(document).ready(function() {
     $("#question_form").validate({
             rules : {
-                retrieval_first_date:{
-                    date:true,
+                question_input:{
+                    requỉed:true,
                 },
-                retrieval_second_date:{
-                    date:true,
-                },
-                retrieval_third_date:{
-                    date:true,
-                }
             }, tooltip_options: {
             }
     });

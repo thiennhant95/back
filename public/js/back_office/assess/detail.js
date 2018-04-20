@@ -34,5 +34,5 @@ $(function(){
   $('#contractdate').datepicker({
   });
   
-  $('#PhotographerEditForm').disableOnSubmit();
+  $('#photographerEditForm').disableOnSubmit();
 });

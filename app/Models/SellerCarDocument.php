@@ -20,6 +20,7 @@ class SellerCarDocument extends Model
 		'cancel_type',
 		'shipment',
 		'document_arrival',
+		'condition',
 		'vehicle_license',
 		'insurance_card',
 		'recycling_ticket',

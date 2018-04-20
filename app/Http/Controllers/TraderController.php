@@ -12,10 +12,12 @@ use App\Repositories\TraderRepository;
 use App\Repositories\EreaRepository;
 use App\Repositories\ZoneRepository;
 use Illuminate\Support\Facades\Route;
+use App\ValidateRequest\ValidateRequestTrader;
+use Hash;
 
 /**
  ***************************************************************************
- * Controller management Trader
+ * Controller management trader
  ***************************************************************************
  *
  * This is a controller management trader
@@ -23,17 +25,19 @@ use Illuminate\Support\Facades\Route;
  ***************************************************************************
  * @author: Nhan Viet Vang
  *****************************************
-**/
+ **/
 class TraderController extends Controller
 {
     protected $TraderRepository;
+    protected $ereaRepository;
+    protected $zoneRepository;
+    protected $Validate;
     public function __construct()
     {
         $this->TraderRepository = new TraderRepository;
         $this->ereaRepository = new EreaRepository;
         $this->zoneRepository = new ZoneRepository;
     }
-
     /**
      * Function index
      * Get all information of an object
@@ -54,27 +58,88 @@ class TraderController extends Controller
         }
         #get list erea
         $data['list_erea'] = $list_erea;
-        $data['list_trader'] = $this->TraderRepository->getPaginate(5);
+        $data['list_trader'] = $this->TraderRepository->getPaginate(2);
+//        echo "<pre>";
+//        print_r($data['list_trader']);
+//        die();
         $search = $request->input('data');
         $pagination_url = 'trader?';
         //search
         if($request->isMethod('post'))
         {
-            $data['list_trader'] = $this->TraderRepository->GetSearchTrader($search['Trader'],5);
-            $pagination_url .= ($search['Trader']['name'] !== '') ? '&t=' . $search['Trader']['name'] : null;
-            $pagination_url .= ($search['Trader']['phone_number'] !== '') ? '&p=' . $search['Trader']['phone_number'] : null;
-            $pagination_url .= ($search['Trader']['email'] !== '') ? '&e=' . $search['Trader']['email'] : null;
-            $pagination_url .= ($search['Trader']['pref_id'] !== '') ? '&r=' . $search['Trader']['pref_id'] : null;
-            $pagination_url .= ($search['Trader']['staff'] !== '') ? '&z=' . $search['Trader']['staff'] : null;
-            $pagination_url .= ($search['Trader']['staff'] !== '') ? '&a=' . $search['Trader']['service_start_date'] : null;
-            $pagination_url .= ($search['Trader']['staff'] !== '') ? '&b=' . $search['Trader']['service_end_date'] : null;
-            $pagination_url .= ($search['Trader']['staff'] !== '') ? '&c=' . $search['Trader']['curio_start_date'] : null;
-            $pagination_url .= ($search['Trader']['staff'] !== '') ? '&d=' . $search['Trader']['curio_start_date'] : null;
+            $data['list_trader'] = $this->TraderRepository->GetSearchTrader($search['trader'],2);
+            $pagination_url .= ($search['trader']['name'] !== '') ? '&name=' . $search['trader']['name'] : null;
+            $pagination_url .= ($search['trader']['phone_number'] !== '') ? '&phone=' . $search['trader']['phone_number'] : null;
+            $pagination_url .= ($search['trader']['email'] !== '') ? '&email=' . $search['trader']['email'] : null;
+            $pagination_url .= ($search['trader']['pref_id'] !== '') ? '&erea=' . $search['trader']['pref_id'] : null;
+            $pagination_url .= ($search['trader']['staff'] !== '') ? '&status=' . $search['trader']['staff'] : null;
+            $pagination_url .= ($search['trader']['service_start_date'] !== '') ? '&service_start=' . $search['trader']['service_start_date'] : null;
+            $pagination_url .= ($search['trader']['service_end_date'] !== '') ? '&service_end=' . $search['trader']['service_end_date'] : null;
+            $pagination_url .= ($search['trader']['curio_start_date'] !== '') ? '&curio_start=' . $search['trader']['curio_start_date'] : null;
+            $pagination_url .= ($search['trader']['curio_end_date'] !== '') ? '&curio_end=' . $search['trader']['curio_end_date'] : null;
+            $pagination_url .= ($search['trader']['bring_assessment'] !== '') ? '&bring=' . $search['trader']['bring_assessment'] : null;
+            $pagination_url .= ($search['trader']['assessment_classification'] !== '') ? '&classification=' . $search['trader']['assessment_classification'] : null;
+            $pagination_url .= (isset($search['trader']['excess_deficit_money']) && $search['trader']['excess_deficit_money'] !== '') ? '&deficit=' . $search['trader']['excess_deficit_money'] : '';
+            $pagination_url .= (isset($search['trader']['bid_approval']) && $search['trader']['bid_approval'] !== '') ? '&bid=' . $search['trader']['bid_approval'] : null;
             $data['list_trader']->setPath($pagination_url);
         }
         else
         {
+            if(isset($_GET['name']) && isset($_GET['phone']) && isset($_GET['email']) && isset($_GET['erea']) && isset($_GET['status'])
+                && isset($_GET['service_start'] )&& isset($_GET['service_end']) && isset($_GET['curio_start']) && isset($_GET['curio_end'])
+                && isset($_GET['bring'] )&& isset($_GET['classification']))
+            {
+                $search['trader']=[
+                    'name' => $_GET['name'],
+                    'phone_number' => $_GET['phone'],
+                    'email' => $_GET['email'],
+                    'pref_id' => $_GET['erea'],
+                    'staff' => $_GET['status'],
+                    'service_start_date' => $_GET['service_start'],
+                    'service_end_date' => $_GET['service_end'],
+                    'curio_start_date' => $_GET['curio_start'],
+                    'curio_end_date' => $_GET['curio_end'],
+                    'bring_assessment' => $_GET['bring'],
+                    'assessment_classification' => $_GET['classification'],
+                ];
+                if (isset($_GET['deficit']))
+                {
+                    $search['trader']=[
+                        'excess_deficit_money' => $_GET['deficit']
+                    ];
+                }
+                if (isset($_GET['bid_approval']))
+                {
+                    $search['trader']=[
+                        'bid_approval' => $_GET['bid']
+                    ];
+                }
+                $data['list_trader'] = $this->TraderRepository->GetSearchTrader($search['trader'],2);
+                $pagination_url .= ($search['trader']['name'] !== '') ? 'name=' . $search['trader']['name'] : 'name=';
+                $pagination_url .= ($search['trader']['phone_number'] !== '') ? '&phone=' . $search['trader']['phone_number'] : '&phone=';
+                $pagination_url .= ($search['trader']['email'] !== '') ? '&email=' . $search['trader']['email'] : '&email=';
+                $pagination_url .= ($search['trader']['pref_id'] !== '') ? '&erea=' . $search['trader']['pref_id']: '&erea=';
+                $pagination_url .= ($search['trader']['staff'] !== '') ? '&status=' . $search['trader']['staff'] : '&status=';
+                $pagination_url .= ($search['trader']['service_start_date'] !== '') ? '&service_start=' . $search['trader']['service_start_date'] : '&service_start=';
+                $pagination_url .= ($search['trader']['service_end_date'] !== '') ? '&service_end=' . $search['trader']['service_end_date'] : '&service_end=';
+                $pagination_url .= ($search['trader']['curio_start_date'] !== '') ? '&curio_start=' . $search['trader']['curio_start_date'] : '&curio_start=';
+                $pagination_url .= ($search['trader']['curio_end_date'] !== '') ? '&curio_end=' . $search['trader']['curio_end_date'] : '&curio_end=';
+                $pagination_url .= ($search['trader']['bring_assessment'] !== '') ? '&bring=' .$search['trader']['bring_assessment']: '&bring=';
+                $pagination_url .= ($search['trader']['assessment_classification'] !== '') ? '&classification=' . $search['trader']['assessment_classification'] : '&classification=';
+                $pagination_url .= (isset($search['trader']['excess_deficit_money']) && $search['trader']['excess_deficit_money'] !== '') ? '&excess_deficit_money=' . $search['trader']['excess_deficit_money'] : '&excess_deficit_money=';
+                $pagination_url .= (isset($search['trader']['bid_approval']) && $search['trader']['bid_approval'] !== '') ? '&bid=' . $search['trader']['bid_approval'] : '&bid=';
+                $data['list_trader']->setPath($pagination_url);
+            }
 
+            if(isset($_GET['col']) && isset($_GET['sort']))
+            {
+                $col = $_GET['col'];
+                $sort = $_GET['sort'];
+                $data['list_trader'] = $this->TraderRepository->GetSort($col,$sort,2);
+                $pagination_url .= ($col !== '') ? 'col=' . $col : 'col=';
+                $pagination_url .= ($sort !== '') ? '&sort=' . $sort : '&sort=';
+                $data['list_trader']->setPath($pagination_url);
+            }
         }
         return view('trader.index',$data);
     }
@@ -94,8 +159,6 @@ class TraderController extends Controller
             $column = $request->input('column');
             $list_trader = $this->TraderRepository->GetSort($column,$sort,5);
             $content = '';
-            print_r($list_trader);
-            exit();
             $pagination_url = 'trader?';
             $data['count_list_trader'] = count($list_trader);
             foreach ($list_trader as $trader)
@@ -103,16 +166,43 @@ class TraderController extends Controller
                 $data['id'][] = $trader->id;
                 $data['name'][] = $trader->name;
                 $data['phonetic'][] = $trader->phonetic;
-                $data['email1'][] = $trader->email1;
-                $data['traderment_frequency'][] = $trader->traderment_frequency;
-                $data['report_delivery_method'][] = $trader->report_delivery_method;
-                $data['number_complain'][] = $trader->number_complain;
+                $data['zip_code'][] = $trader->zip_code;
+                $data['address'][]=$trader->address;
+                $data['phone'][]=$trader->phone;
+                $data['fax'][]=$trader->fax;
+                if ($trader->fax==0)
+                {
+                    $data['member_status']="非会員";
+                }
+                elseif($trader->fax==1)
+                {
+                    $data['member_status']="無料会員";
+                }
+                elseif($trader->fax==2)
+                {
+                    $data['member_status']="有料会員";
+                }
+                elseif($trader->fax==3)
+                {
+                    $data['member_status']="取引中止";
+                }
+                $data['credit'][] = number_format($trader->credit);
+                $data['excess_deficit_money'][] = number_format($trader->excess_deficit_money);
+                $trader->bring_assessment=='1'?$data['bring_assessment'][] ='不可':$data['bring_assessment'][]='可';
+                $trader->assessment_classification=='1'?$data['assessment_classification'][] ='不可':$data['assessment_classification'][]='可';
+                $trader->bid_approval=='1'?$data['bid_approval'][] ='不可':$data['bid_approval'][]='可';
+
+//                $data['email'][] = $trader->email;
+//                $data['report_delivery_method'][] = $trader->report_delivery_method;
+//                $data['number_complain'][] = $trader->number_complain;
             }
+            print_r($data);
+            exit();
             $pagination_url .= ($column !== '' && $sort !== '') ? 'col=' . $column . '&sort=' . $sort : null;
             $list_trader->setPath($pagination_url);
             $data['content'] = $content;
             $data['pagination'] = $list_trader->links()->toHtml();
-            return json_encode( $data );
+            return json_encode( $data);
         }
     }
 
@@ -137,70 +227,86 @@ class TraderController extends Controller
         #if post != null
         if($request->isMethod('post'))
         {
+
             #get data input
             $data = $request->input('data');
-            $info_trader['name'] = $data['Trader']['name'];
-            $info_trader['zip_code'] = $data['Trader']['zip_code'];
-            $info_trader['erea_id'] = $data['Trader']['pref_id'];
-            $info_trader['zip_code'] = $data['Trader']['zip_code'];
-            $info_trader['address'] = $data['Trader']['address'];
-            $info_trader['phone'] = $data['Trader']['phone_number'];
-            $info_trader['fax'] = $data['Trader']['fax_number'];
-            $info_trader['building_name'] = $data['Trader']['building_name'];
-            $info_trader['destination_fax'] = $data['Trader']['destination_fax'];
-            $info_trader['contact_name'] = $data['Trader']['contact_name'];
-            $info_trader['furigana_name'] = $data['Trader']['furigana_name'];
-            $info_trader['furigana_phone'] = $data['Trader']['furigana_phone'];
-            $info_trader['email'] = $data['Trader']['email'];
-            $info_trader['website'] = $data['Trader']['website'];
-            $info_trader['service_date'] = $data['Trader']['service_date'];
-            $info_trader['curio_date'] = $data['Trader']['curio_date'];
-            $info_trader['permit_number'] = $data['Trader']['permit_number'];
-            $info_trader['document_confirmation_date'] = $data['Trader']['document_confirmation_date'];
-            $info_trader['remark'] = $data['Trader']['remark'];
-            $info_trader['assessment_area'] = $data['Trader']['assessment_area'];
-            $info_trader['assessment_classification'] = $data['Trader']['assessment_classification'];
-            $info_trader['assessment_level'] = $data['Trader']['assessment_level'];
-            $info_trader['assessment_price'] = $data['Trader']['assessment_price'];
-            $info_trader['assessment_trip'] = $data['Trader']['assessment_trip'];
-            $info_trader['remark1'] = $data['Trader']['remark1'];
-            $info_trader['member_status'] = $data['Trader']['member_status'];
-            $info_trader['remark2'] = $data['Trader']['remark2'];
-            $info_trader['bid_approval'] = $data['Trader']['bid_approval'];
-            $info_trader['service_classification'] = $data['Trader']['service_classification'];
-            $info_trader['remark3'] = $data['Trader']['remark3'];
-            $info_trader['email_classification'] = $data['Trader']['email_classification'];
-            $info_trader['new_email'] = $data['Trader']['new_email'];
-            $info_trader['promotion_email_classification'] = $data['Trader']['promotion_email_classification'];
-            $info_trader['promotion_email'] = $data['Trader']['promotion_email'];
-            $info_trader['business_email_classification'] = $data['Trader']['business_email_classification'];
-            $info_trader['business_email'] = $data['Trader']['business_email'];
-            $info_trader['parent_company'] = $data['Trader']['parent_company'];
-            $info_trader['business_type'] = $data['Trader']['business_type'];
-            $info_trader['member_status'] = $data['Trader']['member_status'];
-            $info_trader['category'] = implode(',',$data['Trader']['category']);
-            $info_trader['additional_correspondence'] =implode(',',$data['Trader']['additional_correspondence']);
-            $info_trader['withdraw_method'] = $data['Trader']['withdraw_method'];
-            $info_trader['number_transaction'] = $data['Trader']['number_transaction'];
-            $info_trader['complaint_count'] = $data['Trader']['complaint_count'];
-            $info_trader['remark4'] = $data['Trader']['remark4'];
-            $info_trader['claim_number'] = $data['Trader']['claim_number'];
-            $info_trader['remark5'] = $data['Trader']['remark5'];
-            $info_trader['payment_closing_date'] = $data['Trader']['payment_closing_date'];
-            $info_trader['customer_degree'] = $data['Trader']['customer_degree'];
-            $info_trader['method_statement'] = $data['Trader']['method_statement'];
-            $info_trader['credit'] = $data['Trader']['credit'];
-            $info_trader['deposite'] = $data['Trader']['deposite'];
-            $info_trader['excess_deficit money'] = $data['Trader']['excess_deficit money'];
-            $info_trader['bank_name'] = $data['Trader']['bank_name'];
-            $info_trader['bank_code'] = $data['Trader']['bank_code'];
-            $info_trader['branch_name'] = $data['Trader']['branch_name'];
-            $info_trader['branch_code'] = $data['Trader']['branch_code'];
-            $info_trader['account_type'] = $data['Trader']['account_type'];
-            $info_trader['account_number'] = $data['Trader']['account_number'];
-            $info_trader['account_number'] = $data['Trader']['promotion_email'];
-            $info_trader['account_holder'] = $data['Trader']['account_holder'];
 
+            #validate input
+            ValidateRequestTrader::validateTrader($request);
+
+            #set data input to array insert
+            $info_trader['name'] = $data['trader']['name'];
+            $info_trader['phonetic'] = $data['trader']['phonetic'];
+            $info_trader['zip_code'] = $data['trader']['zip_code'];
+            $info_trader['erea_id'] = $data['trader']['pref_id'];
+            $info_trader['zip_code'] = $data['trader']['zip_code'];
+            $info_trader['address'] = $data['trader']['address'];
+            $info_trader['phone'] = $data['trader']['phone_number'];
+            $info_trader['fax'] = $data['trader']['fax_number'];
+            $info_trader['building_name'] = $data['trader']['building_name'];
+            $info_trader['destination_fax'] = $data['trader']['destination_fax'];
+            $info_trader['contact_name'] = $data['trader']['contact_name'];
+            $info_trader['furigana_name'] = $data['trader']['furigana_name'];
+            $info_trader['furigana_phone'] = $data['trader']['furigana_phone'];
+            $info_trader['email'] = $data['trader']['email'];
+            $info_trader['website'] = $data['trader']['website'];
+            $info_trader['service_date'] = $data['trader']['service_date'];
+            $info_trader['curio_date'] = $data['trader']['curio_date'];
+            $info_trader['permit_number'] = $data['trader']['permit_number'];
+            $info_trader['document_confirmation_date'] = $data['trader']['document_confirmation_date'];
+            $info_trader['remark'] = $data['trader']['remark'];
+            $info_trader['bring_asssessment'] = $data['trader']['bring_assessment'];
+            $info_trader['bought_level'] = $data['trader']['bought_level'];
+            $info_trader['bought_price'] = intval(preg_replace('/[^\d.]/', '', $data['trader']['bought_price']));
+            $info_trader['bought_frequency'] = $data['trader']['bought_frequency'];
+            $info_trader['assessment_area'] = $data['trader']['assessment_area'];
+            $info_trader['assessment_classification'] = $data['trader']['assessment_classification'];
+            $info_trader['assessment_level'] = $data['trader']['assessment_level'];
+            $info_trader['assessment_price'] = intval(preg_replace('/[^\d.]/', '', $data['trader']['assessment_price']));
+            $info_trader['assessment_trip'] = $data['trader']['assessment_trip'];
+            $info_trader['remark1'] = $data['trader']['remark1'];
+            $info_trader['member_status'] = $data['trader']['member_status'];
+            $info_trader['remark2'] = $data['trader']['remark2'];
+            $info_trader['bid_approval'] = $data['trader']['bid_approval'];
+            $info_trader['service_classification'] = $data['trader']['service_classification'];
+            $info_trader['remark3'] = $data['trader']['remark3'];
+            $info_trader['email_classification'] = $data['trader']['email_classification'];
+            $info_trader['new_email'] = $data['trader']['new_email'];
+            $info_trader['promotion_email_classification'] = $data['trader']['promotion_email_classification'];
+            $info_trader['promotion_email'] = $data['trader']['promotion_email'];
+            $info_trader['business_email_classification'] = $data['trader']['business_email_classification'];
+            $info_trader['business_email'] = $data['trader']['business_email'];
+            $info_trader['parent_company'] = $data['trader']['parent_company'];
+            $info_trader['business_type'] = $data['trader']['business_type'];
+            $info_trader['member_status'] = $data['trader']['member_status'];
+            $info_trader['category'] = implode(',',$data['trader']['category']);
+            $info_trader['additional_correspondence'] =implode(',',$data['trader']['additional_correspondence']);
+            $info_trader['withdraw_method'] = $data['trader']['withdraw_method'];
+            $info_trader['complaint_count'] = $data['trader']['complaint_count'];
+            $info_trader['remark4'] = $data['trader']['remark4'];
+            $info_trader['claim_number'] = $data['trader']['claim_number'];
+            $info_trader['remark5'] = $data['trader']['remark5'];
+            $info_trader['remark6'] = $data['trader']['remark6'];
+            $info_trader['remark7'] = $data['trader']['remark7'];
+            $info_trader['payment_closing_date'] = $data['trader']['payment_closing_date'];
+            $info_trader['customer_degree'] = $data['trader']['customer_degree'];
+            $info_trader['method_statement'] = $data['trader']['method_statement'];
+            $info_trader['credit'] = $data['trader']['credit'];
+            $info_trader['deposite'] = $data['trader']['deposite'];
+            $info_trader['excess_deficit_money'] = $data['trader']['excess_deficit_money'];
+            $info_trader['bank_name'] = $data['trader']['bank_name'];
+            $info_trader['bank_code'] = $data['trader']['bank_code'];
+            $info_trader['branch_name'] = $data['trader']['branch_name'];
+            $info_trader['branch_code'] = $data['trader']['branch_code'];
+            $info_trader['account_type'] = $data['trader']['account_type'];
+            $info_trader['account_number'] = $data['trader']['account_number'];
+            $info_trader['account_holder'] = $data['trader']['account_holder'];
+
+            //if password!=null
+            if (isset($data['trader']['password']))
+            {
+                $info_trader['password'] = Hash::make($data['trader']['password']);
+            }
             //if insert data trader success
             if ($insert = $this->TraderRepository->store($info_trader))
             {
@@ -222,10 +328,198 @@ class TraderController extends Controller
      * @return boolean
      * @author Nhan- VietVang JSC
      */
-    public function edit(Request $request)
+    public function edit(Request $request,$id)
     {
+        $list_zone = $this->zoneRepository->GetZoneAll();
+        $data['list_zone'] = $list_zone;
+        foreach($list_zone as $zone)
+        {
+            $list_erea[$zone->id] = array();
+            $list_erea[$zone->id] = $this->ereaRepository->GetZoneErea($zone->id);
+        }
+        $data['list_erea'] = $list_erea;
+        $data['trader'] = $this->TraderRepository->getById($id);
+        if($request->isMethod('post'))
+        {
 
+            #get data input
+            $data = $request->input('data');
+
+            #validate input
+            ValidateRequestTrader::validateTrader($request);
+
+            #set data input to array update
+            $info_trader['name'] = $data['trader']['name'];
+            $info_trader['phonetic'] = $data['trader']['phonetic'];
+            $info_trader['zip_code'] = $data['trader']['zip_code'];
+            $info_trader['erea_id'] = $data['trader']['pref_id'];
+            $info_trader['zip_code'] = $data['trader']['zip_code'];
+            $info_trader['address'] = $data['trader']['address'];
+            $info_trader['phone'] = $data['trader']['phone_number'];
+            $info_trader['fax'] = $data['trader']['fax_number'];
+            $info_trader['building_name'] = $data['trader']['building_name'];
+            $info_trader['destination_fax'] = $data['trader']['destination_fax'];
+            $info_trader['contact_name'] = $data['trader']['contact_name'];
+            $info_trader['furigana_name'] = $data['trader']['furigana_name'];
+            $info_trader['furigana_phone'] = $data['trader']['furigana_phone'];
+            $info_trader['email'] = $data['trader']['email'];
+            $info_trader['website'] = $data['trader']['website'];
+            $info_trader['service_date'] = $data['trader']['service_date'];
+            $info_trader['curio_date'] = $data['trader']['curio_date'];
+            $info_trader['permit_number'] = $data['trader']['permit_number'];
+            $info_trader['document_confirmation_date'] = $data['trader']['document_confirmation_date'];
+            $info_trader['remark'] = $data['trader']['remark'];
+            $info_trader['bring_asssessment'] = $data['trader']['bring_assessment'];
+            $info_trader['bought_level'] = $data['trader']['bought_level'];
+            $info_trader['bought_price'] = intval(preg_replace('/[^\d.]/', '', $data['trader']['bought_price']));
+            $info_trader['bought_frequency'] = $data['trader']['bought_frequency'];
+            $info_trader['assessment_area'] = $data['trader']['assessment_area'];
+            $info_trader['assessment_classification'] = $data['trader']['assessment_classification'];
+            $info_trader['assessment_level'] = $data['trader']['assessment_level'];
+            $info_trader['assessment_price'] = intval(preg_replace('/[^\d.]/', '', $data['trader']['assessment_price']));
+            $info_trader['assessment_trip'] = $data['trader']['assessment_trip'];
+            $info_trader['remark1'] = $data['trader']['remark1'];
+            $info_trader['member_status'] = $data['trader']['member_status'];
+            $info_trader['remark2'] = $data['trader']['remark2'];
+            $info_trader['bid_approval'] = $data['trader']['bid_approval'];
+            $info_trader['service_classification'] = $data['trader']['service_classification'];
+            $info_trader['remark3'] = $data['trader']['remark3'];
+            $info_trader['email_classification'] = $data['trader']['email_classification'];
+            $info_trader['new_email'] = $data['trader']['new_email'];
+            $info_trader['promotion_email_classification'] = $data['trader']['promotion_email_classification'];
+            $info_trader['promotion_email'] = $data['trader']['promotion_email'];
+            $info_trader['business_email_classification'] = $data['trader']['business_email_classification'];
+            $info_trader['business_email'] = $data['trader']['business_email'];
+            $info_trader['parent_company'] = $data['trader']['parent_company'];
+            $info_trader['business_type'] = $data['trader']['business_type'];
+            $info_trader['member_status'] = $data['trader']['member_status'];
+            $info_trader['category'] = implode(',',$data['trader']['category']);
+            $info_trader['additional_correspondence'] =implode(',',$data['trader']['additional_correspondence']);
+            $info_trader['withdraw_method'] = $data['trader']['withdraw_method'];
+            $info_trader['complaint_count'] = $data['trader']['complaint_count'];
+            $info_trader['remark4'] = $data['trader']['remark4'];
+            $info_trader['claim_number'] = $data['trader']['claim_number'];
+            $info_trader['remark5'] = $data['trader']['remark5'];
+            $info_trader['remark6'] = $data['trader']['remark6'];
+            $info_trader['remark7'] = $data['trader']['remark7'];
+            $info_trader['payment_closing_date'] = $data['trader']['payment_closing_date'];
+            $info_trader['customer_degree'] = $data['trader']['customer_degree'];
+            $info_trader['method_statement'] = $data['trader']['method_statement'];
+            $info_trader['credit'] = $data['trader']['credit'];
+            $info_trader['deposite'] = $data['trader']['deposite'];
+            $info_trader['excess_deficit_money'] = $data['trader']['excess_deficit_money'];
+            $info_trader['bank_name'] = $data['trader']['bank_name'];
+            $info_trader['bank_code'] = $data['trader']['bank_code'];
+            $info_trader['branch_name'] = $data['trader']['branch_name'];
+            $info_trader['branch_code'] = $data['trader']['branch_code'];
+            $info_trader['account_type'] = $data['trader']['account_type'];
+            $info_trader['account_number'] = $data['trader']['account_number'];
+            $info_trader['account_holder'] = $data['trader']['account_holder'];
+
+            //if password!=null
+            if (isset($data['trader']['password']))
+            {
+                $info_trader['password'] = Hash::make($data['trader']['password']);
+            }
+            //if update data trader success
+            if ($insert = $this->TraderRepository->update($id,$info_trader))
+            {
+                return redirect('trader')->with('message','Updated!');
+            }
+            //if update data trader fail
+            else
+            {
+                return redirect('trader/update/'.$id)->with('message','Update Fail!');
+            }
+        }
+        return view('trader.detail',$data);
     }
 
 
+    /**
+     * Get and save name trader by session to trader erea
+     * @access public
+     * @author Nhan- VietVang JSC
+     */
+    public function getinfo(Request $request)
+    {
+        $request->session()->put('trader_first_name',$request->input('first_name'));
+        if($request->input('corresponding_erea')  !== null)
+        {
+            $request->session()->put('corresponding_erea',$request->input('corresponding_erea'));
+            echo session()->get('corresponding_erea');
+        }
+//        echo $request->input('first_name');
+//        echo session()->get('trader_first_name');
+//        echo session()->get('corresponding_erea');
+//        die();
+    }
+
+    /**
+     * Controller edit return view trader erea
+     * @access public
+     * @author Nhan- VietVang JSC
+     */
+    public function area(Request $request)
+    {
+        $list_zone = $this->zoneRepository->GetZoneAll();
+        $data['list_zone'] = $list_zone;
+        return view('trader.area',$data);
+    }
+
+    /**
+     * Controller edit return view trader erea
+     * @access public
+     * @author Nhan- VietVang JSC
+     */
+    public function ajaxerea(Request $request)
+    {
+        $select_erea = $request->input('select_erea');
+        $get_erea = $this->ereaRepository->GetZoneErea($select_erea);
+        $count_erea = count($get_erea);
+        $data = $get_erea;
+        $data['count_erea'] = $count_erea;
+        return json_encode($data);
+    }
+
+    /**
+     * Controller save erea selected by session
+     * @access public
+     * @author Nhan- VietVang JSC
+     */
+    public function saveerea(Request $request)
+    {
+        $request->session()->put('save_erea',$request->input('save_erea'));
+    }
+
+    /**
+     * Controller get Erea selected to view add/ edit
+     * @access public
+     * @author Nhan- VietVang JSC
+     */
+    public function getErea(Request $request)
+    {
+        $data=['erea'=>$erea=session()->get('save_erea')];
+        echo json_encode($data);
+        die();
+    }
+
+    /**
+     ***************************************************************************
+     * Created: 2018/04/19
+     * Load zone edit assess
+     ***************************************************************************
+     * @author: Duy
+     *
+     ***************************************************************************
+     */
+    public function loadzone(Request $request)
+    {
+        $erea = $request->input('erea');
+        $get_erea = $this->zoneRepository->GetZoneByName($erea);
+        if($get_erea->name != null)
+        {
+            $request->session()->put('zone',$get_erea->name);
+        }
+    }
 }

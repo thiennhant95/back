@@ -34,10 +34,10 @@ class AssessRepository extends BaseRepository
     	$phone_number = '%'.$phone_number.'%';
     	$email = '%'.$email.'%';
         $address = '%'.$address.'%';
-    	$query = Assess::select('assess.*')->where('assess.name','like',$name)->where('phone1','like',$phone_number)->where('email1','like',$email)->where('address','like',$address);
+    	$query = Assess::select('assess.*')->where('assess.name','like',$name)->where('phone1','like',$phone_number)->where('email1','like',$email)->where('address1','like',$address);
 		if($photographer_cd != '')
     	{
-    		$query = $query->where('assess.id','=',$photographer_cd);
+    		$query = $query->where('assess1.id','=',$photographer_cd);
     	}
     	if($erea_id != '')
     	{

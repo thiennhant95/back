@@ -1,8 +1,8 @@
 $(document).ready(function() {
 	$("#status_form").validate({
             rules : {
-            	status_re_tel_date:{
-            		date:true,
+            	status_word_preparation:{
+            		maxlength:50,
             	}
             }, tooltip_options: {
             }

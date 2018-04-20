@@ -24,6 +24,20 @@ var token = "{{csrf_token()}}";
 <script type="text/javascript" src="{{ url('js/back_office/order/status.js') }}"></script>
 <script type="text/javascript" src="{{ url('js/back_office/order/document.js') }}"></script>
 <script type="text/javascript" src="{{ url('js/back_office/order/account.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/back_office/order/information.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/back_office/order/history.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/back_office/order/retrieval.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/back_office/order/question.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/back_office/order/reception.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/back_office/order/sale.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/back_office/order/sale_confirm.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/back_office/order/assessment.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/back_office/order/transfer.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/back_office/order/order.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/back_office/order/various_cost.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/back_office/order/recycling.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/back_office/order/refund.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/back_office/order/image.js') }}"></script>
 @endsection
 
 @section('content')
@@ -47,7 +61,8 @@ var token = "{{csrf_token()}}";
                   <th colspan="2"> <div class="col col-md-10 lead PL0 MB0"><strong>顧客情報</strong></div>
                     <div class="col col-md-2 text-center edit_seller_button_div"> <a href="#" class="btn btn-primary btn-sm edit_seller" id="edit_seller">編集</a> </div>
                     <input type="hidden" name="seller_seller_id" id="seller_seller_id" value="{{$seller->id}}"/>
-                    <input type="hidden" name="seller_seller_cd" id="seller_seller_cd" value="U04799576"/>
+                    <input type="hidden" name="seller_seller_cd" id="seller_seller_cd" value=""/>
+                    <input type="hidden" name="seller_car_id" id="seller_car_id" value="{{$infor->seller_car_id}}"/>
                   </th>
                 </tr>
               </thead>
@@ -154,73 +169,13 @@ var token = "{{csrf_token()}}";
                   <td style="background-color: #f9f9f9;"><div class="col col-md-3 PL0">
                       <select name="seller_seller_erea" class="form-control input-sm pref_name" id="seller_seller_erea">
                         <option value="">----------</option>
-                        <optgroup label="北海道">
-                        <option value="1">北海道</option>
-                        </optgroup>
-                        <optgroup label="東北">
-                        <option value="2">青森県</option>
-                        <option value="3">岩手県</option>
-                        <option value="4">宮城県</option>
-                        <option value="5">秋田県</option>
-                        <option value="6">山形県</option>
-                        <option value="7">福島県</option>
-                        </optgroup>
-                        <optgroup label="関東">
-                        <option value="8">茨城県</option>
-                        <option value="9">栃木県</option>
-                        <option value="10">群馬県</option>
-                        <option value="11" selected="selected">埼玉県</option>
-                        <option value="12">千葉県</option>
-                        <option value="13">東京都</option>
-                        <option value="14">神奈川県</option>
-                        </optgroup>
-                        <optgroup label="北陸">
-                        <option value="15">新潟県</option>
-                        <option value="16">富山県</option>
-                        <option value="17">石川県</option>
-                        <option value="18">福井県</option>
-                        </optgroup>
-                        <optgroup label="中部">
-                        <option value="19">山梨県</option>
-                        <option value="20">長野県</option>
-                        <option value="21">岐阜県</option>
-                        <option value="22">静岡県</option>
-                        <option value="23">愛知県</option>
-                        </optgroup>
-                        <optgroup label="関西">
-                        <option value="24">三重県</option>
-                        <option value="25">滋賀県</option>
-                        <option value="26">京都府</option>
-                        <option value="27">大阪府</option>
-                        <option value="28">兵庫県</option>
-                        <option value="29">奈良県</option>
-                        <option value="30">和歌山県</option>
-                        </optgroup>
-                        <optgroup label="中国">
-                        <option value="31">鳥取県</option>
-                        <option value="32">島根県</option>
-                        <option value="33">岡山県</option>
-                        <option value="34">広島県</option>
-                        <option value="35">山口県</option>
-                        </optgroup>
-                        <optgroup label="四国">
-                        <option value="36">徳島県</option>
-                        <option value="37">香川県</option>
-                        <option value="38">愛媛県</option>
-                        <option value="39">高知県</option>
-                        </optgroup>
-                        <optgroup label="九州">
-                        <option value="40">福岡県</option>
-                        <option value="41">佐賀県</option>
-                        <option value="42">長崎県</option>
-                        <option value="43">熊本県</option>
-                        <option value="44">大分県</option>
-                        <option value="45">宮崎県</option>
-                        <option value="46">鹿児島県</option>
-                        </optgroup>
-                        <optgroup label="沖縄">
-                        <option value="47">沖縄県</option>
-                        </optgroup>
+                        @foreach($erea as $item)
+                          <optgroup label="{{$item['zone_name']}}">
+                            @foreach($item['data'] as $item_detail)
+                              <option {{$item_detail->id == $seller->erea_id?'selected':''}} value="{{$item_detail->id}}">{{$item_detail->name}}</option>
+                            @endforeach
+                          </optgroup>
+                        @endforeach
                       </select>
                     </div></td>
                 </tr>
@@ -278,7 +233,7 @@ var token = "{{csrf_token()}}";
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">登録日時</td>
                   <td style="background-color: #f9f9f9;"><div class="col col-md-4 PL0">
-                      <input name="seller_seller_register_date" class="form-control input-sm　ime-disabled" maxlength="15" id="seller_seller_register_date" type="tel" value="{{$seller->register_date}}"/>
+                      <input name="seller_seller_register_date" class="form-control input-sm　ime-disabled datepicker" maxlength="19" id="seller_seller_register_date" type="tel" value="{{$seller->register_date}}"/>
                     </div></td>
                 </tr>
               </tbody>
@@ -366,12 +321,13 @@ var token = "{{csrf_token()}}";
             </form>
           </div>
           <div>
+          <form id="infor_form">
             <table class="table table-bordered table-condensed table-striped info_table">
               <thead>
                 <tr class="info">
                   <th colspan="2"> <div class="col col-md-10 lead PL0 MB0"><strong>車両情報</strong></div>
-                    <div class="col col-md-2 text-center edit_own_car_button_div"> <a href="/crm/AgreementOrders/edit/118262" class="btn btn-primary btn-sm edit_own_car" data-own_car_id="388218">編集</a> </div>
-                    <input type="hidden" name="data[OwnCar][id]" value="388218"/>
+                    <div class="col col-md-2 text-center edit_own_car_button_div"> <a href="#" class="btn btn-primary btn-sm edit_own_car" id="edit_infor" >編集</a> </div>
+                    <input type="hidden" name="infor_id" id="infor_id" value="{{$infor->id}}"/>
                   </th>
                 </tr>
               </thead>
@@ -380,163 +336,26 @@ var token = "{{csrf_token()}}";
                   <td class="active" style="width: 120px; vertical-align: middle;">車種名</td>
                   <td><div class="col col-md-12 PA0" style="margin-bottom:5px;">
                       <div class="col col-md-12 PL0">
-                        <input name="data[OwnCar][own_car_name]" class="form-control input-sm" maxlength="50" id="own_car_name" autocomplete="off" readonly="readonly" type="text" value="三菱 ミラージュディンゴ"/>
+                        <input name="infor_car_name" class="form-control input-sm" maxlength="50" id="infor_car_name" autocomplete="off" readonly="readonly" type="text" value="{{$infor->car_name}}"/>
                       </div>
                     </div>
                     <div class="col col-md-12 PA0">
                       <div class="col col-md-5 PL0">
-                        <select name="data[OwnCar][maker_id]" class="form-control input-sm" id="makerId">
+                        <select name="infor_maker_id" class="form-control input-sm" id="infor_maker_id">
                           <option value="">----------</option>
-                          <option value="1">トヨタ</option>
-                          <option value="2">レクサス</option>
-                          <option value="3">日産</option>
-                          <option value="4">ホンダ</option>
-                          <option value="5" selected="selected">三菱</option>
-                          <option value="6">マツダ</option>
-                          <option value="7">スバル</option>
-                          <option value="8">スズキ</option>
-                          <option value="9">いすゞ</option>
-                          <option value="10">ダイハツ</option>
-                          <option value="11">光岡</option>
-                          <option value="12">日野</option>
-                          <option value="13">アルファロメオ</option>
-                          <option value="14">アストンマーチン</option>
-                          <option value="15">アウディ</option>
-                          <option value="16">ベントレー</option>
-                          <option value="17">BMW</option>
-                          <option value="18">キャデラック</option>
-                          <option value="19">シボレー</option>
-                          <option value="20">クライスラー</option>
-                          <option value="21">シトロエン</option>
-                          <option value="22">ダッジ</option>
-                          <option value="23">フィアット</option>
-                          <option value="24">フォード</option>
-                          <option value="25">GMC</option>
-                          <option value="26">ヒュンダイ</option>
-                          <option value="27">ジャガー</option>
-                          <option value="28">ジープ</option>
-                          <option value="29">ランドローバー</option>
-                          <option value="30">リンカーン</option>
-                          <option value="31">メルセデス・ベンツ</option>
-                          <option value="32">オペル</option>
-                          <option value="33">プジョー</option>
-                          <option value="34">ポルシェ</option>
-                          <option value="35">ルノー</option>
-                          <option value="36">スマート</option>
-                          <option value="37">フォルクスワーゲン</option>
-                          <option value="38">ボルボ</option>
-                          <option value="39">ビュイック</option>
-                          <option value="40">フェラーリ</option>
-                          <option value="41">ハマー</option>
-                          <option value="42">ランボルギーニ</option>
-                          <option value="43">ランチア</option>
-                          <option value="44">ポンティアック</option>
-                          <option value="45">サーブ</option>
-                          <option value="46">サターン</option>
-                          <option value="47">AMG</option>
-                          <option value="48">ロールス・ロイス</option>
-                          <option value="49">デイムラー</option>
-                          <option value="50">MINI</option>
-                          <option value="51">アルピナ</option>
-                          <option value="52">アバルト</option>
-                          <option value="53">マセラティ</option>
-                          <option value="54">マーキュリー</option>
-                          <option value="55">三菱ふそう</option>
-                          <option value="56">UDトラックス</option>
-                          <option value="57">ローバー</option>
-                          <option value="58">MG</option>
-                          <option value="59">ロータス</option>
-                          <option value="60">ケーターハム</option>
+                          @foreach($maker as $item)
+                            <option {{$item->id == $infor->maker_id?'selected':''}} value="{{$item->id}}">{{$item->name}}</option>
+                          @endforeach
+                          
                         </select>
                       </div>
                       <div class="col col-md-7 PL0">
-                        <select name="data[OwnCar][car_id]" class="form-control input-sm" id="carId">
+                        <select name="infor_car_id" class="form-control input-sm" id="infor_car_id">
                           <option value="">----------</option>
-                          <option value="403" car_classification="2">360</option>
-                          <option value="394" car_classification="2">eKアクティブ</option>
-                          <option value="393" car_classification="2">eKカスタム</option>
-                          <option value="395" car_classification="2">eKクラッシィ</option>
-                          <option value="396" car_classification="2">eKスポーツ</option>
-                          <option value="397" car_classification="2">eKワゴン</option>
-                          <option value="398" car_classification="1">FTO</option>
-                          <option value="399" car_classification="1">GTO</option>
-                          <option value="400" car_classification="2">i</option>
-                          <option value="401" car_classification="2">i-MiEV</option>
-                          <option value="402" car_classification="1">RVR</option>
-                          <option value="404" car_classification="1">アウトランダー</option>
-                          <option value="405" car_classification="1">アウトランダーPHEV</option>
-                          <option value="407" car_classification="1">アスパイア</option>
-                          <option value="408" car_classification="1">エアトレック</option>
-                          <option value="410" car_classification="1">エクリプス</option>
-                          <option value="411" car_classification="1">エクリプススパイダー</option>
-                          <option value="412" car_classification="1">エテルナ</option>
-                          <option value="413" car_classification="1">エメロード</option>
-                          <option value="414" car_classification="1">カリスマ</option>
-                          <option value="417" car_classification="1">ギャラン</option>
-                          <option value="420" car_classification="1">ギャランGTO</option>
-                          <option value="421" car_classification="1">ギャランスポーツ</option>
-                          <option value="418" car_classification="1">ギャランフォルティス</option>
-                          <option value="419" car_classification="1">ギャランフォルティススポーツバック</option>
-                          <option value="415" car_classification="1">ギャランラムダ</option>
-                          <option value="422" car_classification="1">グランディス</option>
-                          <option value="423" car_classification="1">コルト</option>
-                          <option value="424" car_classification="1">コルトプラス</option>
-                          <option value="430" car_classification="1">ジープ</option>
-                          <option value="429" car_classification="1">シグマ</option>
-                          <option value="427" car_classification="1">シャリオ</option>
-                          <option value="428" car_classification="1">シャリオグランディス</option>
-                          <option value="432" car_classification="1">スタリオン</option>
-                          <option value="433" car_classification="1">ストラーダ</option>
-                          <option value="434" car_classification="2">タウンボックス</option>
-                          <option value="435" car_classification="1">タウンボックスワイド</option>
-                          <option value="436" car_classification="1">チャレンジャー</option>
-                          <option value="437" car_classification="1">ディアマンテ</option>
-                          <option value="438" car_classification="1">ディアマンテワゴン</option>
-                          <option value="439" car_classification="1">ディオン</option>
-                          <option value="440" car_classification="1">ディグニティ</option>
-                          <option value="442" car_classification="1">デボネア</option>
-                          <option value="443" car_classification="1">デボネアV</option>
-                          <option value="444" car_classification="1">デリカD:2</option>
-                          <option value="445" car_classification="1">デリカD:3</option>
-                          <option value="446" car_classification="1">デリカD:5</option>
-                          <option value="447" car_classification="1">デリカカーゴ</option>
-                          <option value="448" car_classification="1">デリカスターワゴン</option>
-                          <option value="449" car_classification="1">デリカスペースギア</option>
-                          <option value="450" car_classification="1">デリカトラック</option>
-                          <option value="451" car_classification="1">デリカバン</option>
-                          <option value="452" car_classification="2">トッポ</option>
-                          <option value="453" car_classification="2">トッポBJ</option>
-                          <option value="454" car_classification="1">トッポBJワイド</option>
-                          <option value="455" car_classification="1">トライトン</option>
-                          <option value="456" car_classification="1">パジェロ</option>
-                          <option value="457" car_classification="1">パジェロイオ</option>
-                          <option value="458" car_classification="1">パジェロジュニア</option>
-                          <option value="459" car_classification="2">パジェロミニ</option>
-                          <option value="460" car_classification="1">ピスタチオ</option>
-                          <option value="463" car_classification="1">フォルテ</option>
-                          <option value="462" car_classification="1">プラウディア</option>
-                          <option value="461" car_classification="2">ブラボー</option>
-                          <option value="464" car_classification="1">マグナ</option>
-                          <option value="465" car_classification="2">ミニカ</option>
-                          <option value="467" car_classification="2">ミニカトッポ</option>
-                          <option value="469" car_classification="2">ミニキャブ</option>
-                          <option value="471" car_classification="2">ミニキャブMiEV</option>
-                          <option value="470" car_classification="2">ミニキャブトラック</option>
-                          <option value="472" car_classification="2">ミニキャブブラボー</option>
-                          <option value="473" car_classification="1">ミラージュ</option>
-                          <option value="474" car_classification="1">ミラージュアスティ</option>
-                          <option value="475" car_classification="1" selected="selected">ミラージュディンゴ</option>
-                          <option value="476" car_classification="1">ランサー</option>
-                          <option value="477" car_classification="1">ランサーエボリューション</option>
-                          <option value="479" car_classification="1">ランサーエボリューションワゴン</option>
-                          <option value="480" car_classification="1">ランサーカーゴ</option>
-                          <option value="481" car_classification="1">ランサーセディア</option>
-                          <option value="482" car_classification="1">ランサーセディアワゴン</option>
-                          <option value="483" car_classification="1">ランサーフィオーレ</option>
-                          <option value="484" car_classification="1">ランサーワゴン</option>
-                          <option value="485" car_classification="1">リベロ</option>
-                          <option value="486" car_classification="1">リベロカーゴ</option>
-                          <option value="487" car_classification="1">レグナム</option>
+                          @foreach($car as $item)
+                            <option {{$item->id == $infor->car_id?'selected':''}} value="{{$item->id}}">{{$item->name}}</option>
+                          @endforeach
+                          
                         </select>
                       </div>
                     </div></td>
@@ -544,161 +363,149 @@ var token = "{{csrf_token()}}";
                 <tr style="height: 41px;">
                   <td class="active" style="vertical-align: middle;">車両区分</td>
                   <td><div class="col col-md-12 P6_0">
-                      <label class="radio-inline" for="OwnCarCarClassification1">
-                        <input type="radio" name="data[OwnCar][car_classification]" id="OwnCarCarClassification1" value="1" checked="checked" />
+                      <label class="radio-inline" for="infor_classification1">
+                        <input type="radio" name="infor_classification" id="infor_classification1" {{$infor->classification == 1?'checked':''}} />
                         普通自動車</label>
-                      <label class="radio-inline" for="OwnCarCarClassification2">
-                        <input type="radio" name="data[OwnCar][car_classification]" id="OwnCarCarClassification2" value="2" />
+                      <label class="radio-inline" for="infor_classification2">
+                        <input type="radio" name="infor_classification" id="infor_classification2" {{$infor->classification == 2?'checked':''}} />
                         軽自動車</label>
                     </div></td>
                 </tr>
                 <tr class="form-horizontal">
                   <td class="active" style="vertical-align: middle;">年式</td>
                   <td><div class="col col-md-2 PL0">
-                      <select name="data[OwnCar][model_year_era]" class="form-control input-sm ime-disabled" id="model_year_era" autocomplete="off">
-                        <option value="H" selected="selected">H</option>
-                        <option value="S">S</option>
+                      <select name="infor_car_year_type" class="form-control input-sm ime-disabled" id="infor_car_year_type" autocomplete="off">
+                        <option {{$infor->car_year_type == 'H'?'selected':''}} value="H">H</option>
+                        <option {{$infor->car_year_type == 'S'?'selected':''}} value="S">S</option>
                       </select>
                     </div>
                     <div class="col col-md-2 PL0">
-                      <input name="data[OwnCar][model_year_year]" class="form-control input-sm ime-disabled" id="model_year_year" maxlength="2" autocomplete="off" type="tel" value="11"/>
+                      <input name="infor_car_year" class="form-control input-sm ime-disabled" id="infor_car_year" maxlength="2" autocomplete="off" type="tel" value="{{$infor->car_year}}"/>
                     </div>
                     <div class="col col-md-1 P6_0">年</div>
                     <div class="col col-md-2 PL0">
-                      <input name="data[OwnCar][model_year_month]" class="form-control input-sm ime-disabled" id="model_year_month" maxlength="2" autocomplete="off" type="tel" value=""/>
+                      <input name="infor_car_month" class="form-control input-sm ime-disabled" id="infor_car_month" maxlength="2" autocomplete="off" type="tel" value="{{$infor->car_month}}"/>
                     </div>
                     <div class="col col-md-1 P6_0">月</div>
                     <div class="col col-md-1 col-md-offset-1 text-right PR0">
                       <div class="checkbox">
-                        <input type="hidden" name="data[OwnCar][about_model_year]" id="about_model_year_" value="0"/>
-                        <input type="checkbox" name="data[OwnCar][about_model_year]"  id="about_model_year" value="1"/>
+                        <input type="checkbox" name="infor_about_check"  id="infor_about_check" {{$infor->about_check == 1?'checked':''}} />
                       </div>
                     </div>
-                    <input type="hidden" name="data[OwnCar][model_year_ad]" class="form-control input-sm ime-disabled" id="model_year_year" maxlength="2" autocomplete="off" value="199900"/>
+                   
                     <div class="col col-md-1 P6_0"> くらい</div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="vertical-align: middle;">購入</td>
                   <td style="vertical-align:middle;"><div class="col col-md-12 P6_0">
-                      <input type="hidden" name="data[OwnCar][purchase]" id="OwnCarPurchase_" value=""/>
-                      <label class="radio-inline" for="OwnCarPurchase1">
-                        <input type="radio" name="data[OwnCar][purchase]" id="OwnCarPurchase1" value="1" />
+                      <label class="radio-inline" for="infor_purchase1">
+                        <input type="radio" name="infor_purchase" id="infor_purchase1" {{$infor->purchase == 1?'checked':''}} />
                         新車購入</label>
-                      <label class="radio-inline" for="OwnCarPurchase2">
-                        <input type="radio" name="data[OwnCar][purchase]" id="OwnCarPurchase2" value="2" />
+                      <label class="radio-inline" for="infor_purchase2">
+                        <input type="radio" name="infor_purchase" id="infor_purchase2" {{$infor->purchase == 2?'checked':''}} />
                         中古車購入</label>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="vertical-align: middle;">走行距離</td>
                   <td><div class="col col-md-4 PL0">
-                      <input name="data[OwnCar][mileage]" class="form-control input-sm ime-disabled mileage" maxlength="10" id="mileage" type="text" value="65000"/>
+                      <input name="infor_mileage" class="form-control input-sm ime-disabled mileage" maxlength="10" id="infor_mileage" type="text" value="{{$infor->mileage}}"/>
                     </div>
                     <div class="col col-md-1 P6_0"> km</div></td>
                 </tr>
                 <tr>
                   <td class="active" style="vertical-align: middle;">車検日</td>
                   <td><div class="col col-md-2 PL0">
-                      <select name="data[OwnCar][inspection_date_era]" class="form-control input-sm ime-disabled" id="inspection_date_era" autocomplete="off">
-                        <option value="H" selected="selected">H</option>
-                        <option value="S">S</option>
+                      <select name="infor_inspection" class="form-control input-sm ime-disabled" id="infor_inspection" autocomplete="off">
+                        <option {{$infor->inspection == 'H'?'selected':''}} value="H">H</option>
+                        <option {{$infor->inspection == 'H'?'selected':''}} value="S">S</option>
                       </select>
                     </div>
                     <div class="col col-md-2 PL0">
-                      <input name="data[OwnCar][inspection_date_year]" class="form-control input-sm ime-disabled" id="inspection_date_year" maxlength="2" autocomplete="off" type="tel" value="30"/>
+                      <input name="infor_inspection_year" class="form-control input-sm ime-disabled" id="infor_inspection_year" maxlength="2" autocomplete="off" type="tel" value="{{$infor->inspection_year}}"/>
                     </div>
                     <div class="col col-md-1 P6_0">年</div>
                     <div class="col col-md-2 PL0">
-                      <input name="data[OwnCar][inspection_date_month]" class="form-control input-sm ime-disabled" id="inspection_date_month" maxlength="2" autocomplete="off" type="tel" value="3"/>
+                      <input name="infor_inspection_month" class="form-control input-sm ime-disabled" id="infor_inspection_month" maxlength="2" autocomplete="off" type="tel" value="{{$infor->inspection_month}}"/>
                     </div>
                     <div class="col col-md-1 P6_0">月</div>
                     <div class="col col-md-2 PL0">
-                      <input name="data[OwnCar][inspection_date_day]" class="form-control input-sm ime-disabled" id="inspection_date_day" maxlength="2" autocomplete="off" type="tel" value=""/>
+                      <input name="infor_inspection_day" class="form-control input-sm ime-disabled" id="infor_inspection_day" maxlength="2" autocomplete="off" type="tel" value="{{$infor->inspection_day}}"/>
                     </div>
                     <div class="col col-md-1 P6_0">日</div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="vertical-align: middle;">自走可否</td>
                   <td><div class="col col-md-12 P6_0" id="own_car_runnable_box">
-                      <label class="radio-inline own_car_runnable" for="OwnCarRunnable1">
-                        <input type="radio" name="data[OwnCar][runnable]" id="OwnCarRunnable1" value="1" checked="checked" />
+                      <label class="radio-inline own_car_runnable" for="info_self_propelled11">
+                        <input type="radio" name="info_self_propelled1" id="info_self_propelled11" {{$infor->self_propelled1 == 1?'checked':''}} />
                         走行可能</label>
                       <label class="radio-inline own_car_runnable" for="OwnCarRunnable0">
-                        <input type="radio" name="data[OwnCar][runnable]" id="OwnCarRunnable0" value="0" />
+                        <input type="radio" name="info_self_propelled1" id="info_self_propelled11" {{$infor->self_propelled1 == 2?'checked':''}} />
                         走行不可</label>
                     </div>
                     <div id="own_car_status_box" class="col col-md-12 P6_0">
-                      <input id="OwnCarStatusId" type="hidden" value="379871" name="data[OwnCarStatus][id]">
                       <div id="own_car_runnable_subbox" style="display:block">
-                        <input type="hidden" name="data[OwnCarStatus][use_now]" id="OwnCarStatusUseNow_" value="0"/>
-                        <input type="checkbox" name="data[OwnCarStatus][use_now]"  value="1" checked="checked" id="OwnCarStatusUseNow"/>
-                        <label for="OwnCarStatusUseNow" style="font-weight:normal;margin-left:7px;margin-right:15px;vertical-align:middle;cursor:pointer;">使用中</label>
-                        <input type="hidden" name="data[OwnCarStatus][engine_noise]" id="OwnCarStatusEngineNoise_" value="0"/>
-                        <input type="checkbox" name="data[OwnCarStatus][engine_noise]"  value="1"  id="OwnCarStatusEngineNoise"/>
-                        <label for="OwnCarStatusEngineNoise" style="font-weight:normal;margin-left:7px;margin-right:15px;vertical-align:middle;cursor:pointer;">エンジン異音</label>
-                        <input type="hidden" name="data[OwnCarStatus][white_smoke]" id="OwnCarStatusWhiteSmoke_" value="0"/>
-                        <input type="checkbox" name="data[OwnCarStatus][white_smoke]"  value="1"  id="OwnCarStatusWhiteSmoke"/>
-                        <label for="OwnCarStatusWhiteSmoke" style="font-weight:normal;margin-left:7px;margin-right:15px;vertical-align:middle;cursor:pointer;">白煙</label>
-                        <input type="hidden" name="data[OwnCarStatus][battery_ng_runnable]" id="OwnCarStatusBatteryNgRunnable_" value="0"/>
-                        <input type="checkbox" name="data[OwnCarStatus][battery_ng_runnable]"  value="1"  id="OwnCarStatusBatteryNgRunnable"/>
-                        <label for="OwnCarStatusBatteryNgRunnable" style="font-weight:normal;margin-left:7px;margin-right:15px;vertical-align:middle;cursor:pointer;">バッテリ上</label>
-                        <input type="hidden" name="data[OwnCarStatus][engine_trouble]" id="OwnCarStatusEngineTrouble_" value="0"/>
-                        <input type="checkbox" name="data[OwnCarStatus][engine_trouble]"  value="1"  id="OwnCarStatusEngineTrouble"/>
-                        <label for="OwnCarStatusEngineTrouble" style="font-weight:normal;margin-left:7px;margin-right:15px;vertical-align:middle;cursor:pointer;">エンジン不調</label>
+                        <input type="checkbox" name="info_self_propelled2"  id="info_self_propelled21" {{$infor->self_propelled2[0] == 1?'checked':''}}/>
+                        <label for="info_self_propelled21" style="font-weight:normal;margin-left:7px;margin-right:15px;vertical-align:middle;cursor:pointer;">使用中</label>
+                        <input type="checkbox" name="info_self_propelled2"  id="info_self_propelled22" {{$infor->self_propelled2[1] == 1?'checked':''}}/>
+                        <label for="info_self_propelled22" style="font-weight:normal;margin-left:7px;margin-right:15px;vertical-align:middle;cursor:pointer;">エンジン異音</label>
+                        <input type="checkbox" name="info_self_propelled2"  id="info_self_propelled23" {{$infor->self_propelled2[2] == 1?'checked':''}}/>
+                        <label for="info_self_propelled23" style="font-weight:normal;margin-left:7px;margin-right:15px;vertical-align:middle;cursor:pointer;">白煙</label>
+                        <input type="checkbox" name="info_self_propelled2"  id="info_self_propelled24" {{$infor->self_propelled2[3] == 1?'checked':''}}/>
+                        <label for="info_self_propelled24" style="font-weight:normal;margin-left:7px;margin-right:15px;vertical-align:middle;cursor:pointer;">バッテリ上</label>
+                        <input type="checkbox" name="info_self_propelled2"  id="info_self_propelled25" {{$infor->self_propelled2[4] == 1?'checked':''}}/>
+                        <label for="info_self_propelled25" style="font-weight:normal;margin-left:7px;margin-right:15px;vertical-align:middle;cursor:pointer;">エンジン不調</label>
                       </div>
                       <div id="own_car_unrunnable_subbox" style="display:none">
-                        <input type="hidden" name="data[OwnCarStatus][tire_ok]" id="OwnCarStatusTireOk_" value="0"/>
-                        <input type="checkbox" name="data[OwnCarStatus][tire_ok]"  value="1"  id="OwnCarStatusTireOk"/>
-                        <label for="OwnCarStatusTireOk" style="font-weight:normal;margin-left:7px;margin-right:15px;vertical-align:middle;cursor:pointer;">タイヤ動作OK</label>
-                        <input type="hidden" name="data[OwnCarStatus][tire_punctured]" id="OwnCarStatusTirePunctured_" value="0"/>
-                        <input type="checkbox" name="data[OwnCarStatus][tire_punctured]"  value="1"  id="OwnCarStatusTirePunctured"/>
-                        <label for="OwnCarStatusTirePunctured" style="font-weight:normal;margin-left:7px;margin-right:15px;vertical-align:middle;cursor:pointer;">タイヤパンク</label>
-                        <input type="hidden" name="data[OwnCarStatus][battery_ng_unrunnable]" id="OwnCarStatusBatteryNgUnrunnable_" value="0"/>
-                        <input type="checkbox" name="data[OwnCarStatus][battery_ng_unrunnable]"  value="1"  id="OwnCarStatusBatteryNgUnrunnable"/>
-                        <label for="OwnCarStatusBatteryNgUnrunnable" style="font-weight:normal;margin-left:7px;margin-right:15px;vertical-align:middle;cursor:pointer;">バッテリ上</label>
+                        <input type="checkbox" name="info_self_propelled2"  id="info_self_propelled26" {{$infor->self_propelled2[5] == 1?'checked':''}}/>
+                        <label for="info_self_propelled26" style="font-weight:normal;margin-left:7px;margin-right:15px;vertical-align:middle;cursor:pointer;">タイヤ動作OK</label>
+                        <input type="checkbox" name="info_self_propelled2"  id="info_self_propelled27" {{$infor->self_propelled2[6] == 1?'checked':''}}/>
+                        <label for="info_self_propelled27" style="font-weight:normal;margin-left:7px;margin-right:15px;vertical-align:middle;cursor:pointer;">タイヤパンク</label>
+                        <input type="checkbox" name="info_self_propelled2"  id="info_self_propelled28" {{$infor->self_propelled2[7] == 1?'checked':''}}/>
+                        <label for="info_self_propelled28" style="font-weight:normal;margin-left:7px;margin-right:15px;vertical-align:middle;cursor:pointer;">バッテリ上</label>
                       </div>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="vertical-align: middle;">走行状態</td>
                   <td><div class="col col-md-12 PL0">
-                      <textarea name="data[OwnCar][running]" class="form-control input-sm" rows="3" cols="30" id="OwnCarRunning"></textarea>
+                      <textarea name="infor_running_condition" class="form-control input-sm" rows="3" cols="30" id="infor_running_condition">{{$infor->running_condition}}
+                      </textarea>
                     </div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="vertical-align: middle;">4tユニック進入</td>
                   <td><div class="col col-md-12 P6_0">
-                      <input type="hidden" name="data[Inquiry][tow_truck]" id="InquiryTowTruck_" value=""/>
-                      <label class="radio-inline" for="InquiryTowTruck0">
-                        <input type="radio" name="data[Inquiry][tow_truck]" id="InquiryTowTruck0" value="0" />
+                      <label class="radio-inline" for="infor_4t_unic1">
+                        <input type="radio" name="infor_4t_unic" id="infor_4t_unic1" {{$infor->t4_unic == 1?'checked':''}} />
                         不可</label>
-                      <label class="radio-inline" for="InquiryTowTruck1">
-                        <input type="radio" name="data[Inquiry][tow_truck]" id="InquiryTowTruck1" value="1" />
+                      <label class="radio-inline" for="infor_4t_unic2">
+                        <input type="radio" name="infor_4t_unic" id="infor_4t_unic2" {{$infor->t4_unic == 2?'checked':''}} />
                         可能</label>
-                      <label class="radio-inline" for="InquiryTowTruck2">
-                        <input type="radio" name="data[Inquiry][tow_truck]" id="InquiryTowTruck2" value="2" />
+                      <label class="radio-inline" for="infor_4t_unic3">
+                        <input type="radio" name="infor_4t_unic" id="infor_4t_unic3" {{$infor->t4_unic == 3?'checked':''}} />
                         たぶん可</label>
-                      <label class="radio-inline" for="InquiryTowTruck3">
-                        <input type="radio" name="data[Inquiry][tow_truck]" id="InquiryTowTruck3" value="3" />
+                      <label class="radio-inline" for="infor_4t_unic4">
+                        <input type="radio" name="infor_4t_unic" id="infor_4t_unic4" {{$infor->t4_unic == 4?'checked':''}} />
                         2tならOK</label>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">ボディーカラー</td>
                   <td><div class="col col-md-4 PL0">
-                      <input name="data[OwnCar][color]" class="form-control input-sm" maxlength="20" id="color" type="text" value="白"/>
+                      <input name="infor_body_color" class="form-control input-sm" maxlength="20" id="infor_body_color" type="text" value="{{$infor->body_color}}"/>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">排気量</td>
                   <td class="form-horizontal"><div class="col col-md-3 PL0">
-                      <input name="data[OwnCar][displacement]" class="form-control input-sm ime-disabled displacement" maxlength="5" id="displacement" type="text" value="1500"/>
+                      <input name="infor_displacement" class="form-control input-sm ime-disabled displacement" maxlength="5" id="infor_displacement" type="text" value="{{$infor->displacement}}"/>
                     </div>
                     <div class="col col-md-1 P6_0"> cc</div>
                     <div class="col col-md-1 col-md-offset-4 text-right PR0">
                       <div class="checkbox">
-                        <input type="hidden" name="data[OwnCar][about_displacement]" id="about_displacement_" value="0"/>
-                        <input type="checkbox" name="data[OwnCar][about_displacement]"  id="about_displacement" value="1"/>
+                        <input type="checkbox" name="infor_about_check"  id="infor_about_check" {{$infor->about_check == 1?'checked':''}}/>
                       </div>
                     </div>
                     <div class="col col-md-3 P6_0"> くらい</div></td>
@@ -706,30 +513,28 @@ var token = "{{csrf_token()}}";
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">エンジンの型式</td>
                   <td><div class="col col-md-3 PL0">
-                      <input name="data[OwnCar][engine_model]" class="form-control input-sm" maxlength="10" id="engine_model" type="text" value=""/>
+                      <input name="infor_engine_model" class="form-control input-sm" maxlength="10" id="infor_engine_model" type="text" value="{{$infor->engine_model}}"/>
                     </div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">ターボ (過給器)</td>
                   <td><div class="col col-md-12 P6_0">
-                      <input type="hidden" name="data[OwnCar][turbo]" id="OwnCarTurbo_" value=""/>
-                      <label class="radio-inline" for="OwnCarTurbo0">
-                        <input type="radio" name="data[OwnCar][turbo]" id="OwnCarTurbo0" value="0" />
+                      <label class="radio-inline" for="infor_turbo1">
+                        <input type="radio" name="infor_turbo" id="infor_turbo1" {{$infor->turbo == 1?'checked':''}} />
                         無 (N/A、自然吸気エンジン)</label>
-                      <label class="radio-inline" for="OwnCarTurbo1">
-                        <input type="radio" name="data[OwnCar][turbo]" id="OwnCarTurbo1" value="1" />
+                      <label class="radio-inline" for="infor_turbo2">
+                        <input type="radio" name="infor_turbo" id="infor_turbo2" {{$infor->turbo == 2?'checked':''}} />
                         有 (ターボエンジン、スーパーチャージャー)</label>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">型式</td>
                   <td class="form-horizontal"><div class="col col-md-5 PL0">
-                      <input name="data[OwnCar][model_name]" class="form-control input-sm" maxlength="30" id="model_name" type="text" value="GF-CQ2A "/>
+                      <input name="infor_type" class="form-control input-sm" maxlength="30" id="infor_type" type="text" value="{{$infor->type}}"/>
                     </div>
                     <div class="col col-md-1 col-md-offset-3 text-right PR0">
                       <div class="checkbox">
-                        <input type="hidden" name="data[OwnCar][about_model_name]" id="about_model_name_" value="0"/>
-                        <input type="checkbox" name="data[OwnCar][about_model_name]"  id="about_model_name" value="1"/>
+                        <input type="checkbox" name="infor_ambiguous_check"  id="infor_ambiguous_check" {{$infor->ambiguous_check == 1?'checked':''}}/>
                       </div>
                     </div>
                     <div class="col col-md-3 P6_0"> 曖昧</div></td>
@@ -737,104 +542,103 @@ var token = "{{csrf_token()}}";
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">型式指定番号</td>
                   <td><div class="col col-md-3 PL0">
-                      <input name="data[OwnCar][model_specify_number]" class="form-control input-sm ime-disabled" maxlength="6" id="model_specify_number" type="text" value="09304"/>
+                      <input name="infor_model_number" class="form-control input-sm ime-disabled" maxlength="6" id="infor_model_number" type="text" value="{{$infor->model_number}}"/>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">類別区分番号</td>
                   <td><div class="col col-md-3 PL0">
-                      <input name="data[OwnCar][classification_number]" class="form-control input-sm ime-disabled" maxlength="4" id="classification_number" type="text" value="0010"/>
+                      <input name="infor_category_number" class="form-control input-sm ime-disabled" maxlength="4" id="infor_category_number" type="text" value="{{$infor->category_number}}"/>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">グレード</td>
                   <td><div class="col col-md-8 PL0">
-                      <input name="data[OwnCar][grade]" class="form-control input-sm" maxlength="50" id="grade" type="text" value="不明"/>
+                      <input name="infor_grade" class="form-control input-sm" maxlength="50" id="infor_grade" type="text" value="{{$infor->grade}}"/>
                     </div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">駆動方式</td>
                   <td><div class="col col-md-12 P6_0">
-                      <label class="radio-inline" for="OwnCarDriving0">
-                        <input type="radio" name="data[OwnCar][driving]" id="OwnCarDriving0" value="0" checked="checked" />
+                      <label class="radio-inline" for="infor_drive_system1">
+                        <input type="radio" name="infor_drive_system" id="infor_drive_system1" {{$infor->drive_system == 1?'checked':''}}/>
                         2WD (FF / FR 等)</label>
-                      <label class="radio-inline" for="OwnCarDriving1">
-                        <input type="radio" name="data[OwnCar][driving]" id="OwnCarDriving1" value="1" />
+                      <label class="radio-inline" for="infor_drive_system2">
+                        <input type="radio" name="infor_drive_system" id="infor_drive_system2" {{$infor->drive_system == 1?'checked':''}} />
                         4WD (AWD)</label>
-                      <label class="radio-inline" for="OwnCarDriving9">
-                        <input type="radio" name="data[OwnCar][driving]" id="OwnCarDriving9" value="9" />
+                      <label class="radio-inline" for="infor_drive_system3">
+                        <input type="radio" name="infor_drive_system" id="infor_drive_system3" {{$infor->drive_system == 1?'checked':''}} />
                         不明</label>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">トランスミッション</td>
                   <td><div class="col col-md-8 P6_0">
-                      <label class="radio-inline" for="OwnCarTransmission0">
-                        <input type="radio" name="data[OwnCar][transmission]" id="OwnCarTransmission0" onclick="changeTransmission()" value="0" checked="checked" />
+                      <label class="radio-inline" for="infor_transmission1">
+                        <input type="radio" name="infor_transmission" id="infor_transmission1" {{$infor->transmission == 1?'checked':''}} />
                         AT (CVT)</label>
-                      <label class="radio-inline" for="OwnCarTransmission1">
-                        <input type="radio" name="data[OwnCar][transmission]" id="OwnCarTransmission1" onclick="changeTransmission()" value="1" />
+                      <label class="radio-inline" for="infor_transmission2">
+                        <input type="radio" name="infor_transmission" id="infor_transmission2"  {{$infor->transmission == 2?'checked':''}} />
                         MT</label>
                     </div>
                     <div class="col col-md-2 PL0">
-                      <input name="data[OwnCar][gear_number]" class="form-control input-sm ime-disabled" maxlength="1" id="gear_number" type="text"/>
+                      <input name="infor_speed" class="form-control input-sm ime-disabled" maxlength="1" id="infor_speed" type="text" value="{{$infor->speed}}"/>
                     </div>
                     <div class="col col-md-1 P6_0"> 速</div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">燃料</td>
                   <td><div class="col col-md-12 P6_0">
-                      <label class="radio-inline" for="OwnCarFuel1">
-                        <input type="radio" name="data[OwnCar][fuel]" id="OwnCarFuel1" value="1" checked="checked" />
+                      <label class="radio-inline" for="infor_owner1">
+                        <input type="radio" name="infor_fuel" id="infor_fuel1" {{$infor->fuel == 1?'checked':''}}/>
                         ガソリン</label>
-                      <label class="radio-inline" for="OwnCarFuel2">
-                        <input type="radio" name="data[OwnCar][fuel]" id="OwnCarFuel2" value="2" />
+                      <label class="radio-inline" for="infor_owner2">
+                        <input type="radio" name="infor_fuel" id="infor_fuel2" {{$infor->fuel == 2?'checked':''}}/>
                         ディーゼル</label>
-                      <label class="radio-inline" for="OwnCarFuel3">
-                        <input type="radio" name="data[OwnCar][fuel]" id="OwnCarFuel3" value="3" />
+                      <label class="radio-inline" for="infor_owner3">
+                        <input type="radio" name="infor_fuel" id="infor_fuel3" {{$infor->fuel == 3?'checked':''}}/>
                         ハイブリッド</label>
-                      <label class="radio-inline" for="OwnCarFuel4">
-                        <input type="radio" name="data[OwnCar][fuel]" id="OwnCarFuel4" value="4" />
+                      <label class="radio-inline" for="infor_owner4">
+                        <input type="radio" name="infor_fuel" id="infor_fuel4" {{$infor->fuel == 4?'checked':''}}/>
                         電気自動車</label>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">所有者 (名義)</td>
                   <td class="form-horizontal"><div class="col col-md-6 PL0">
-                      <input name="data[OwnCar][holder]" class="form-control input-sm" maxlength="50" id="holder" type="text" value="本人　ローン組無し　引越し無し　車検確認"/>
+                      <input name="infor_owner" class="form-control input-sm" maxlength="50" id="infor_owner" type="text" value="{{$infor->owner}}"/>
                     </div>
                     <div class="col col-md-1 col-md-offset-2 text-right PR0">
                       <div class="checkbox">
-                        <input type="hidden" name="data[OwnCar][holder_dead]" id="holder_dead_" value="0"/>
-                        <input type="checkbox" name="data[OwnCar][holder_dead]"  id="holder_dead" value="1"/>
+                        <input type="checkbox" name="infor_personal_check"  id="infor_personal_check" {{$infor->personal_check == 1?"checked":''}}/>
                       </div>
                     </div>
                     <div class="col col-md-3 P6_0"> 個人</div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">所有者住所</td>
-                  <td><input name="" class="form-control input-sm" maxlength="100" id="address3" type="text" value=""/></td>
+                  <td><input name="infor_residence" class="form-control input-sm" maxlength="100" id="infor_residence" type="text" value="{{$infor->residence}}"/></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">車検証と印鑑証明書の住所までの引越し回数</td>
                   <td><div class="col col-md-2 PL0">
-                      <input name="" class="form-control input-sm ime-disabled" maxlength="1" id="" type="tel" value="5"/>
+                      <input name="infor_number_stamp" class="form-control input-sm ime-disabled" maxlength="1" id="infor_number_stamp" type="tel" value="{{$infor->number_stamp}}"/>
                     </div>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">ローン残債状況</td>
                   <td><div class="col col-md-8 PL0">
-                      <input name="" class="form-control input-sm" maxlength="50" id="" type="text" value="ローン残債状況"/>
+                      <input name="infor_balance_status" class="form-control input-sm" maxlength="50" id="infor_balance_status" type="text" value="{{$infor->balance_status}}"/>
                     </div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">一時抹消登録</td>
                   <td><div class="col col-md-6 P6_0">
-                      <label class="radio-inline" for="OwnCarDisposal0">
-                        <input type="radio" name="data[OwnCar][disposal]" id="OwnCarDisposal0" value="0" checked="checked" />
+                      <label class="radio-inline" for="infor_delete_temp1">
+                        <input type="radio" name="infor_delete_temp" id="infor_delete_temp1" {{$infor->delete_temp == 1?'checked':''}}/>
                         未</label>
-                      <label class="radio-inline" for="OwnCarDisposal1">
-                        <input type="radio" name="data[OwnCar][disposal]" id="OwnCarDisposal1" value="1" />
+                      <label class="radio-inline" for="infor_delete_temp2">
+                        <input type="radio" name="infor_delete_temp" id="infor_delete_temp2" {{$infor->delete_temp == 2?'checked':''}} />
                         済</label>
                     </div></td>
                 </tr>
@@ -842,311 +646,196 @@ var token = "{{csrf_token()}}";
                   <td class="active" style="width: 120px; vertical-align: middle;">事故歴・修復歴</td>
                   <td><div class="col col-md-12 P6_0">
                       <label class="radio-inline" for="OwnCarAccidents0">
-                        <input type="radio" name="data[OwnCar][accidents]" id="OwnCarAccidents0" value="0" />
+                        <input type="radio" name="infor_accident_repair" id="infor_accident_repair1" {{$infor->accident_repair == 1?'checked':''}}/>
                         無</label>
-                      <label class="radio-inline" for="OwnCarAccidents1">
-                        <input type="radio" name="data[OwnCar][accidents]" id="OwnCarAccidents1" value="1" />
+                      <label class="radio-inline" for="infor_accident_repair2">
+                        <input type="radio" name="infor_accident_repair" id="infor_accident_repair2" {{$infor->accident_repair == 2?'checked':''}} />
                         有</label>
-                      <label class="radio-inline" for="OwnCarAccidents9">
-                        <input type="radio" name="data[OwnCar][accidents]" id="OwnCarAccidents9" value="9" checked="checked" />
+                      <label class="radio-inline" for="infor_accident_repair3">
+                        <input type="radio" name="infor_accident_repair" id="infor_accident_repair3" {{$infor->accident_repair == 3?'checked':''}}/>
                         不明</label>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">保証書</td>
                   <td><div class="col col-md-8 PL0">
-                      <input name="" class="form-control input-sm" maxlength="50" id="" type="text" value=""/>
+                      <input name="infor_written_guarantee" class="form-control input-sm" maxlength="50" id="infor_written_guarantee" type="text" value="{{$infor->written_guarantee}}"/>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">点検記録簿</td>
                   <td><div class="col col-md-8 PL0">
-                      <input name="" class="form-control input-sm" maxlength="50" id="" type="text" value=""/>
+                      <input name="infor_record_book" class="form-control input-sm" maxlength="50" id="infor_record_book" type="text" value="{{$infor->record_book}}"/>
                     </div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">車歴</td>
                   <td><div class="col col-md-12 P6_0">
-                      <label class="radio-inline" for="OwnCarAccidents0">
-                        <input type="radio" name="data[OwnCar][accidents]" id="OwnCarAccidents0" value="0" />
+                      <label class="radio-inline" for="infor_history1">
+                        <input type="radio" name="infor_history" id="infor_history1" {{$infor->history == 1?'checked':''}} />
                         自家用</label>
-                      <label class="radio-inline" for="OwnCarAccidents1">
-                        <input type="radio" name="data[OwnCar][accidents]" id="OwnCarAccidents1" value="1" />
+                      <label class="radio-inline" for="infor_history2">
+                        <input type="radio" name="infor_history" id="infor_history2" {{$infor->history == 2?'checked':''}} />
                         事業用</label>
-                      <label class="radio-inline" for="OwnCarAccidents9">
-                        <input type="radio" name="data[OwnCar][accidents]" id="OwnCarAccidents9" value="2" />
+                      <label class="radio-inline" for="infor_history3">
+                        <input type="radio" name="infor_history" id="infor_history3" {{$infor->history == 3?'checked':''}} />
                         レンタル</label>
-                      <label class="radio-inline" for="OwnCarAccidents9">
-                        <input type="radio" name="data[OwnCar][accidents]" id="OwnCarAccidents9" value="3"  />
+                      <label class="radio-inline" for="infor_history4">
+                        <input type="radio" name="infor_history" id="infor_history4" {{$infor->history == 4?'checked':''}}  />
                         未確認</label>
                     </div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">喫煙状況</td>
                   <td><div class="col col-md-12 P6_0">
-                      <label class="radio-inline" for="OwnCarSmoking0">
-                        <input type="radio" name="data[OwnCar][smoking]" id="OwnCarSmoking0" value="0" />
+                      <label class="radio-inline" for="info_smoking_status1">
+                        <input type="radio" name="info_smoking_status" id="info_smoking_status1" {{$infor->smoking_status == 1?'checked':''}} />
                         禁煙車</label>
-                      <label class="radio-inline" for="OwnCarSmoking1">
-                        <input type="radio" name="data[OwnCar][smoking]" id="OwnCarSmoking1" value="1" />
+                      <label class="radio-inline" for="info_smoking_status2">
+                        <input type="radio" name="info_smoking_status" id="info_smoking_status2" {{$infor->smoking_status == 2?'checked':''}} />
                         喫煙車</label>
-                      <label class="radio-inline" for="OwnCarSmoking9">
-                        <input type="radio" name="data[OwnCar][smoking]" id="OwnCarSmoking9" value="9" checked="checked" />
+                      <label class="radio-inline" for="info_smoking_status3">
+                        <input type="radio" name="info_smoking_status" id="info_smoking_status3" {{$infor->smoking_status == 3?'checked':''}} />
                         不明</label>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">装備品（オプション等）</td>
 				  <td>
-                    <div class="col col-md-9" style="padding: 6px;">
-                      <label class="radio-inline" for="OwnCarEquipmentNavigation0">
-                        <input type="radio" name="data" id="OwnCarEquipmentNavigation0" value="0" checked="checked" />
-                        エアコン</label>
-                      <label class="radio-inline" for="OwnCarEquipmentNavigation1">
-                        <input type="radio" name="data" id="OwnCarEquipmentNavigation1" value="1" />
-                        パワステ</label>
-                      <label class="radio-inline" for="OwnCarEquipmentNavigation2">
-                        <input type="radio" name="data" id="OwnCarEquipmentNavigation2" value="2" />
-                        パワーウィンドウ</label>
-                    </div>
-                    <div class="col col-md-9" style="padding: 6px;">
-                      <label class="radio-inline" for="OwnCarEquipmentBackMonitor0">
-                        <input type="radio" name="data" id="OwnCarEquipmentBackMonitor0" value="3" />
-                        集中ドアロック</label>
-                      <label class="radio-inline" for="OwnCarEquipmentBackMonitor1">
-                        <input type="radio" name="data" id="OwnCarEquipmentBackMonitor1" value="4" />
-                        ABS</label>
-                      <label class="radio-inline" for="OwnCarEquipmentPowerSlideDoor0">
-                        <input type="radio" name="data" id="OwnCarEquipmentPowerSlideDoor0" value="5"/>
-                        エアバッグ</label>
-                    </div>
-                    <div class="col col-md-9" style="padding: 6px;">
-                      <label class="radio-inline" for="OwnCarEquipmentPowerSlideDoor1">
-                        <input type="radio" name="data" id="OwnCarEquipmentPowerSlideDoor1" value="6" />
-                        ETC</label>
-                      <label class="radio-inline" for="OwnCarEquipmentPowerSlideDoor2">
-                        <input type="radio" name="data" id="OwnCarEquipmentPowerSlideDoor2" value="7" />
-                        キーレスエントリー</label>
-                      <label class="radio-inline" for="OwnCarEquipmentSunroof0">
-                        <input type="radio" name="data" id="OwnCarEquipmentSunroof0" value="8" />
-                        スマートキー</label>
-                    </div>
-                    <div class="col col-md-9" style="padding: 6px;">
-                      <label class="radio-inline" for="OwnCarEquipmentSunroof1">
-                        <input type="radio" name="data" id="OwnCarEquipmentSunroof1" value="9" />
-                        CD</label>
-                      <label class="radio-inline" for="OwnCarEquipmentLeatherSeat0">
-                        <input type="radio" name="data" id="OwnCarEquipmentLeatherSeat0" value="10"  />
-                        MD</label>
-                      <label class="radio-inline" for="OwnCarEquipmentLeatherSeat1">
-                        <input type="radio" name="data" id="OwnCarEquipmentLeatherSeat1" value="11" />
-                        DVDビデオ</label>
-                    </div>
-                    <div class="col col-md-9" style="padding: 6px;">
-                      <label class="radio-inline" for="OwnCarEquipmentAlloyWheels0">
-                        <input type="radio" name="data" id="OwnCarEquipmentAlloyWheels0" value="12" />
-                        テレビ</label>
-                      <label class="radio-inline" for="OwnCarEquipmentAlloyWheels1">
-                        <input type="radio" name="data" id="OwnCarEquipmentAlloyWheels1" value="13" />
-                        ナビゲーション</label>
-                      <label class="radio-inline" for="OwnCarSteering0">
-                        <input type="radio" name="data" id="OwnCarSteering0" value="14"/>
-                        バックカメラ</label>
-                    </div>
-                    <div class="col col-md-9" style="padding: 6px;">
-                      <label class="radio-inline" for="OwnCarSteering1">
-                        <input type="radio" name="data" id="OwnCarSteering1" value="15" />
-                        電動スライドドア</label>
-                      <label class="radio-inline" for="OwnCarSteering2">
-                        <input type="radio" name="data" id="OwnCarSteering2" value="16"  />
-                        サンルーフ</label>
-                      <label class="radio-inline" for="OwnCarSteering2b">
-                        <input type="radio" name="data" id="OwnCarSteering2b" value="17" />
-                        本革シート</label>
-                    </div>
-                    <div class="col col-md-9" style="padding: 6px;">
-                      <label class="radio-inline" for="OwnCarSteering3">
-                        <input type="radio" name="data" id="OwnCarSteering3" value="18"  />
-                        純正エアロパーツ</label>
-                      <label class="radio-inline" for="OwnCarSteering4">
-                        <input type="radio" name="data" id="OwnCarSteering4" value="19" />
-                        純正アルミホイール</label>
-                    </div>
-                    <div class="col col-md-9" style="padding: 6px;">
-                      <label class="radio-inline" for="OwnCarSteering5">
-                        <input type="radio" name="data" id="OwnCarSteering5" value="20"  />
-                        横滑り防止装置</label>
-                      <label class="radio-inline" for="OwnCarSteering6">
-                        <input type="radio" name="data" id="OwnCarSteering6" value="21" />
-                        トラクションコントロール</label>
-                    </div>
-                    <div class="col col-md-9" style="padding: 6px;">
-                      <label class="radio-inline" for="OwnCarSteering7">
-                        <input type="radio" name="data" id="OwnCarSteering7" value="22"  />
-                        寒冷地仕様車</label>
-                      <label class="radio-inline" for="OwnCarSteering8">
-                        <input type="radio" name="data" id="OwnCarSteering8" value="23" />
-                        福祉車両</label>
-                      <label class="radio-inline" for="OwnCarSteering9">
-                        <input type="radio" name="data" id="OwnCarSteering9" value="24"  />
-                        ローダウン</label>
-                    </div>
-                    <div class="col col-md-9" style="padding: 6px;">
-                      <label class="radio-inline" for="OwnCarSteering10">
-                        <input type="radio" name="data" id="OwnCarSteering10" value="25" />
-                        禁煙車</label>
-                      <label class="radio-inline" for="OwnCarSteering0">
-                        <input type="radio" name="data" id="OwnCarSteering0" value="26" />
-                        ペット同乗歴なし</label>
-                      <label class="radio-inline" for="OwnCarSteering1">
-                        <input type="radio" name="data" id="OwnCarSteering1" value="27" />
-                        限定車</label>
-                    </div>
-                    <div class="col col-md-12" style="padding: 6px;">
-                      <label class="radio-inline" for="OwnCarSteering0">
-                        <input type="radio" name="data" id="OwnCarSteering0" value="28"  />
-                        取扱説明書</label>
-                      <label class="radio-inline" for="OwnCarSteering1">
-                        <input type="radio" name="data" id="OwnCarSteering1" value="29" />
-                        新車時保証書</label>
-                      <label class="radio-inline" for="OwnCarSteering0">
-                        <input type="radio" name="data" id="OwnCarSteering0" value="30"  />
-                        スペアタイヤ</label>
-                      <label class="radio-inline" for="OwnCarSteering1">
-                        <input type="radio" name="data" id="OwnCarSteering1" value="31" />
-                        ハンドル</label>
-                    </div>
+            @for($i=0;$i<count($equipment);$i++)
+              @if($i == 0)
+                <div class="col col-md-9" style="padding: 6px;">
+              @endif
+                <label class="radio-inline" for="infor_equipment{{$i}}">
+                        <input type="radio" name="infor_equipment" id="infor_equipment{{$i}}" data-id="{{$equipment[$i]->id}}" {{in_array($equipment[$i]->id,$infor->equipment)?'checked':''}}  />
+                {{$equipment[$i]->name}}</label>
+              @if(($i+1)%3 == 0)
+                </div>
+              @endif
+              @if(($i+1)%3 == 0 && ($i+1) != count($equipment))
+                <div class="col col-md-9" style="padding: 6px;">
+              @endif
+            @endfor
+                    
+                    
 
 				  </td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">エアコン</td>
                   <td><div class="col col-md-12 P6_0">
-                      <label class="radio-inline" for="OwnCarEquipmentAirConditioner0">
-                        <input type="radio" name="data[OwnCar][equipment_air_conditioner]" id="OwnCarEquipmentAirConditioner0" value="0" />
+                      <label class="radio-inline" for="infor_air_condition1">
+                        <input type="radio" name="infor_air_condition" id="infor_air_condition1" {{$infor->air_condition == 1?'checked':''}} />
                         無</label>
-                      <label class="radio-inline" for="OwnCarEquipmentAirConditioner1">
-                        <input type="radio" name="data[OwnCar][equipment_air_conditioner]" id="OwnCarEquipmentAirConditioner1" value="1" />
+                      <label class="radio-inline" for="infor_air_condition2">
+                        <input type="radio" name="infor_air_condition" id="infor_air_condition2" {{$infor->air_condition == 2?'checked':''}} />
                         オートエアコン</label>
-                      <label class="radio-inline" for="OwnCarEquipmentAirConditioner2">
-                        <input type="radio" name="data[OwnCar][equipment_air_conditioner]" id="OwnCarEquipmentAirConditioner2" value="2" />
+                      <label class="radio-inline" for="infor_air_condition3">
+                        <input type="radio" name="infor_air_condition" id="infor_air_condition3" {{$infor->air_condition == 3?'checked':''}} />
                         マニュアルエアコン</label>
-                      <label class="radio-inline" for="OwnCarEquipmentAirConditioner4">
-                        <input type="radio" name="data[OwnCar][equipment_air_conditioner]" id="OwnCarEquipmentAirConditioner4" value="4" />
+                      <label class="radio-inline" for="infor_air_condition4">
+                        <input type="radio" name="infor_air_condition" id="infor_air_condition4" {{$infor->air_condition == 4?'checked':''}} />
                         故障</label>
-                      <label class="radio-inline" for="OwnCarEquipmentAirConditioner9">
-                        <input type="radio" name="data[OwnCar][equipment_air_conditioner]" id="OwnCarEquipmentAirConditioner9" value="9" checked="checked" />
+                      <label class="radio-inline" for="infor_air_condition5">
+                        <input type="radio" name="infor_air_condition" id="infor_air_condition5" {{$infor->air_condition == 5?'checked':''}} />
                         不明</label>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">装備品（オプション等）備考</td>
                   <td><div class="col col-md-8 PL0">
-                      <input name="data[OwnCar][grade]" class="form-control input-sm" maxlength="50" id="grade" type="text" value=""/>
+                      <input name="infor_remark" class="form-control input-sm" maxlength="50" id="infor_remark" type="text" value="{{$infor->remark}}"/>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">ドア数</td>
                   <td><div class="col col-md-2 PL0">
-                      <input name="data[OwnCar][doors]" class="form-control input-sm ime-disabled" maxlength="1" id="doors" type="tel" value="5"/>
+                      <input name="infor_number_door" class="form-control input-sm ime-disabled" maxlength="1" id="infor_number_door" type="tel" value="{{$infor->number_door}}"/>
                     </div>
                     <div class="col col-md-2 P6_0"> ドア</div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">乗員定員数</td>
                   <td><div class="col col-md-2 PL0">
-                      <input name="data[OwnCar][doors]" class="form-control input-sm ime-disabled" maxlength="1" id="doors" type="tel" value="5"/>
+                      <input name="infor_number_passenger" class="form-control input-sm ime-disabled" maxlength="1" id="infor_number_passenger" type="tel" value="{{$infor->number_passenger}}"/>
                     </div>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">車両状態(外装)</td>
                   <td><div class="col col-md-12 PL0">
-                      <textarea name="data[OwnCar][conditions_exterior]" class="form-control input-sm" rows="3" placeholder="外装" cols="30" id="OwnCarConditionsExterior">キズ・凹み多少ある</textarea>
+                      <textarea name="infor_condition" class="form-control input-sm" rows="3" placeholder="外装" cols="30" id="infor_condition">{{$infor->condition}}</textarea>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">車両状態(内装)</td>
                   <td><div class="col col-md-12 PL0">
-                      <textarea name="data[OwnCar][conditions_interior]" class="form-control input-sm" rows="3" placeholder="内装" cols="30" id="OwnCarConditionsInterior">シミ・汚れ多少ある</textarea>
+                      <textarea name="infor_state_interior" class="form-control input-sm" rows="3" placeholder="内装" cols="30" id="infor_state_interior">{{$infor->state_interior}}</textarea>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">車両状態(その他)</td>
                   <td><div class="col col-md-12 PL0">
-                      <textarea name="data[OwnCar][conditions]" class="form-control input-sm" rows="3" placeholder="車両（その他）" cols="30" id="OwnCarConditions"></textarea>
+                      <textarea name="infor_state_other" class="form-control input-sm" rows="3" placeholder="車両（その他）" cols="30" id="infor_state_other">{{$infor->state_other}}</textarea>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">その他PRポイント</td>
                   <td><div class="col col-md-12 PL0">
-                      <textarea name="data[OwnCar][conditions]" class="form-control input-sm" rows="3" placeholder="その他PRポイント" cols="30" id="OwnCarConditions"></textarea>
+                      <textarea name="infor_pr_points" class="form-control input-sm" rows="3" placeholder="その他PRポイント" cols="30" id="infor_pr_points">{{$infor->pr_points}}</textarea>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">車両番号 (N/P)</td>
                   <td><div class="col col-md-6 PL0">
-                      <input name="data[OwnCar][vehicle_number]" class="form-control input-sm" maxlength="20" id="vehicle_number" type="text" value="大宮502め2235"/>
+                      <input name="infor_vehicle_number" class="form-control input-sm" maxlength="20" id="infor_vehicle_number" type="text" value="{{$infor->vehicle_number}}"/>
                     </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px; vertical-align: middle;">車台番号</td>
                   <td><div class="col col-md-8 PL0">
-                      <input name="data[OwnCar][serial_number]" class="form-control input-sm" maxlength="30" id="serial_number" type="tel" value="CQ2A-0017425"/>
+                      <input name="infor_chassis_number" class="form-control input-sm" maxlength="30" id="infor_chassis_number" type="tel" value="{{$infor->chassis_number}}"/>
                     </div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">要望：取外部品</td>
                   <td class="form-horizontal"><div class="col col-md-1 text-center PA0">
                       <div class="checkbox">
-                        <input type="hidden" name="data[OwnCar][request_remove_navi]" id="request_remove_navi_" value="0"/>
-                        <input type="checkbox" name="data[OwnCar][request_remove_navi]"  id="request_remove_navi" value="1"/>
+                        <input type="checkbox" name="infor_remove_part"  id="infor_remove_part1" {{$infor->remove_part[0] == 1?'checked':''}}/>
                       </div>
                     </div>
                     <div class="col col-md-2 P6_0" style="margin: 0px -10px;">ナビ</div>
                     <div class="col col-md-1 text-center PA0">
                       <div class="checkbox">
-                        <input type="hidden" name="data[OwnCar][request_remove_etc]" id="request_remove_etc_" value="0"/>
-                        <input type="checkbox" name="data[OwnCar][request_remove_etc]"  id="request_remove_etc" value="1"/>
+                        <input type="checkbox" name="infor_remove_part"  id="infor_remove_part2" {{$infor->remove_part[1] == 1?'checked':''}}/>
                       </div>
                     </div>
                     <div class="col col-md-2 P6_0" style="margin: 0px -10px;">ETC</div>
                     <div class="col col-md-1 text-center PA0">
                       <div class="checkbox">
-                        <input type="hidden" name="data[OwnCar][request_remove_tire]" id="request_remove_tire_" value="0"/>
-                        <input type="checkbox" name="data[OwnCar][request_remove_tire]"  id="request_remove_tire" value="1"/>
+                        <input type="checkbox" name="infor_remove_part"  id="infor_remove_part3" {{$infor->remove_part[2] == 1?'checked':''}}/>
                       </div>
                     </div>
                     <div class="col col-md-2 P6_0" style="margin: 0px -10px;"> タイヤ</div>
                     <div class="col col-md-1 text-center PA0">
                       <div class="checkbox">
-                        <input type="hidden" name="data[OwnCar][request_remove_wheel]" id="request_remove_wheel_" value="0"/>
-                        <input type="checkbox" name="data[OwnCar][request_remove_wheel]"  id="request_remove_wheel" value="1"/>
+                        <input type="checkbox" name="infor_remove_part"  id="infor_remove_part4" {{$infor->remove_part[3] == 1?'checked':''}}/>
                       </div>
                     </div>
                     <div class="col col-md-2 P6_0" style="margin: 0px -10px;"> ホイール</div></td>
                 </tr>
               </tbody>
-
-              <thead>
-			  <tr class="info">
-				  <th colspan="2">
-					  <div class="col col-md-12 text-right edit_own_car_button_div">
-						  <a href="/crm/AgreementOrders/edit/118262" class="btn btn-primary btn-sm edit_own_car" data-own_car_id="388218">編集</a>
-					  </div>
-				  </th>
-			  </tr>
-              </thead>
             </table>
+            </form>
           </div>
           <div>
             <table class="table table-bordered table-condensed info_table" style="margin-bottom:0; margin-bottom:10px;">
               <thead>
                 <tr class="info">
-					<th colspan="4"> <div class="col col-md-9 lead PL0 MB0"><strong>車両写真</strong></div>
-						<div class="col col-md-3 text-right">
-						<button type="button" class="btn btn-success" data-toggle="modal" data-target="#Modal">新規追加</button>
+                  <th colspan="4"> <div class="col col-md-9 lead PL0 MB0"><strong>車両写真</strong></div>                    
+                    <div class="col col-md-3 text-right"> 
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#Modal_add_image">新規追加</button>
                         <!-- Modal -->
-                        <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal fade" id="Modal_add_image" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -1154,799 +843,107 @@ var token = "{{csrf_token()}}";
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                     </div>
                                     <div class="modal-body">
-                                        <label for="file-upload" class="custom-file-upload"></label>
-                                        <input type="file" id="file-upload">
+                                        <label for="image_add" class="custom-file-upload"></label>
+                                        <input type="file" id="image_add">
+                                        <select name="image_index_add" class="form-control input-sm" id="image_index_add">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="6">7</option>
+                                                <option value="6">8</option>
+                                                <option value="6">9</option>
+                                                <option value="6">10</option>
+                                                <option value="6">11</option>
+                                                <option value="6">12</option>
+                                                <option value="6">13</option>
+                                                <option value="6">14</option>
+                                                <option value="6">15</option>
+                                                <option value="6">16</option>
+                                          </select>
+                                        <input type="text" id="image_name_add" accept="image/*" >
                                     </div>
                                     <div class="modal-footer">
+                                        <button type="button" id="image_add_ajax" class="btn btn-secondary">Submit</button>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!-- <button type="file" name="upfile" id="upfile" accept="image/*" class="btn btn-success btn-sm"></button>  -->
-                    </div>		
+                    </div>          
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="image_content">
                 <tr class="active text-center">
                   <td class="col col-md-2" style="vertical-align: middle;">写真とコメント</td>
                   <td class="col col-md-4" style="vertical-align: middle;">表示順</td>
                 </tr>
-                <tr>
+                @foreach($images as $item)
+                <tr id="row_img_{{$item->id}}">
                   <td class="text-center">
-					<div style="margin-bottom:5px;"><a href="./images/car1.jpg" rel="lightbox" class="lightbox_photo"><img src="{{ url('images/car1.jpg')}}" alt="車検証写真" width="120"></a></div>
-					<div><input name="data[OwnCar][vehicle_number]" class="form-control input-sm" maxlength="20" id="" type="text" value=""/></div>
-				  </td>
-					<td class="text-center">
-						<div class="col col-md-12 PR0 PL0">
-							<p class="iconclose"><button type="button" class="close" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button></p>
-						</div>
-					  <select name="data[AuctionCost][cost_category]" class="form-control input-sm" id="auction_cost_category">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="6">7</option>
-						<option value="6">8</option>
-						<option value="6">9</option>
-						<option value="6">10</option>
-						<option value="6">11</option>
-						<option value="6">12</option>
-						<option value="6">13</option>
-						<option value="6">14</option>
-						<option value="6">15</option>
-						<option value="6">16</option>
-					  </select>
-					   <br>				   
-					  <div class="text-center"> 
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">ファイル参照</button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">アップロードするファイルを選択</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="file-upload" class="custom-file-upload"></label>
-                                            <input type="file" id="file-upload">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
+                    <div style="margin-bottom:5px;"><a href="{{url('/').'/'.$item->url}}" id="image_url_show_a{{$item->id}}" rel="lightbox" class="lightbox_photo"><img src="{{url('/').'/'.$item->url}}" alt="車検証写真" width="120" id="image_url_show{{$item->id}}"></a></div>
+                    <div>
+                        <input class="form-control input-sm notfocus" id="image_name_show_left{{$item->id}}" maxlength="20" type="text" value="{{$item->name}}" disabled="disabled"/></div>
+                    </td>
+                    <td class="text-center">
+                                <div class="col col-md-12 PR0 PL0">
+                                    <p class="iconclose"><button type="button" class="close delete_image" data-id="{{$item->id}}" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button></p>
                                 </div>
-                            </div>
-				     </div>
-				　　</td>
+                                <div>
+                        <input class="form-control input-sm notfocus" id="image_name_show_right{{$item->id}}" maxlength="20" type="text" value="{{$item->name}}" disabled="disabled"/></div>
+                      <br>           
+                      <div class="text-center"> 
+                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal_edit_image{{$item->id}}">ファイル参照</button>
+                                      <!-- Modal -->
+                                      <div class="modal fade" id="Modal_edit_image{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                          <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                      <h5 class="modal-title" id="exampleModalLabel">アップロードするファイルを選択</h5>
+                                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                              </div>
+                                              <div class="modal-body">
+                                                <label for="image_url{{$item->id}}" class="custom-file-upload"></label>
+                                                <input type="file" id="image_url{{$item->id}}" accept="image/*">
+                                                <select name="image_index_edit{{$item->id}}" class="form-control input-sm" id="image_index_edit{{$item->id}}">
+                                                  <option {{$item->index == 1?'selected':''}} value="1">1</option>
+                                                  <option {{$item->index == 2?'selected':''}} value="2">2</option>
+                                                  <option {{$item->index == 3?'selected':''}} value="3">3</option>
+                                                  <option {{$item->index == 4?'selected':''}} value="4">4</option>
+                                                  <option {{$item->index == 5?'selected':''}} value="5">5</option>
+                                                  <option {{$item->index == 6?'selected':''}} value="6">6</option>
+                                                  <option {{$item->index == 7?'selected':''}} value="7">7</option>
+                                                  <option {{$item->index == 8?'selected':''}} value="8">8</option>
+                                                  <option {{$item->index == 9?'selected':''}} value="9">9</option>
+                                                  <option {{$item->index == 10?'selected':''}} value="10">10</option>
+                                                  <option {{$item->index == 11?'selected':''}} value="11">11</option>
+                                                  <option {{$item->index == 12?'selected':''}} value="12">12</option>
+                                                  <option {{$item->index == 13?'selected':''}} value="13">13</option>
+                                                  <option {{$item->index == 14?'selected':''}} value="14">14</option>
+                                                  <option {{$item->index == 15?'selected':''}} value="15">15</option>
+                                                  <option {{$item->index == 16?'selected':''}} value="16">16</option>
+                                                </select>
+                                                <input type="text" id="image_name_edit{{$item->id}}" value="{{$item->name}}" >
+                                              </div>
+                                              <div class="modal-footer">
+                                                  <button type="button" id="image_edit_ajax" data-id="{{$item->id}}" class="btn btn-secondary image_edit_ajax">Submit</button>
+                                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                      </div>
+                       </div>
+                  　　</td>
                 </tr>
-                <tr>
-                  <td class="text-center">
-					<div style="margin-bottom:5px;"><a href="./images/car2.jpg" rel="lightbox" class="lightbox_photo"><img src="{{ url('/images/car2.jpg')}}" alt="車検証写真" width="120"></a></div>
-					<div><input name="data[OwnCar][vehicle_number]" class="form-control input-sm" maxlength="20" id="" type="text" value=""/></div>
-				  </td>
-					<td class="text-center">
-					  <select name="data[AuctionCost][cost_category]" class="form-control input-sm" id="auction_cost_category">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="6">7</option>
-						<option value="6">8</option>
-						<option value="6">9</option>
-						<option value="6">10</option>
-						<option value="6">11</option>
-						<option value="6">12</option>
-						<option value="6">13</option>
-						<option value="6">14</option>
-						<option value="6">15</option>
-						<option value="6">16</option>
-					  </select>
-					   <br>				   
-					  <div class="text-center"> 
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">ファイル参照</button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">アップロードするファイルを選択</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="file-upload" class="custom-file-upload"></label>
-                                            <input type="file" id="file-upload">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-				     </div>
-				　　</td>
-                </tr>
-                <tr>
-                  <td class="text-center">
-					<div style="margin-bottom:5px;"><a href="./images/car3.jpg" rel="lightbox" class="lightbox_photo"><img src="{{ url('/images/car3.jpg')}}" alt="車検証写真" width="120"></a></div>
-					<div><input name="data[OwnCar][vehicle_number]" class="form-control input-sm" maxlength="20" id="" type="text" value=""/></div>
-				  </td>
-					<td class="text-center">
-					  <select name="data[AuctionCost][cost_category]" class="form-control input-sm" id="auction_cost_category">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="6">7</option>
-						<option value="6">8</option>
-						<option value="6">9</option>
-						<option value="6">10</option>
-						<option value="6">11</option>
-						<option value="6">12</option>
-						<option value="6">13</option>
-						<option value="6">14</option>
-						<option value="6">15</option>
-						<option value="6">16</option>
-					  </select>
-					   <br>				   
-					  <div class="text-center"> 
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">ファイル参照</button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">アップロードするファイルを選択</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="file-upload" class="custom-file-upload"></label>
-                                            <input type="file" id="file-upload">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-				     </div>
-				　　</td>
-                </tr>
-                <tr>
-                  <td class="text-center">
-					<div style="margin-bottom:5px;"><a href="./images/car4.jpg" rel="lightbox" class="lightbox_photo"><img src="{{ url('/images/car4.jpg')}}" alt="車検証写真" width="120"></a></div>
-					<div><input name="data[OwnCar][vehicle_number]" class="form-control input-sm" maxlength="20" id="" type="text" value=""/></div>
-				  </td>
-					<td class="text-center">
-					  <select name="data[AuctionCost][cost_category]" class="form-control input-sm" id="auction_cost_category">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="6">7</option>
-						<option value="6">8</option>
-						<option value="6">9</option>
-						<option value="6">10</option>
-						<option value="6">11</option>
-						<option value="6">12</option>
-						<option value="6">13</option>
-						<option value="6">14</option>
-						<option value="6">15</option>
-						<option value="6">16</option>
-					  </select>
-					  <br>				   
-					  <div class="text-center"> 
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">ファイル参照</button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">アップロードするファイルを選択</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="file-upload" class="custom-file-upload"></label>
-                                            <input type="file" id="file-upload">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-				     </div>
-				　　</td>
-                </tr>
-                <tr>
-                  <td class="text-center">
-					<div style="margin-bottom:5px;"><a href="./images/car5.jpg" rel="lightbox" class="lightbox_photo"><img src="{{ url('/images/car5.jpg')}}" alt="車検証写真" width="120"></a></div>
-					<div><input name="data[OwnCar][vehicle_number]" class="form-control input-sm" maxlength="20" id="" type="text" value=""/></div>
-				  </td>
-					<td class="text-center">
-					  <select name="data[AuctionCost][cost_category]" class="form-control input-sm" id="auction_cost_category">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="6">7</option>
-						<option value="6">8</option>
-						<option value="6">9</option>
-						<option value="6">10</option>
-						<option value="6">11</option>
-						<option value="6">12</option>
-						<option value="6">13</option>
-						<option value="6">14</option>
-						<option value="6">15</option>
-						<option value="6">16</option>
-					  </select>
-					   <br>				   
-					  <div class="text-center"> 
-                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">ファイル参照</button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">アップロードするファイルを選択</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="file-upload" class="custom-file-upload"></label>
-                                            <input type="file" id="file-upload">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-				     </div>
-				　　</td>
-                </tr>
-                <tr>
-                  <td class="text-center">
-					<div style="margin-bottom:5px;"><a href="./images/car6.jpg" rel="lightbox" class="lightbox_photo"><img src="{{ url('/images/car6.jpg')}}" alt="車検証写真" width="120"></a></div>
-					<div><input name="data[OwnCar][vehicle_number]" class="form-control input-sm" maxlength="20" id="" type="text" value=""/></div>
-				  </td>
-					<td class="text-center">
-					  <select name="data[AuctionCost][cost_category]" class="form-control input-sm" id="auction_cost_category">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="6">7</option>
-						<option value="6">8</option>
-						<option value="6">9</option>
-						<option value="6">10</option>
-						<option value="6">11</option>
-						<option value="6">12</option>
-						<option value="6">13</option>
-						<option value="6">14</option>
-						<option value="6">15</option>
-						<option value="6">16</option>
-					  </select>
-					   <br>				   
-					  <div class="text-center"> 
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">ファイル参照</button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">アップロードするファイルを選択</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="file-upload" class="custom-file-upload"></label>
-                                            <input type="file" id="file-upload">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-				     </div>
-				　　</td>
-                </tr>
-                <tr>
-                  <td class="text-center">
-					<div style="margin-bottom:5px;"><a href="./images/car7.jpg" rel="lightbox" class="lightbox_photo"><img src="{{ url('/images/car7.jpg')}}" alt="車検証写真" width="120"></a></div>
-					<div><input name="data[OwnCar][vehicle_number]" class="form-control input-sm" maxlength="20" id="" type="text" value=""/></div>
-				  </td>
-					<td class="text-center">
-					  <select name="data[AuctionCost][cost_category]" class="form-control input-sm" id="auction_cost_category">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="6">7</option>
-						<option value="6">8</option>
-						<option value="6">9</option>
-						<option value="6">10</option>
-						<option value="6">11</option>
-						<option value="6">12</option>
-						<option value="6">13</option>
-						<option value="6">14</option>
-						<option value="6">15</option>
-						<option value="6">16</option>
-					  </select>
-					   <br>				   
-					  <div class="text-center"> 
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">ファイル参照</button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">アップロードするファイルを選択</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="file-upload" class="custom-file-upload"></label>
-                                            <input type="file" id="file-upload">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-				     </div>
-				　　</td>
-                </tr>
-                <tr>
-                  <td class="text-center">
-					<div style="margin-bottom:5px;"><a href="./images/car8.jpg" rel="lightbox" class="lightbox_photo"><img src="{{ url('/images/car8.jpg')}}" alt="車検証写真" width="120"></a></div>
-					<div><input name="data[OwnCar][vehicle_number]" class="form-control input-sm" maxlength="20" id="" type="text" value=""/></div>
-				  </td>
-					<td class="text-center">
-					  <select name="data[AuctionCost][cost_category]" class="form-control input-sm" id="auction_cost_category">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="6">7</option>
-						<option value="6">8</option>
-						<option value="6">9</option>
-						<option value="6">10</option>
-						<option value="6">11</option>
-						<option value="6">12</option>
-						<option value="6">13</option>
-						<option value="6">14</option>
-						<option value="6">15</option>
-						<option value="6">16</option>
-					  </select>
-					  <br>				   
-					  <div class="text-center"> 
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">ファイル参照</button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">アップロードするファイルを選択</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="file-upload" class="custom-file-upload"></label>
-                                            <input type="file" id="file-upload">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-				     </div>
-				　　</td>
-                </tr>
-                <tr>
-                  <td class="text-center">
-					<div style="margin-bottom:5px;"><a href="./images/car9.jpg" rel="lightbox" class="lightbox_photo"><img src="{{ url('/images/car9.jpg')}}" alt="車検証写真" width="120"></a></div>
-					<div><input name="data[OwnCar][vehicle_number]" class="form-control input-sm" maxlength="20" id="" type="text" value=""/></div>
-				  </td>
-					<td class="text-center">
-					  <select name="data[AuctionCost][cost_category]" class="form-control input-sm" id="auction_cost_category">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="6">7</option>
-						<option value="6">8</option>
-						<option value="6">9</option>
-						<option value="6">10</option>
-						<option value="6">11</option>
-						<option value="6">12</option>
-						<option value="6">13</option>
-						<option value="6">14</option>
-						<option value="6">15</option>
-						<option value="6">16</option>
-					  </select>
-					   <br>				   
-					  <div class="text-center"> 
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">ファイル参照</button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">アップロードするファイルを選択</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="file-upload" class="custom-file-upload"></label>
-                                            <input type="file" id="file-upload">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-				     </div>
-				　　</td>
-                </tr>
-                <tr>
-                  <td class="text-center">
-					<div style="margin-bottom:5px;"><a href="./images/car10.jpg" rel="lightbox" class="lightbox_photo"><img src="{{ url('/images/car10.jpg')}}" alt="車検証写真" width="120"></a></div>
-					<div><input name="data[OwnCar][vehicle_number]" class="form-control input-sm" maxlength="20" id="" type="text" value=""/></div>
-				  </td>
-					<td class="text-center">
-					  <select name="data[AuctionCost][cost_category]" class="form-control input-sm" id="auction_cost_category">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="6">7</option>
-						<option value="6">8</option>
-						<option value="6">9</option>
-						<option value="6">10</option>
-						<option value="6">11</option>
-						<option value="6">12</option>
-						<option value="6">13</option>
-						<option value="6">14</option>
-						<option value="6">15</option>
-						<option value="6">16</option>
-					  </select>
-					   <br>				   
-					  <div class="text-center"> 
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">ファイル参照</button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">アップロードするファイルを選択</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="file-upload" class="custom-file-upload"></label>
-                                            <input type="file" id="file-upload">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-				     </div>
-				　　</td>
-                </tr>
-                <tr>
-                  <td class="text-center">
-					<div style="margin-bottom:5px;"><a href="./images/car11.jpg" rel="lightbox" class="lightbox_photo"><img src="{{ url('/images/car11.jpg')}}" alt="車検証写真" width="120"></a></div>
-					<div><input name="data[OwnCar][vehicle_number]" class="form-control input-sm" maxlength="20" id="" type="text" value=""/></div>
-				  </td>
-					<td class="text-center">
-					  <select name="data[AuctionCost][cost_category]" class="form-control input-sm" id="auction_cost_category">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="6">7</option>
-						<option value="6">8</option>
-						<option value="6">9</option>
-						<option value="6">10</option>
-						<option value="6">11</option>
-						<option value="6">12</option>
-						<option value="6">13</option>
-						<option value="6">14</option>
-						<option value="6">15</option>
-						<option value="6">16</option>
-					  </select>
-					   <br>				   
-					  <div class="text-center"> 
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">ファイル参照</button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">アップロードするファイルを選択</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="file-upload" class="custom-file-upload"></label>
-                                            <input type="file" id="file-upload">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-				     </div>
-				　　</td>
-                </tr>
-                <tr>
-                  <td class="text-center">
-					<div style="margin-bottom:5px;"><a href="./images/car12.jpg" rel="lightbox" class="lightbox_photo"><img src="{{ url('/images/car12.jpg')}}" alt="車検証写真" width="120"></a></div>
-					<div><input name="data[OwnCar][vehicle_number]" class="form-control input-sm" maxlength="20" id="" type="text" value=""/></div>
-				  </td>
-					<td class="text-center">
-					  <select name="data[AuctionCost][cost_category]" class="form-control input-sm" id="auction_cost_category">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="6">7</option>
-						<option value="6">8</option>
-						<option value="6">9</option>
-						<option value="6">10</option>
-						<option value="6">11</option>
-						<option value="6">12</option>
-						<option value="6">13</option>
-						<option value="6">14</option>
-						<option value="6">15</option>
-						<option value="6">16</option>
-					  </select>
-						<div class="text-center">
-							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">ファイル参照</button>
-							<!-- Modal -->
-							<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-								<div class="modal-dialog modal-dialog-centered" role="document">
-									<div class="modal-content">
-										<div class="modal-header">
-											<h5 class="modal-title" id="exampleModalLabel">アップロードするファイルを選択</h5>
-											<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-										</div>
-										<div class="modal-body">
-											<label for="file-upload" class="custom-file-upload"></label>
-											<input type="file" id="file-upload">
-										</div>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-				　　</td>
-                </tr>
-                <tr>
-                  <td class="text-center">
-					<div style="margin-bottom:5px;"><a href="./images/car13.jpg" rel="lightbox" class="lightbox_photo"><img src="{{ url('/images/car13.jpg')}}" alt="車検証写真" width="120"></a></div>
-					<div><input name="data[OwnCar][vehicle_number]" class="form-control input-sm" maxlength="20" id="" type="text" value=""/></div>
-				  </td>
-					<td class="text-center">
-					  <select name="data[AuctionCost][cost_category]" class="form-control input-sm" id="auction_cost_category">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="6">7</option>
-						<option value="6">8</option>
-						<option value="6">9</option>
-						<option value="6">10</option>
-						<option value="6">11</option>
-						<option value="6">12</option>
-						<option value="6">13</option>
-						<option value="6">14</option>
-						<option value="6">15</option>
-						<option value="6">16</option>
-					  </select>
-					   <br>				   
-					  <div class="text-center"> 
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">ファイル参照</button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">アップロードするファイルを選択</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="file-upload" class="custom-file-upload"></label>
-                                            <input type="file" id="file-upload">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-				     </div>
-				　　</td>
-                </tr>
-                <tr>
-                  <td class="text-center">
-					<div style="margin-bottom:5px;"><a href="./images/car14.jpg" rel="lightbox" class="lightbox_photo"><img src="{{ url('/images/car14.jpg')}}" alt="車検証写真" width="120"></a></div>
-					<div><input name="data[OwnCar][vehicle_number]" class="form-control input-sm" maxlength="20" id="" type="text" value=""/></div>
-				  </td>
-					<td class="text-center">
-					  <select name="data[AuctionCost][cost_category]" class="form-control input-sm" id="auction_cost_category">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="6">7</option>
-						<option value="6">8</option>
-						<option value="6">9</option>
-						<option value="6">10</option>
-						<option value="6">11</option>
-						<option value="6">12</option>
-						<option value="6">13</option>
-						<option value="6">14</option>
-						<option value="6">15</option>
-						<option value="6">16</option>
-					  </select>
-					   <br>				   
-					  <div class="text-center"> 
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">ファイル参照</button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">アップロードするファイルを選択</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="file-upload" class="custom-file-upload"></label>
-                                            <input type="file" id="file-upload">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-				     </div>
-				　　</td>
-                </tr>
-                <tr>
-                  <td class="text-center">
-					<div style="margin-bottom:5px;"><a href="./images/car15.jpg" rel="lightbox" class="lightbox_photo"><img src="{{ url('/images/car15.jpg')}}" alt="車検証写真" width="120"></a></div>
-					<div><input name="data[OwnCar][vehicle_number]" class="form-control input-sm" maxlength="20" id="" type="text" value=""/></div>
-				  </td>
-					<td class="text-center">
-					  <select name="data[AuctionCost][cost_category]" class="form-control input-sm" id="auction_cost_category">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="6">7</option>
-						<option value="6">8</option>
-						<option value="6">9</option>
-						<option value="6">10</option>
-						<option value="6">11</option>
-						<option value="6">12</option>
-						<option value="6">13</option>
-						<option value="6">14</option>
-						<option value="6">15</option>
-						<option value="6">16</option>
-					  </select>
-					   <br>				   
-					  <div class="text-center"> 
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">ファイル参照</button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">アップロードするファイルを選択</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="file-upload" class="custom-file-upload"></label>
-                                            <input type="file" id="file-upload">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-				     </div>
-				　　</td>
-                </tr>
-                <tr>
-                  <td class="text-center">
-					<div style="margin-bottom:5px;"><a href="./images/car16.jpg" rel="lightbox" class="lightbox_photo"><img src="{{ url('/images/car16.jpg')}}" alt="車検証写真" width="120"></a></div>
-					<div><input name="data[OwnCar][vehicle_number]" class="form-control input-sm" maxlength="20" id="" type="text" value=""/></div>
-				  </td>
-					<td class="text-center">
-					  <select name="data[AuctionCost][cost_category]" class="form-control input-sm" id="auction_cost_category">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="6">7</option>
-						<option value="6">8</option>
-						<option value="6">9</option>
-						<option value="6">10</option>
-						<option value="6">11</option>
-						<option value="6">12</option>
-						<option value="6">13</option>
-						<option value="6">14</option>
-						<option value="6">15</option>
-						<option value="6">16</option>
-					  </select>
-					   <br>				   
-					  <div class="text-center"> 
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">ファイル参照</button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">アップロードするファイルを選択</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label for="file-upload" class="custom-file-upload"></label>
-                                            <input type="file" id="file-upload">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-				     </div>
-				　　</td>
-                </tr>
+                @endforeach
               </tbody>
-			</table>
+      </table>
 			<table class="table table-bordered table-condensed info_table" style="margin-bottom:0;">
               <tbody>
                 <tr style="height: 41px;" id="recycling_deposit_status">
@@ -1954,7 +951,7 @@ var token = "{{csrf_token()}}";
                   <td style="vertical-align: middle;"> 
                       <div class="flexrowbetween">
                           <div class="img">
-                              <a href="{{ url('/images/img2.jpg')}}" rel="lightbox" class="lightbox_photo"><img src="{{ url('/images/img3.jpg')}}" alt="車検証写真" width="100"></a>
+                              <a href="{{ url('/').'/'.$sellerCar->inspection_photo}}" rel="lightbox" class="lightbox_photo"><img src="{{ url('/').'/'.$sellerCar->inspection_photo}}" alt="車検証写真" width="100"></a>
                           </div>
                           <div class="flexbtn"> 
                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">ファイル参照</button>
@@ -1982,14 +979,14 @@ var token = "{{csrf_token()}}";
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">登録日時</td>
-                  <td style="vertical-align: middle;"> 2018-03-01 </td>
+                  <td style="vertical-align: middle;"> {{$sellerCar->inspection_register_date}} </td>
                 </tr>
                 <tr style="height: 41px;" id="recycling_deposit_status">
                   <td class="active" style="width: 120px; vertical-align: middle;">書類写真</td>
                   <td style="vertical-align: middle;"> 
                       <div class="flexrowbetween">
                           <div class="img">
-                              <a href="{{ url('/images/img3.jpg')}}" rel="lightbox" class="lightbox_photo"><img src="{{ url('/images/img3.jpg')}}" alt="車検証写真" width="100"></a>
+                              <a href="{{ url('/').'/'.$sellerCar->document_photo}}" rel="lightbox" class="lightbox_photo"><img src="{{ url('/').'/'.$sellerCar->document_photo}}" alt="車検証写真" width="100"></a>
                           </div>
                           <div class="flexbtn"> 
                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">ファイル参照</button>
@@ -2017,7 +1014,7 @@ var token = "{{csrf_token()}}";
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">登録日時</td>
-                  <td style="vertical-align: middle;"> 2018-03-01 </td>
+                  <td style="vertical-align: middle;"> 2{{$sellerCar->document_register_date}} </td>
                 </tr>
 
               </tbody>
@@ -2091,7 +1088,7 @@ var token = "{{csrf_token()}}";
                    <td class="active" style="width: 120px; vertical-align: middle;">再TEL予定日</td>
                   <td style="background-color: #f9f9f9; vertical-align: middle;">
 					  <div class="col col-md-4 PL0">
-						  <input name="status_re_tel_date" class="form-control input-sm ime-disabled" maxlength="10" id="status_re_tel_date" autocomplete="off" type="tel" value="{{$status->re_tel_date}}"/>
+						  <input name="status_re_tel_date" class="form-control input-sm ime-disabled datepicker" maxlength="10" id="status_re_tel_date" autocomplete="off" type="tel" value="{{$status->re_tel_date}}"/>
 					  </div>
 				  </td>
                 </tr>
@@ -2195,7 +1192,8 @@ var token = "{{csrf_token()}}";
             </table>
             </form>
           </div>
-          <div>
+          <div style="margin-top:20px;">
+            <form id="history_form">
             <table class="table table-bordered table-condensed info_table" style="margin-bottom: 0px;">
               <thead>
                 <tr class="info handle_history_title">
@@ -2206,78 +1204,63 @@ var token = "{{csrf_token()}}";
               <tbody>
                 <tr>
                   <td style="border-bottom-style: none;"><div class="col col-md-12">
-                      <textarea name="data[InquiryDetail][conditions]" class="form-control input-sm" rows="5" cols="30" id="InquiryDetailConditions"></textarea>
+                      <textarea name="history_input" class="form-control input-sm" rows="5" cols="30" id="history_input"></textarea>
                     </div></td>
                 </tr>
                 <tr>
                   <td style="border-top-style: none; border-bottom-style: none;"><div class="col col-md-12 calling_radio" style="padding: 6px">
-                      <label class="radio-inline" for="InquiryDetailCalling1">
-                        <input type="radio" name="data[InquiryDetail][calling]" id="InquiryDetailCalling1" value="1" checked="checked" />
+                      <label class="radio-inline" for="history_type1">
+                        <input type="radio" name="history_type" id="history_type1" value="入電" checked="checked" />
                         入電</label>
-                      <label class="radio-inline" for="InquiryDetailCalling2">
-                        <input type="radio" name="data[InquiryDetail][calling]" id="InquiryDetailCalling2" value="2" />
+                      <label class="radio-inline" for="history_type2">
+                        <input type="radio" name="history_type" id="history_type2" value="架電" />
                         架電</label>
-                      <label class="radio-inline" for="InquiryDetailCalling3">
-                        <input type="radio" name="data[InquiryDetail][calling]" id="InquiryDetailCalling3" value="3" />
+                      <label class="radio-inline" for="history_type3">
+                        <input type="radio" name="history_type" id="history_type3" value="メール受信" />
                         メール受信</label>
-                      <label class="radio-inline" for="InquiryDetailCalling4">
-                        <input type="radio" name="data[InquiryDetail][calling]" id="InquiryDetailCalling4" value="4" />
+                      <label class="radio-inline" for="history_type4">
+                        <input type="radio" name="history_type" id="history_type4" value="メール送信 " />
                         メール送信</label>
-                      <label class="radio-inline" for="InquiryDetailCalling5">
-                        <input type="radio" name="data[InquiryDetail][calling]" id="InquiryDetailCalling5" value="5" />
+                      <label class="radio-inline" for="history_type5">
+                        <input type="radio" name="history_type" id="history_type5" value="業者入電" />
                         業者入電</label>
-                      <label class="radio-inline" for="InquiryDetailCalling6">
-                        <input type="radio" name="data[InquiryDetail][calling]" id="InquiryDetailCalling6" value="6" />
+                      <label class="radio-inline" for="history_type6">
+                        <input type="radio" name="history_type" id="history_type6" value="業者架電" />
                         業者架電</label>
-                      <label class="radio-inline" for="InquiryDetailCalling9">
-                        <input type="radio" name="data[InquiryDetail][calling]" id="InquiryDetailCalling9" value="9" />
+                      <label class="radio-inline" for="history_type7">
+                        <input type="radio" name="history_type" id="history_type7" value="その他" />
                         その他</label>
                     </div></td>
                 </tr>
                 <tr>
-                  <td style="border-top-style: none;"><div class="col col-md-2 col-md-offset-10 text-center add_inquiry_detail_button_div"> <a href="/crm/AgreementOrders/edit/118262" class="btn btn-primary btn-sm add_inquiry_detail" inquiry_id="388102">登録</a> </div></td>
+                  <td style="border-top-style: none;"><div class="col col-md-2 col-md-offset-10 text-center add_inquiry_detail_button_div"> <a href="#" class="btn btn-primary btn-sm add_inquiry_detail" id="add_history">登録</a> </div></td>
                 </tr>
               </tbody>
             </table>
-            <table class="table table-striped table-bordered table-condensed handle_history_list info_table" style="margin-bottom: 0px; table-layout: fixed;">
-              <tbody class="handle_history">
-                <tr>
-                  <td class="active" style="vertical-align: middle; width: 90px;">2018-02-06<br />
-                    09:32:35</td>
-                  <td class="active" style="vertical-align: middle; width: 90px;">吉成 英里</td>
-                  <td class="active" style="vertical-align: middle; width: 80px;">その他</td>
-                  <td>写真OK　立会無し　事前連絡必要<br />
-                    <br />
-                    白NP<br />
-                    キズ・凹み多少ある<br />
-                    シミ・汚れ多少ある</td>
-                </tr>
-                <tr>
-                  <td class="active" style="vertical-align: middle; width: 90px;">2018-02-06<br />
-                    09:33:08</td>
-                  <td class="active" style="vertical-align: middle; width: 90px;">吉成 英里</td>
-                  <td class="active" style="vertical-align: middle; width: 80px;">その他</td>
-                  <td>書類対応願います。★書類付き購入の際は3月抹消または名変必須のため3月中に手続き必要。それ以外の場合は3/26必着にて書類・NPを弊社へ返送必要です</td>
-                </tr>
-                <tr>
-                  <td class="active" style="vertical-align: middle; width: 90px;">2018-02-06<br />
-                    09:34:30</td>
-                  <td class="active" style="vertical-align: middle; width: 90px;">吉成 英里</td>
-                  <td class="active" style="vertical-align: middle; width: 80px;">その他</td>
-                  <td>手元にあった車検証は1個前の車検証だった</td>
-                </tr>
-                <tr>
-                  <td class="active" style="vertical-align: middle; width: 90px;">2018-02-06<br />
-                    10:50:14</td>
-                  <td class="active" style="vertical-align: middle; width: 90px;">吉成 英里</td>
-                  <td class="active" style="vertical-align: middle; width: 80px;">その他</td>
-                  <td>修正<br />
-                    2000円　提示　自税別（2/6吉成）</td>
-                </tr>
-              </tbody>
-            </table>
+            </form>
+          </div>
+            <div>
+                <div class="scroll">
+                    <div id="live-chat2">
+                        <table>
+                        <tbody id="history_content">
+                        @foreach($history as $item)
+                          <tr>
+                            <td class="active" style="vertical-align: middle; width: 90px;">{{$item->date}}</td>
+                            <td class="active" style="vertical-align: middle; width: 90px;">{{$item->name}}</td>
+                            <td class="active" style="vertical-align: middle; width: 80px;">{{$item->type}}</td>
+                            <td>{{$item->content}}</td>
+                          </tr>
+                        @endforeach
+                        </tbody>
+                        </table>
+                        <!-- end chat -->
+                    </div>
+                    <!-- end live-chat -->
+                </div>
           </div>
           <div style="margin-top:20px;">
+            <form id="question_form" >
             <table class="table table-bordered table-condensed info_table" style="margin-top: 20px; margin-bottom: 0px;">
               <thead>
                 <tr class="info sms_history_title">
@@ -2289,7 +1272,7 @@ var token = "{{csrf_token()}}";
               <tbody>
                 <tr>
                   <td style="border-bottom-style: none;"><div class="col col-md-12 required">
-                      <input name="data[ShortMessage][message]" class="form-control input-sm" maxlength="50" id="short_message" type="text"/>
+                      <input name="question_input" class="form-control input-sm" maxlength="50" id="question_input" type="text"/>
                     </div></td>
                 </tr>
                 <tr>
@@ -2297,183 +1280,138 @@ var token = "{{csrf_token()}}";
                      <div class="col col-md-10 calling_radio" style="padding: 6px">
                       
                         <div class="col col-md-2 text-center send_short_message_div">
-                            <a href="/crm/AgreementOrders/edit/118262" class="btn btn-warning btn-sm send_short_message" inquiry_id="388102">送信</a> 
+                            <a href="#" class="btn btn-warning btn-sm send_short_message" id="add_question">送信</a> 
                         </div>
                     </div>
                 </td>
                 </tr>
               </tbody>
             </table>
+            </form>
             <table class="table table-striped table-bordered table-condensed sms_history_list info_table" style="margin-bottom: 0px; display: none;">
               <tbody class="sms_history">
               </tbody>
             </table>
           </div>
           <div>
-                 <table class="table table-striped table-bordered table-condensed info_table" style="margin-top: 20px;">
-                      <thead>
-                        <tr class="info">
-                          <th colspan="2"> <div class="col col-md-10 lead PL0 MB0"><strong>出品受付情報</strong></div>
-                          </th>
-                        </tr>
-                     </thead>
-                </table>
-                <div class="scroll">
-					<div id="live-chat2">
-						<form action="#" method="post">
-							<table>
-								<tr>
-									<th>文本文本文本文本文本</th>
-									<td>文本文本文本文本文本<br>文本文本文本文本文本</td>
-									<td>10/04/2018(13:38)</td>
-								</tr>
-								<tr>
-									<th>文本文本文本文本文本</th>
-									<td>文本文本文本文本文本<br>文本文本文本文本文本</td>
-									<td>10/04/2018(13:38)</td>
-								</tr>
-								<tr>
-									<th>文本文本文本文本文本</th>
-									<td>文本文本文本文本文本<br>文本文本文本文本文本</td>
-									<td>10/04/2018(13:38)</td>
-								</tr>
-								<tr>
-									<th>文本文本文本文本文本</th>
-									<td>文本文本文本文本文本<br>文本文本文本文本文本</td>
-									<td>10/04/2018(13:38)</td>
-								</tr>
-								<tr>
-									<th>文本文本文本文本文本</th>
-									<td>文本文本文本文本文本<br>文本文本文本文本文本</td>
-									<td>10/04/2018(13:38)</td>
-								</tr>
-								<tr>
-									<th>文本文本文本文本文本</th>
-									<td>文本文本文本文本文本<br>文本文本文本文本文本</td>
-									<td>10/04/2018(13:38)</td>
-								</tr>
-								<tr>
-									<th>文本文本文本文本文本</th>
-									<td>文本文本文本文本文本<br>文本文本文本文本文本</td>
-									<td>10/04/2018(13:38)</td>
-								</tr>
-								<tr>
-									<th>文本文本文本文本文本</th>
-									<td>文本文本文本文本文本<br>文本文本文本文本文本</td>
-									<td>10/04/2018(13:38)</td>
-								</tr>
-							</table>
-						</form>
+              <div class="scroll">
+      					<div id="live-chat2">
+      							<table id="question_content">
+                      @foreach($question as $item)
+      								<tr>
+      									<th>{{$item->name}}</th>
+      									<td>{{$item->question}}</td>
+      									<td>{{$item->date}}</td>
+      								</tr>
+      								@endforeach
+      							</table>
                         <!-- end chat -->
-                    </div>
-                    <!-- end live-chat -->
                 </div>
+                    <!-- end live-chat -->
+              </div>
           </div>
           <div>
+            <form id="reception_form" >
             <table class="table table-striped table-bordered table-condensed info_table" style="margin-top: 20px;">
               <thead>
                 <tr class="info">
                   <th colspan="2"> <div class="col col-md-10 lead PL0 MB0"><strong>出品受付情報</strong></div>
-					  <div class="col col-md-2 text-center send_seeking_photographer_mail_button_div"> <a href="javascript: void(0);" class="btn btn-primary btn-sm send_seeking_photographer_mail" agreement_order_id="118262">編集</a> </div>
-
-				  </th>
+                    <div class="col col-md-2 text-center send_seeking_photographer_mail_button_div"> <a href="#;" class="btn btn-primary btn-sm send_seeking_photographer_mail" id="edit_reception">編集</a> 
+                    <input type="hidden" name="reception_id" id="reception_id" value="{{$reception->id}}"/>
+                    </div>
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td class="active" style="width: 120px;">出品番号</td>
-                  <td> 118262			(問合番号：0479-9576-0011-8262)
-                    <input type="hidden" name="data[AgreementOrder][id]" id="agreement_order_id" value="118262"/></td>
+                  <td> {{$reception->listing_number}}</td>
                 </tr>
                 <tr>
                   <td class="active">規約同意日</td>
-					<td>
-						<div class="col col-md-5">
-							<input name="data[ScrapAuction][end_at_date]" class="form-control input-sm" maxlength="10" id="satei_datepicker1" autocomplete="off" type="text" value="2018-03-21"/>
-						</div></td>
+                  <td>
+                     <div class="col col-md-5">
+                      <input name="reception_term_consent" class="form-control input-sm datepicker" maxlength="10" id="reception_term_consent" autocomplete="off" type="text" value="{{$reception->term_consent}}"/>
+                    </div></td>
                 </tr>
                 <tr>
                   <td class="active" style="width: 120px;">規約同意確認方法</td>
-					<td> <div class="col col-md-12 PL0">
-							<input name="" class="form-control input-sm" maxlength="50" id="" type="text"/>
-						</div></td>
+                  <td> <div class="col col-md-12 PL0">
+                      <input name="reception_confirm_method" class="form-control input-sm" maxlength="50" id="reception_confirm_method" type="text" value="{{$reception->confirm_method}}"/>
+                    </div></td>
                 </tr>
                 <tr>
                   <td class="active">出品催促担当者</td>
-					<td> <div class="col col-md-12 PL0">
-							<input name="" class="form-control input-sm" maxlength="50" id="" type="text"/>
-						</div> </td>
+                  <td> <div class="col col-md-12 PL0">
+                      <input name="reception_producer_urged" class="form-control input-sm" maxlength="50" id="reception_producer_urged" type="text" value="{{$reception->producer_urged}}"/>
+                    </div> </td>
                 </tr>
                 <tr>
                   <td class="active">備考</td>
-					<td><div class="col col-md-12 PL0">
-							<input name="" class="form-control input-sm" maxlength="50" id="" type="text"/>
-						</div></td>
+                  <td><div class="col col-md-12 PL0">
+                      <input name="reception_remark1" class="form-control input-sm" maxlength="50" id="reception_remark1" type="text" value="{{$reception->remark1}}"/>
+                    </div></td>
                 </tr>
                 <tr>
                   <td class="active">顧客ID</td>
-                  <td>9999</td>
-                </tr>
-                <tr>
-                  <td class="active">顧客PW</td>
-					<td><div class="col col-md-12 PL0">
-							<input name="" class="form-control input-sm" maxlength="50" id="" type="text"/>
-						</div></td>
+                  <td>{{$seller->id}}</td>
                 </tr>
                 <tr>
                   <td class="active">最低希望価格</td>
-					<td><div class="col col-md-12 PL0">
-							<input name="" class="form-control input-sm" maxlength="50" id="" type="text"/>
-						</div></td>
+                  <td><div class="col col-md-12 PL0">
+                      <input name="reception_minimum_recommend_price" class="form-control input-sm" maxlength="50" id="reception_minimum_recommend_price" type="text" value="{{$reception->minimum_recommend_price}}"/>
+                    </div></td>
                 </tr>
                 <tr>
                   <td class="active">オークション終了希望日時</td>
-					<td><div class="col col-md-12 PL0">
-							<input name="" class="form-control input-sm" maxlength="50" id="" type="text"/>
-						</div></td>
+                  <td><div class="col col-md-12 PL0">
+                      <input name="reception_end_desired_date" class="form-control input-sm datepicker" maxlength="50" id="reception_end_desired_date" type="text" value="{{$reception->end_desired_date}}"/>
+                    </div></td>
                 </tr>
                 <!-- id19：成約手法変更機能 -->
-				<tr>
-					<td class="active">クレーム</td>
-					<td><div class="col col-md-12 P6_0" id="own_car_runnable_box">
-							<label class="radio-inline own_car_runnable" for="OwnCarRunnable10">
-								<input type="radio" name="data[OwnCar][runnable]" id="OwnCarRunnable10" value="1" checked="checked" />
-								クレーム有</label>
-							<label class="radio-inline own_car_runnable" for="OwnCarRunnable11">
-								<input type="radio" name="data[OwnCar][runnable]" id="OwnCarRunnable11" value="0" />
-								クレーム無し</label>
-						</div>
-					</td>
-				</tr>
+                <tr>
+                  <td class="active">クレーム</td>
+                  <td><div class="col col-md-12 P6_0" id="own_car_runnable_box">
+                      <label class="radio-inline own_car_runnable" for="reception_claim1">
+                        <input type="radio" name="reception_claim" id="reception_claim1" {{$reception->claim == 1?'checked':''}} />
+                        クレーム有</label>
+                      <label class="radio-inline own_car_runnable" for="reception_claim2">
+                        <input type="radio" name="reception_claim" id="reception_claim2" {{$reception->claim == 2?'checked':''}} />
+                        クレーム無し</label>
+                    </div>
+                    </td>
+                </tr>
+
                 <tr>
                   <td class="active">抹消謄本の通知方法</td>
-					<td><div class="col col-md-12 PL0">
-							<input name="" class="form-control input-sm" maxlength="50" id="" type="text"/>
-						</div></td>
+                  <td><div class="col col-md-12 PL0">
+                      <input name="reception_notify_certified_copy" class="form-control input-sm" maxlength="50" id="reception_notify_certified_copy" type="text" value="{{$reception->notify_certified_copy}}"/>
+                    </div></td>
                 </tr>
-                <tr>
-                  <td class="active">税止案件</td>
-					<td>
-						<div class="col col-md-12 P6_0" id="own_car_runnable_box">
-							<label class="radio-inline own_car_runnable" for="OwnCarRunnable12">
-								<input type="radio" name="data[OwnCar][runnable]" id="OwnCarRunnable12" value="1" checked="checked" />
-								未完</label>
-							<label class="radio-inline own_car_runnable" for="OwnCarRunnable13">
-								<input type="radio" name="data[OwnCar][runnable]" id="OwnCarRunnable13" value="0" />
-								一時抹消</label>
-							<label class="radio-inline own_car_runnable" for="OwnCarRunnable14">
-								<input type="radio" name="data[OwnCar][runnable]" id="OwnCarRunnable14" value="0" />
-								名義変更</label>
-						</div>
-					</td>
-                </tr>
+
                 <tr>
                   <td class="active">抹消業務</td>
-					<td>
-						<div class="col col-md-12 PL0">
-							<textarea name="" class="form-control input-sm" rows="3" cols="30" id=""></textarea>
-						</div>
-					</td>
+                  <td>
+                      <div class="col col-md-12 P6_0" id="own_car_runnable_box">
+                      <label class="radio-inline own_car_runnable" for="reception_deletion_work1">
+                        <input type="radio" name="reception_deletion_work" id="reception_deletion_work1" {{$reception->deletion_work == 1?'checked':''}} />
+                        未完</label>
+                      <label class="radio-inline own_car_runnable" for="reception_deletion_work2">
+                        <input type="radio" name="reception_deletion_work" id="reception_deletion_work2" {{$reception->deletion_work == 2?'checked':''}} />
+                        一時抹消</label>
+                        <label class="radio-inline own_car_runnable" for="reception_deletion_work3">
+                        <input type="radio" name="reception_deletion_work" id="reception_deletion_work3" {{$reception->deletion_work == 3?'checked':''}} />
+                        名義変更</label>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="active">備考</td>
+                  <td>
+                      <div class="col col-md-12 PL0">
+                      <textarea name="reception_remark2" class="form-control input-sm" rows="3" cols="30" id="reception_remark2">{{$reception->remark2}}</textarea>
+                    </div>
+                  </td>
                 </tr>
                 <tr>
                   <td colspan="2" class="text-danger" style="background-color: #ffffff;"> ※抹消業務のボタン (不要以外) を押すと、お客様宛に抹消謄本閲覧サイトの案内メールが送られます。<br>
@@ -2481,13 +1419,17 @@ var token = "{{csrf_token()}}";
                 </tr>
               </tbody>
             </table>
+            </form>
           </div>
           <div>
+          <form id="assessment_form">
             <table class="table table-bordered table-condensed info_table">
               <thead>
                 <tr class="info">
                   <th colspan="2"> <div class="col col-md-10 lead PL0 MB0"><strong>査定サービス管理</strong></div>
-                    <div class="col col-md-2 text-center send_seeking_photographer_mail_button_div"> <a href="javascript: void(0);" class="btn btn-primary btn-sm send_seeking_photographer_mail" agreement_order_id="118262">編集</a> </div>
+                    <div class="col col-md-2 text-center send_seeking_photographer_mail_button_div"> <a href="#" class="btn btn-primary btn-sm send_seeking_photographer_mail" id="edit_assessment">編集</a> 
+                    <input type="hidden" name="assessment_id" id="assessment_id" value="{{$assessment->id}}"/>
+                    </div>
                   </th>
                 </tr>
               </thead>
@@ -2495,128 +1437,129 @@ var token = "{{csrf_token()}}";
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">事前査定</td>
                   <td style="vertical-align: middle;">
-					<div class="col col-md-8 P6_0">
-                      <label class="radio-inline" for="che1">
-                        <input id="che1" name="check0" value="1" type="radio">
-                        要</label>
-                      <label class="radio-inline" for="che2">
-                        <input id="che2" name="check1" value="2" type="radio">
-                        不要</label>
+                    <div class="col col-md-8 P6_0">
+                      <label class="radio-inline" for="assessment_advance1">
+                        <input id="assessment_advance1" name="assessment_advance" {{$assessment->advance == 1?'checked':''}} type="radio">
+                      要</label>
+                      <label class="radio-inline" for="assessment_advance2">
+                        <input id="assessment_advance2" name="assessment_advance" {{$assessment->advance == 2?'checked':''}} type="radio">
+                      不要</label>
                     </div>
-				  </td>
+                  </td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">事前査定方法</td>
                   <td style="vertical-align: middle;">
-					<div class="col col-md-8 P6_0">
-                      <label class="radio-inline" for="chex1">
-                        <input id="chex1" name="check0" value="1" type="radio">
+                  <div class="col col-md-8 P6_0">
+                      <label class="radio-inline" for="assessment_advance_method1">
+                        <input id="assessment_advance_method1" name="assessment_advance_method" {{$assessment->advance_method == 1?'checked':''}} type="radio">
                         持込</label>
-                      <label class="radio-inline" for="chex2">
-                        <input id="chex2" name="check1" value="2" type="radio">
+                      <label class="radio-inline" for="assessment_advance_method2">
+                        <input id="assessment_advance_method2" name="assessment_advance_method" {{$assessment->advance_method == 2?'checked':''}} type="radio">
                         出張</label>
                     </div>
-				  </td>
+                  </td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">査定場所</td>
                   <td class="photo_note_td" style="vertical-align: middle;"><div class="col col-md-12 PL0">
-                      <input name="" class="form-control input-sm" maxlength="50" id="" type="text"/>
+                      <input name="assessment_place" class="form-control input-sm" maxlength="50" id="assessment_place" type="text" value="{{$assessment->place}}"/>
                     </div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">査定場所地図</td>
                   <td class="photo_note_td" style="vertical-align: middle;"><div class="col col-md-12 PL0">
-                      <input name="" class="form-control input-sm" maxlength="50" id="" type="text"/>
+                      <input name="assessment_place_map" class="form-control input-sm" maxlength="50" id="assessment_place_map" type="text" value="{{$assessment-> place_map}}"/>
                     </div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">事前査定状況</td>
                   <td class="photo_note_td" style="vertical-align: middle;"><div class="col col-md-12 PL0">
-                      <input name="" class="form-control input-sm" maxlength="50" id="" type="text"/>
+                      <input name="assessment_situation" class="form-control input-sm" maxlength="50" id="assessment_situation" type="text" value="{{$assessment->situation}}"/>
                     </div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">事前査定日①</td>
                   <td class="photo_term_td" style="vertical-align: middle;"><div class="col col-md-5">
-                      <input name="data[ScrapAuction][end_at_date]" class="form-control input-sm" maxlength="10" id="zentei_datepicker1" autocomplete="off" type="text" value="2018-03-21"/>
+                      <input name="assessment_advance_date1" class="form-control input-sm datepicker" maxlength="10" id="assessment_advance_date1" autocomplete="off" type="text" value="{{$assessment->advance_date1}}"/>
                     </div>
-				</tr>
+                </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">事前査定日②</td>
                   <td class="photo_term_td" style="vertical-align: middle;"><div class="col col-md-5">
-                      <input name="data[ScrapAuction][end_at_date]" class="form-control input-sm" maxlength="10" id="zentei_datepicker2" autocomplete="off" type="text" value="2018-03-21"/>
+                      <input name="assessment_advance_date2" class="form-control input-sm datepicker" maxlength="10" id="assessment_advance_date2" autocomplete="off" type="text" value="{{$assessment->advance_date2}}"/>
                     </div>
-				</tr>
+                </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">事前査定日③</td>
                   <td class="photo_term_td" style="vertical-align: middle;"><div class="col col-md-5">
-                      <input name="data[ScrapAuction][end_at_date]" class="form-control input-sm" maxlength="10" id="zentei_datepicker3" autocomplete="off" type="text" value="2018-03-21"/>
+                      <input name="assessment_advance_date3" class="form-control input-sm datepicker" maxlength="10" id="assessment_advance_date3" autocomplete="off" type="text" value="{{$assessment->advance_date3}}"/>
                     </div>
-				</tr>
+                </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">備考</td>
                   <td class="photo_note_td" style="vertical-align: middle;"><div class="col col-md-10 PL0">
-                      <input name="data[SeekingPhotographerMail][note]" class="form-control input-sm" maxlength="50" id="photo_note" type="text"/>
+                      <input name="assessment_remark1" class="form-control input-sm" maxlength="50" id="assessment_remark1" type="text" value="{{$assessment->remark1}}"/>
                     </div></td>
                 </tr>
-				<tr style="height: 41px;">
+                <tr style="height: 41px;">
                   <td class="active" style="vertical-align: middle;">持込査定・出張査定候補リスト</td>
                   <td><div class="col col-md-12 PL0">
-                      <textarea name="" class="form-control input-sm" rows="3" cols="30" id=""></textarea>
+                      <textarea name="assessment_candidate_list" class="form-control input-sm" rows="3" cols="30" id="assessment_candidate_list">{{$assessment->candidate_list}}</textarea>
                     </div></td>
-				</tr>   
+                </tr>   
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">査定業者</td>
                   <td class="photo_note_td" style="vertical-align: middle;"><div class="col col-md-10 PL0">
-                      <input name="data[SeekingPhotographerMail][note]" class="form-control input-sm" maxlength="50" id="photo_note" type="text"/>
+                      <input name="assessment_assessor1" class="form-control input-sm" maxlength="50" id="assessment_assessor1" type="text" disabled="" value="{{$assessment->assessor1}}"/>
                     </div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">査定業者ID</td>
                   <td class="photo_note_td" style="vertical-align: middle;"><div class="col col-md-10 PL0">
-                      <input name="data[SeekingPhotographerMail][note]" class="form-control input-sm" maxlength="50" id="photo_note" type="text"/>
+                      <input name="assessment_assessor_id" class="form-control input-sm" maxlength="50" id="assessment_assessor_id" type="text" value="{{$assessment->assessor_id}}"/>
                     </div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">査定依頼日</td>
-                  <td class="photo_term_td" style="vertical-align: middle;"><div class="col col-md-5">
-                      <input name="data[ScrapAuction][end_at_date]" class="form-control input-sm" maxlength="10" id="satei_datepicker1" autocomplete="off" type="text" value="2018-03-21"/>
+                  <td class="photo_term_td" style="vertical-align: middle;">
+                     <div class="col col-md-5">
+                      <input name="assessment_request_date" class="form-control input-sm datepicker" maxlength="10" id="assessment_request_date" autocomplete="off" type="text" value="{{$assessment->request_date}}"/>
                     </div>
-				</tr>		
+                </tr>   
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">査定依頼者</td>
                   <td class="photo_note_td" style="vertical-align: middle;"><div class="col col-md-10 PL0">
-                      <input name="data[SeekingPhotographerMail][note]" class="form-control input-sm" maxlength="50" id="photo_note" type="text"/>
+                      <input name="assessment_assessor2" class="form-control input-sm" maxlength="50" id="assessment_assessor2" type="text" value="{{$assessment->assessor2}}"/>
                     </div></td>
-                </tr>	
+                </tr> 
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">査定結果到着日</td>
                   <td class="photo_term_td" style="vertical-align: middle;"><div class="col col-md-5">
-                      <input name="data[ScrapAuction][end_at_date]" class="form-control input-sm" maxlength="10" id="satei_datepicker2" autocomplete="off" type="text" value="2018-03-21"/>
+                      <input name="assessment_arrival_date" class="form-control input-sm datepicker" maxlength="10" id="assessment_arrival_date" autocomplete="off" type="text" value="{{$assessment->arrival_date}}"/>
                     </div>
-				</tr>
+                </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">査定完了確認者</td>
                   <td class="photo_note_td" style="vertical-align: middle;"><div class="col col-md-10 PL0">
-                      <input name="data[SeekingPhotographerMail][note]" class="form-control input-sm" maxlength="50" id="photo_note" type="text"/>
+                      <input name="assessment_complete_confirmation" class="form-control input-sm" maxlength="50" id="assessment_complete_confirmation" type="text" value="{{$assessment->complete_confirmation}}"/>
                     </div></td>
-                </tr>		
+                </tr>   
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">査定結果</td>
                   <td style="vertical-align: middle;">
-					<div class="col col-md-10 P6_0 spec1">
-						<div class="flexrowbetween">
+                    <div class="col col-md-10 P6_0 spec1">
+                        <div class="flexrowbetween">
                           <div>
                               <p>査定表（写真）</p>
                           </div>
                           <div class="img">
-                        査定表（写真）<a href="{{ url('/images/img1.jpg')}}" rel="lightbox" class="lightbox_photo"><img src="{{ url('/images/img1.jpg')}}" alt="書類写真" width="100"></a>
-                        </div>
+                              <a href="{{url('/').'/'.$assessment->table_img}}" id="assessment_show_table_a" rel="lightbox" class="lightbox_photo"><img src="{{url('/').'/'.$assessment->table_img}}" alt="書類写真" id="assessment_show_table" width="100"></a>
+                          </div>
                           <div class="flexbtn"> 
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">ファイル参照</button>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal_assessment">ファイル参照</button>
                                 <!-- Modal -->
-                                <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal fade" id="Modal_assessment" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -2624,8 +1567,8 @@ var token = "{{csrf_token()}}";
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                             </div>
                                             <div class="modal-body">
-                                                <label for="file-upload" class="custom-file-upload"></label>
-                                                <input type="file" id="file-upload">
+                                                <label for="assessment_table_img" class="custom-file-upload"></label>
+                                                <input type="file" name="assessment_table_img" id="assessment_table_img" accept="image/*" style="display:none">
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -2635,32 +1578,34 @@ var token = "{{csrf_token()}}";
                                 </div>
                             </div>
                     </div>
-					</div>
-					<div class="col col-md-10 P6_0 spec1">
-                        <span>評価点（総合）</span><input name="" class="form-control input-sm radio-inline w70" maxlength="50" id="" type="text" value="" placeholder=""> <span>点</span>
+                        
+                  </div>
+                  <div class="col col-md-10 P6_0 spec1">
+                        <span>評価点（総合）</span><input name="assessment_synthetic" class="form-control input-sm radio-inline w70" maxlength="50" id="assessment_synthetic" type="text" value="{{$assessment->synthetic}}" placeholder=""> <span>点</span>
                     </div>
-					<div class="col col-md-10 P6_0 spec1">
-                        評価点（外装）<input name="" class="form-control input-sm w70" maxlength="50" id="" type="text" value="" placeholder=""> <span>点</span>
+                  <div class="col col-md-10 P6_0 spec1">
+                        評価点（外装）<input name="assessment_exterior" class="form-control input-sm w70" maxlength="50" id="assessment_exterior" type="text" value="{{$assessment->exterior}}" placeholder=""> <span>点</span>
                     </div>
-					<div class="col col-md-10 P6_0 spec1">
-                        評価点（内装）<input name="" class="form-control input-sm w70" maxlength="50" id="" type="text" value="" placeholder=""> <span>点</span>
+                  <div class="col col-md-10 P6_0 spec1">
+                        評価点（内装）<input name="assessment_interior" class="form-control input-sm w70" maxlength="50" id="assessment_interior" type="text" value="{{$assessment->interior}}" placeholder=""> <span>点</span>
                     </div>
-					<div class="col col-md-10 P6_0 spec1">
-                        評価者コメント<textarea name="data[OwnCar][conditions_exterior]" class="form-control input-sm" rows="3" placeholder="" cols="30" id="OwnCarConditionsExterior"></textarea>
+                  <div class="col col-md-10 P6_0 spec1">
+                        評価者コメント<textarea name="assessment_comment" class="form-control input-sm" rows="3" placeholder="" cols="30" id="assessment_comment">{{$assessment->comment}}</textarea>
                     </div>
-					<div class="col col-md-10 P6_0 spec1">
-                        評価者<input name="" class="form-control input-sm" maxlength="50" id="" type="text" value="" placeholder="">
+                  <div class="col col-md-10 P6_0 spec1">
+                        評価者<input name="assessment_rater" class="form-control input-sm" maxlength="50" id="assessment_rater" type="text" value="{{$assessment->rater}}" placeholder="">
                     </div>
-				  </td>
-                </tr>				
+                  </td>
+                </tr>       
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">備考</td>
                   <td class="photo_note_td" style="vertical-align: middle;"><div class="col col-md-10 PL0">
-                      <input name="data[SeekingPhotographerMail][note]" class="form-control input-sm" maxlength="50" id="photo_note" type="text"/>
+                      <input name="assessment_remark2" class="form-control input-sm" maxlength="50" id="assessment_remark2" type="text" value="{{$assessment->remark2}}"/>
                     </div></td>
                 </tr>
               </tbody>
             </table>
+            </form>
           </div>
         </div>
         <div class="col col-md-4">
@@ -2679,135 +1624,51 @@ var token = "{{csrf_token()}}";
                 <tr>
                   <td class="active">抹消種別</td>
                   <td colspan="2">
-					<div class="col col-md-4 PL0">
-						<select name="document_cancel_type" class="form-control input-sm" id="document_cancel_type">
-						  <option value="">----------</option>
-						  <option {{$document->cancel_type == 1?'selected':''}} value="1">当社抹消</option>
-						  <option {{$document->cancel_type == 2?'selected':''}} value="2">業者抹消</option>
-						</select>
-					</div>
+          					<div class="col col-md-4 PL0">
+          						<select name="document_cancel_type" class="form-control input-sm" id="document_cancel_type">
+          						  <option value="">----------</option>
+          						  <option {{$document->cancel_type == 1?'selected':''}} value="1">当社抹消</option>
+          						  <option {{$document->cancel_type == 2?'selected':''}} value="2">業者抹消</option>
+          						</select>
+          					</div>
                    </td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">書類到着</td>
-					<td style="vertical-align: middle;">
+        					<td style="vertical-align: middle;">
 
-						<div class="col col-md-12">
-							<label class="radio-inline" for="document1">
-								<input type="radio" name="document_document_arrival" id="document_document_arrival1" {{$document->document_arrival == 1 ?'checked':''}} />未着</label>
+        						<div class="col col-md-12">
+        							<label class="radio-inline" for="document1">
+        								<input type="radio" name="document_document_arrival" id="document_document_arrival1" {{$document->document_arrival == 1 ?'checked':''}} />未着</label>
 
-							<label class="radio-inline" for="document2">
-								<input type="radio" name="document_document_arrival" id="document_document_arrival2" {{$document->document_arrival == 2 ?'checked':''}} />不備</label>
+        							<label class="radio-inline" for="document2">
+        								<input type="radio" name="document_document_arrival" id="document_document_arrival2" {{$document->document_arrival == 2 ?'checked':''}} />不備</label>
 
-							<label class="radio-inline" for="document3">
-								<input type="radio" name="document_document_arrival" id="document_document_arrival3" {{$document->document_arrival == 3 ?'checked':''}} />完備</label>
-                    </div>
+        							<label class="radio-inline" for="document3">
+        								<input type="radio" name="document_document_arrival" id="document_document_arrival3" {{$document->document_arrival == 3 ?'checked':''}} />完備</label>
+                            </div>
 
 
-					</td>
+        					</td>
                 </tr>
                 <tr>
-                  <td colspan="2" class="form-horizontal" style="vertical-align: middle; background-color: #ffffff; border-bottom-style: none;"><div class="col col-md-1 text-center" style="padding: 0px;">
-                      <div class="checkbox">
-                        <input type="checkbox" name="document_vehicle_license"  id="document_vehicle_license" {{$document->vehicle_license == 1 ?'checked':''}} />
-                      </div>
-                    </div>
-                    <div class="col col-md-7" style="padding: 6px 0px;">
-                      <label for="inspection_certificate" style="margin:0;font-weight:normal;"> <span>車検証</span> </label>
-                    </div>
-                    <div class="col col-md-4" style="padding: 6px 0px;"> </div></td>
-                </tr>
-                <tr>
-                  <td colspan="2" class="form-horizontal" style="vertical-align: middle; background-color: #ffffff; border-top-style: none; border-bottom-style: none;"><div class="col col-md-1 text-center" style="padding: 0px;">
-                      <div class="checkbox">
-                        <input type="checkbox" name="document_insurance_card"  id="document_insurance_card" {{$document->insurance_card == 1 ?'checked':''}} />
-                      </div>
-                    </div>
-                    <div class="col col-md-7" style="padding: 6px 0px;">
-                      <label for="insurance" style="margin:0;font-weight:normal;"> <span>自賠責保険証</span> </label>
-                    </div>
-                    <div class="col col-md-4" style="padding: 6px 0px;"> </div></td>
-                </tr>
-                <tr>
-                  <td colspan="2" class="form-horizontal" style="vertical-align: middle; background-color: #ffffff; border-top-style: none; border-bottom-style: none;"><div class="col col-md-1 text-center" style="padding: 0px;">
-                      <div class="checkbox">
-                        <input type="checkbox" name="document_recycling_ticket"  id="document_recycling_ticket" {{$document->recycling_ticket == 1 ?'checked':''}} />
-                      </div>
-                    </div>
-                    <div class="col col-md-7" style="padding: 6px 0px;">
-                      <label for="recycle" style="margin:0;font-weight:normal;"> <span>リサイクル券</span> </label>
-                    </div>
-                    <div class="col col-md-4" style="padding: 6px 0px;"> </div></td>
-                </tr>
-                <tr>
-                  <td colspan="2" class="form-horizontal" style="vertical-align: middle; background-color: #ffffff; border-top-style: none; border-bottom-style: none;"><div class="col col-md-1 text-center" style="padding: 0px;">
-                      <div class="checkbox">
-                        <input type="checkbox" name="document_seal_certificate"  id="document_seal_certificate" {{$document->seal_certificate == 1 ?'checked':''}} />
-                      </div>
-                    </div>
-                    <div class="col col-md-7" style="padding: 6px 0px;">
-                      <label for="seal_impression" style="margin:0;font-weight:normal;"> <span>印鑑登録証明書</span> <span class="text-danger">(要：住所一致確認)</span> </label>
-                    </div>
-                    <div class="col col-md-4" style="padding: 6px 0px;"> </div></td>
-                </tr>
-                <tr>
-                  <td colspan="2" class="form-horizontal" style="vertical-align: middle; background-color: #ffffff; border-top-style: none; border-bottom-style: none;"><div class="col col-md-1 text-center" style="padding: 0px;">
-                      <div class="checkbox">
-                        <input type="checkbox" name="document_transfer_certificate"  id="document_transfer_certificate" {{$document->transfer_certificate == 1 ?'checked':''}} />
-                      </div>
-                    </div>
-                    <div class="col col-md-7" style="padding: 6px 0px;">
-                      <label for="assignment" style="margin:0;font-weight:normal;"> <span>譲渡証明書</span> </label>
-                    </div>
-                    <div class="col col-md-4" style="padding: 6px 0px;"> </div></td>
-                </tr>
-                <tr>
-                  <td colspan="2" class="form-horizontal" style="vertical-align: middle; background-color: #ffffff; border-top-style: none; border-bottom-style: none;"><div class="col col-md-1 text-center" style="padding: 0px;">
-                      <div class="checkbox">
-                        <input type="checkbox" name="document_power_attorney"  id="document_power_attorney" {{$document->power_attorney == 1 ?'checked':''}} />
-                      </div>
-                    </div>
-                    <div class="col col-md-7" style="padding: 6px 0px;">
-                      <label for="commission" style="margin:0;font-weight:normal;"> <span>委任状</span> </label>
-                    </div>
-                    <div class="col col-md-4" style="padding: 6px 0px;"> </div></td>
-                </tr>
-                <tr>
-                 <td colspan="2" class="form-horizontal" style="vertical-align: middle; background-color: #ffffff; border-top-style: none; border-bottom-style: none;">
-                     <div class="col col-md-1 text-center" style="padding: 0px;">
-                      <div class="checkbox">
-                        <input type="checkbox" name="document_resident_card"  id="document_resident_card" {{$document->resident_card == 1 ?'checked':''}} disabled="disabled"/>
-                      </div>
-                    </div>
-                    <div class="col col-md-7" style="padding: 6px 0px;">
-                      <label for="regidents_card" style="margin:0;font-weight:normal;"> <del><span class="text-muted">住民票・戸籍附票</span><del> </label>
-                    </div>
-                    <input type="hidden" name="data[Document][regidents_card]" value="9"/>
-                    <div class="col col-md-4" style="padding: 6px 0px;"> </div>
-                 </td>
-                </tr>
-                <tr>
-                  <td colspan="2" class="form-horizontal" style="vertical-align: middle; background-color: #ffffff; border-top-style: none;"><div class="col col-md-1 text-center" style="padding: 0px;">
-                      <div class="checkbox">
-                        <input type="checkbox" name="document_inheritance"  id="document_inheritance" {{$document->inheritance == 1 ?'checked':''}} disabled="disabled"/>
-                      </div>
-                    </div>
-                    <div class="col col-md-7" style="padding: 6px 0px;">
-                      <label for="inheritance" style="margin:0;font-weight:normal;"> <del><span class="text-muted">遺産分割協議書</span></del> </label>
-                    </div>
-                    <div class="col col-md-4" style="padding: 6px 0px;"> </div></td>
-                </tr>
+                    <td colspan="2">
+                        <div class="col col-md-12">
+                          <textarea name="document_condition" class="form-control input-sm" rows="5" cols="30" id="document_condition">{{$document->condition}}</textarea>
+                        </div>
+                    </td>
+                </tr>      
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">ナンバープレート</td>
                   <td style="vertical-align: middle;"><div class="col col-md-4 PL0">
-						<select name="document_license_plate" class="form-control input-sm" id="document_license_plate">
-						  <option value="">----------</option>
-						  <option {{$document->license_plate == 1 ?'selected':''}} value="1">未着</option>
-						  <option {{$document->license_plate == 2 ?'selected':''}} value="2">到着</option>
-						</select>
-					</div>
-				  </td>
-                </tr>
+        						<select name="document_license_plate" class="form-control input-sm" id="document_license_plate">
+        						  <option value="">----------</option>
+        						  <option {{$document->license_plate == 1 ?'selected':''}} value="1">未着</option>
+        						  <option {{$document->license_plate == 2 ?'selected':''}} value="2">到着</option>
+        						</select>
+        					</div>
+        				  </td>
+               </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">書類備考</td>
                   <td><div class="col col-md-10" style="padding-left: 0px;">
@@ -2820,12 +1681,13 @@ var token = "{{csrf_token()}}";
             </form>
           </div>
           <div>
+          <form id="retrieval_form">
             <table class="table table-bordered table-condensed info_table" style="margin-top: 20px;">
               <thead>
                 <tr class="info">
                   <th colspan="2"> <div class="col col-md-10 lead PL0 MB0"><strong>引取情報</strong></div>
-                    <div class="col col-md-2 text-center edit_trade_button_div"> <a href="/crm/AgreementOrders/edit/118262" class="btn btn-primary btn-sm edit_trade" trade_id="105217" agreement_order_id="118262">編集</a> </div>
-                    <input type="hidden" name="data[Trade][id]" value="105217"/>
+                    <div class="col col-md-2 text-center edit_trade_button_div"> <a href="#" class="btn btn-primary btn-sm edit_trade" id="edit_retrieval">編集</a> </div>
+                    <input type="hidden" name="retrieval_id"  id="retrieval_id" value="{{$retrieval->id}}"/>
                   </th>
                 </tr>
               </thead>
@@ -2833,21 +1695,21 @@ var token = "{{csrf_token()}}";
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">引取予定日 <br>（第一）</td>
                   <td style="vertical-align: middle;"><div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Trade][trade_schedule_date]" class="form-control input-sm ime-disabled" maxlength="10" id="trade_datepicker" autocomplete="off" type="tel" value="2018-03-23"/>
+                      <input name="retrieval_first_date" class="form-control input-sm ime-disabled datepicker" maxlength="10" id="retrieval_first_date" autocomplete="off" type="tel" value="{{$retrieval->first_date}}"/>
                     </div>
                     <div class="col col-md-5" style="padding: 6px 0px;">
-                      <label class="radio-inline" for="TradeScheduleTime1">
-                        <input type="radio" name="data[Trade][trade_schedule_time]" id="TradeScheduleTime1" value="0"  checked="checked"/>
+                      <label class="radio-inline" for="retrieval_first_date_check1">
+                        <input type="radio" name="retrieval_first_date_check" id="retrieval_first_date_check1" {{$retrieval->first_date_check == 1?'checked':''}}/>
                         指定なし</label>
-                      <label class="radio-inline" for="TradeScheduleTime2">
-                        <input type="radio" name="data[Trade][trade_schedule_time]" id="TradeScheduleTime2" value="1" />
+                      <label class="radio-inline" for="retrieval_first_date_check2">
+                        <input type="radio" name="retrieval_first_date_check" id="retrieval_first_date_check2" {{$retrieval->first_date_check == 2?'checked':''}} />
                         9:00～12:00</label><br>
 
-                      <label class="radio-inline" for="TradeScheduleTime0">
-                        <input type="radio" name="data[Trade][trade_schedule_time]" id="TradeScheduleTime0" value="2" />
+                      <label class="radio-inline" for="retrieval_first_date_check3">
+                        <input type="radio" name="retrieval_first_date_check" id="retrieval_first_date_check3" {{$retrieval->first_date_check == 3?'checked':''}} />
                         12:00～15:00</label>
-                      <label class="radio-inline" for="TradeScheduleTime3">
-                        <input type="radio" name="data[Trade][trade_schedule_time]" id="TradeScheduleTime3" value="3" />
+                      <label class="radio-inline" for="retrieval_first_date_check4">
+                        <input type="radio" name="retrieval_first_date_check" id="retrieval_first_date_check4" {{$retrieval->first_date_check == 4?'checked':''}} />
                         15:00～</label>
 
                     </div>
@@ -2856,55 +1718,54 @@ var token = "{{csrf_token()}}";
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">引取予定日 <br>（第二）</td>
                   <td class="form-horizontal" style="background-color: #f9f9f9; vertical-align: middle;"><div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Trade][trade_schedule_date2]" class="form-control input-sm ime-disabled" maxlength="10" id="trade_datepicker2" autocomplete="off" type="tel"/>
+                      <input name="retrieval_second_date" class="form-control input-sm ime-disabled datepicker" maxlength="10" id="retrieval_second_date" autocomplete="off" type="tel" value="{{$retrieval->second_date}}"/>
                     </div>
                     <div class="col col-md-5" style="padding: 6px 0px;">
-                      <label class="radio-inline" for="dai1time0">
-                        <input type="radio" name="data[Trade][trade_schedule_time]2" id="dai1time0" value="0"  checked="checked"/>
+                      <label class="radio-inline" for="retrieval_second_date_check1">
+                        <input type="radio" name="retrieval_second_date_check" id="retrieval_second_date_check1" {{$retrieval->second_date_check == 1?'checked':''}}/>
                         指定なし</label>
-                      <label class="radio-inline" for="dai1time1">
-                        <input type="radio" name="data[Trade][trade_schedule_time]2" id="dai1time1" value="1" />
+                      <label class="radio-inline" for="retrieval_second_date_check2">
+                        <input type="radio" name="retrieval_second_date_check" id="retrieval_second_date_check2" {{$retrieval->second_date_check == 2?'checked':''}} />
                         9:00～12:00</label><br>
 
-                      <label class="radio-inline" for="dai1time2">
-                        <input type="radio" name="data[Trade][trade_schedule_time]2" id="dai1time2" value="2" />
+                      <label class="radio-inline" for="retrieval_second_date_check3">
+                        <input type="radio" name="retrieval_second_date_check" id="retrieval_second_date_check3" {{$retrieval->second_date_check == 3?'checked':''}} />
                         12:00～15:00</label>
-                      <label class="radio-inline" for="dai1time3">
-                        <input type="radio" name="data[Trade][trade_schedule_time]2" id="dai1time3" value="3" />
+                      <label class="radio-inline" for="retrieval_second_date_check4">
+                        <input type="radio" name="retrieval_second_date_check" id="retrieval_second_date_check4" {{$retrieval->second_date_check == 4?'checked':''}} />
                         15:00～</label>
                     </div>
                     <div class="col col-md-3 text-center" style="padding: 0px;">
                       <div class="checkbox">
-                        <input type="hidden" name="data[Trade][pending_schedule]" id="chk_pending_schedule_" value="0"/>
-                        <input type="checkbox" name="data[Trade][pending_schedule]"  id="chk_pending_schedule" value="1" onclick="checkPendingSchedule();"/>
+                        <input type="checkbox" name="retrieval_pending_schedule"  id="retrieval_pending_schedule" {{$retrieval->pending_schedule ==1?'checked':''}} />
                       </div>
                     </div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">引取予定日 <br>（第三）</td>
                   <td class="form-horizontal" style="background-color: #f9f9f9; vertical-align: middle;"><div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Trade][trade_schedule_date2]" class="form-control input-sm ime-disabled" maxlength="10" id="trade_datepicker3" autocomplete="off" type="tel"/>
+                      <input name="retrieval_third_date" class="form-control input-sm ime-disabled datepicker" maxlength="10" id="retrieval_third_date" autocomplete="off" type="tel" value="{{$retrieval->third_date}}"/>
                     </div>
                     <div class="col col-md-5" style="padding: 6px 0px;">
-                      <label class="radio-inline" for="dai2time0">
-                        <input type="radio" name="data[Trade][trade_schedule_time]3" id="dai2time0" value="0"  checked="checked"/>
+                      <label class="radio-inline" for="retrieval_third_date_check1">
+                        <input type="radio" name="retrieval_third_date_check" id="retrieval_third_date_check1" {{$retrieval->third_date_check == 1?'checked':''}}/>
                         指定なし</label>
-                      <label class="radio-inline" for="dai2time1">
-                        <input type="radio" name="data[Trade][trade_schedule_time]3" id="dai2time1" value="1" />
+                      <label class="radio-inline" for="retrieval_third_date_check2">
+                        <input type="radio" name="retrieval_third_date_check" id="retrieval_third_date_check2" {{$retrieval->third_date_check == 2?'checked':''}} />
                         9:00～12:00</label><br>
 
-                      <label class="radio-inline" for="dai2time2">
-                        <input type="radio" name="data[Trade][trade_schedule_time]3" id="dai2time2" value="2" />
+                      <label class="radio-inline" for="retrieval_third_date_check3">
+                        <input type="radio" name="retrieval_third_date_check" id="retrieval_third_date_check3" {{$retrieval->third_date_check == 3?'checked':''}} />
                         12:00～15:00</label>
-                      <label class="radio-inline" for="dai2time3">
-                        <input type="radio" name="data[Trade][trade_schedule_time]3" id="dai2time3" value="3" />
+                      <label class="radio-inline" for="retrieval_third_date_check4">
+                        <input type="radio" name="retrieval_third_date_check" id="retrieval_third_date_check4" {{$retrieval->third_date_check == 4?'checked':''}} />
                         15:00～</label>
                     </div>
 				</td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">引取場所</td>
-                  <td style="vertical-align: middle;"><input name="data[Trade][address]" class="form-control input-sm" maxlength="100" id="parking_address" type="text" value="埼玉県北足立郡伊奈町小室5366-3　ハイツカミフジ目の前のP　駐車no4"/></td>
+                  <td style="vertical-align: middle;"><input name="retrieval_takeover_place" class="form-control input-sm" maxlength="100" id="retrieval_takeover_place" type="text" value="{{$retrieval->takeover_place}}"/></td>
                 </tr>
                 <tr>
                   <td colspan="2" style="background-color: #f9f9f9;"><div id="trade_address_map" style="width: 600px; height: 400px;">
@@ -2914,11 +1775,11 @@ var token = "{{csrf_token()}}";
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">立会可否</td>
                   <td style="vertical-align: middle;"><div class="col col-md-12" style="padding: 6px 0px;">
-                      <label class="radio-inline" for="TradePresence0">
-                        <input type="radio" name="data[Trade][presence]" id="TradePresence0" value="0" />
+                      <label class="radio-inline" for="retrieval_availability1">
+                        <input type="radio" name="retrieval_availability" id="retrieval_availability1" {{$retrieval->availability == 1?'checked':''}} />
                         不可</label>
-                      <label class="radio-inline" for="TradePresence1">
-                        <input type="radio" name="data[Trade][presence]" id="TradePresence1" value="1" checked="checked" />
+                      <label class="radio-inline" for="retrieval_availability2">
+                        <input type="radio" name="retrieval_availability" id="retrieval_availability2" {{$retrieval->availability == 2?'checked':''}} />
                         可能</label>
                     </div></td>
                 </tr>
@@ -2926,23 +1787,23 @@ var token = "{{csrf_token()}}";
                   <td class="active" style="width: 120px; vertical-align: middle;">引取業者コード</td>
                   <td style="vertical-align: middle;">
 					<div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Sale][member_code]" class="form-control input-sm" maxlength="10" id="sales_price" value="0123456" type="tel">
+                      <input name="retrieval_company_code" class="form-control input-sm" maxlength="10" id="retrieval_company_code" value="{{$retrieval->company_code}}" type="tel">
                     </div>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">引取備考</td>
                   <td style="background-color: #f9f9f9; vertical-align: middle;"><div class="col col-md-12" style="padding-left: 0px;">
-                      <textarea name="data[Trade][remark]" class="form-control input-sm" rows="3" cols="30" id="TradeRemark">書類対応願います。★書類付き購入の際は3月抹消または名変必須のため3月中に手続き必要。それ以外の場合は3/26必着にて書類・NPを弊社へ返送必要です</textarea>
+                      <textarea name="retrieval_remark]" class="form-control input-sm" rows="3" cols="30" id="retrieval_remark">{{$retrieval->remark}}</textarea>
                     </div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">ナンバーカット</td>
                   <td style="vertical-align: middle;"><div class="col col-md-12" style="padding: 6px 0px;">
-                      <label class="radio-inline" for="TradeNumberCut0">
-                        <input type="radio" name="data[Trade][number_cut]" id="TradeNumberCut0" value="0" />
+                      <label class="radio-inline" for="retrieval_number_cut1">
+                        <input type="radio" name="retrieval_number_cut" id="retrieval_number_cut1" {{$retrieval->number_cut == 1?'checked':''}} />
                         無</label>
-                      <label class="radio-inline" for="TradeNumberCut1">
-                        <input type="radio" name="data[Trade][number_cut]" id="TradeNumberCut1" value="1" checked="checked" />
+                      <label class="radio-inline" for="retrieval_number_cut2">
+                        <input type="radio" name="retrieval_number_cut" id="retrieval_number_cut2" {{$retrieval->number_cut == 2?'checked':''}} />
                         有</label>
                     </div></td>
                 </tr>
@@ -2950,7 +1811,7 @@ var token = "{{csrf_token()}}";
                   <td class="active" style="width: 120px; vertical-align: middle;">引取完了確認日</td>
                   <td style="background-color: #f9f9f9; vertical-align: middle;">
 					<div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Trade][seller_comfirm_date]" class="form-control input-sm ime-disabled" maxlength="10" id="seller_comfirm_date" autocomplete="off" type="tel">
+                      <input name="retrieval_end_recognition_day" class="form-control input-sm ime-disabled datepicker" maxlength="10" id="retrieval_end_recognition_day" autocomplete="off" type="tel" value="{{$retrieval->end_recognition_day}}">
                     </div>
 				  </td>
                 </tr>
@@ -2958,23 +1819,24 @@ var token = "{{csrf_token()}}";
                   <td class="active" style="width: 120px; vertical-align: middle;">引取完了日</td>
                   <td class="finish_trade_td" style="vertical-align: middle;">                      
 					<div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Trade][seller_finish_date]" class="form-control input-sm ime-disabled" maxlength="10" id="seller_finish_date" autocomplete="off" type="tel">
+                      <input name="retrieval_end_quotation" class="form-control input-sm ime-disabled datepicker" maxlength="10" id="retrieval_end_quotation" autocomplete="off" type="tel" value="{{$retrieval->end_quotation}}">
                     </div>
 				  </td>
                 </tr>
               </tbody>
             </table>
+            </form>
           </div>
           <div>
+            <form id="sale_form">
             <table class="table table-striped table-bordered table-condensed info_table" style="margin-top: 20px;">
               <thead>
                 <tr class="info">
                   <th colspan="2"> <div class="col col-md-10 lead PL0 MB0"><strong>販売管理</strong></div>
                     <div class="col col-md-2 text-center edit_sale_button_div"> 
                       <!--id22：販売情報管理--> 
-                      <a href="/crm/AgreementOrders/edit/118262" class="btn btn-primary btn-sm edit_sale" sale_id="105239" agreement_order_id="118262">編集</a> </div>
-                    <input type="hidden" name="data[Sale][id]" value="105239"/>
-                    <input type="hidden" name="data[Sale][bill]"/>
+                      <a href="#" class="btn btn-primary btn-sm edit_sale" id="edit_sale" >編集</a> </div>
+                    <input type="hidden" name="sale_id" id="sale_id" value="{{$sale->id}}"/>
                   </th>
                 </tr>
               </thead>
@@ -2983,7 +1845,7 @@ var token = "{{csrf_token()}}";
                   <td class="active" style="width: 120px; vertical-align: middle;">販売日</td>
                   <td style="vertical-align: middle;">
                   	<div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Trade][sale_date]" class="form-control input-sm ime-disabled" maxlength="10" id="sale_date" autocomplete="off" type="tel">
+                      <input name="sale_sale_date" class="form-control input-sm ime-disabled datepicker" maxlength="10" id="sale_sale_date" autocomplete="off" type="tel" value="{{$sale->sale_date}}">
                     </div>
 				  </td>
                 </tr>
@@ -2992,11 +1854,11 @@ var token = "{{csrf_token()}}";
                   <td class="mode_radio_td" style="vertical-align: middle;"><!--id22：販売情報管理-->
                     
                     <div class="col col-md-12" style="padding: 6px 0px;">
-                      <label class="radio-inline" for="SaleMode1">
-                        <input type="radio" name="data[Sale][mode]" id="SaleMode1" onChange="changeMode();" value="1" checked="checked" />
+                      <label class="radio-inline" for="sale_accounting_method1">
+                        <input type="radio" name="sale_accounting_method" id="sale_accounting_method1" {{$sale->accounting_method == 1?'checked':''}} />
                         一括</label>
-                      <label class="radio-inline" for="SaleMode2">
-                        <input type="radio" name="data[Sale][mode]" id="SaleMode2" onChange="changeMode();" value="2" />
+                      <label class="radio-inline" for="sale_accounting_method2">
+                        <input type="radio" name="sale_accounting_method" id="sale_accounting_method2" {{$sale->accounting_method == 2?'checked':''}} />
                         個別</label>
                     </div></td>
                 </tr>
@@ -3004,7 +1866,7 @@ var token = "{{csrf_token()}}";
                 <tr id="salesPrice" style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">販売額</td>
                   <td class="sales_price_td" style="vertical-align: middle;"><div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Sale][sales_price]" class="form-control input-sm" maxlength="10" id="sales_price" onblur="calculateIncludingTax();" type="tel" value="0"/>
+                      <input name="sale_amount" class="form-control input-sm" maxlength="10" id="sale_amount" type="tel" value="{{$sale->amount}}"/>
                     </div>
                     <div class="col col-md-1" style="padding: 6px 0px;"> 円</div></td>
                 </tr>
@@ -3012,7 +1874,7 @@ var token = "{{csrf_token()}}";
                 <tr id="vehiclePrice" style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">車両本体価格</td>
                   <td class="vehicle_price_td" style="vertical-align: middle;"><div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Sale][vehicle_price]" class="form-control input-sm" maxlength="10" id="vehicle_price" onblur="calculateIncludingTax();" type="tel" value="0"/>
+                      <input name="sale_body_price" class="form-control input-sm" maxlength="10" id="sale_body_price"  type="tel" value="{{$sale->body_price}}"/>
                     </div>
                     <div class="col col-md-1" style="padding: 6px 0px;"> 円</div></td>
                 </tr>
@@ -3020,47 +1882,47 @@ var token = "{{csrf_token()}}";
                 <tr id="recyclingFee" style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">リサイクル料</td>
                   <td class="recycling_fee_td" style="vertical-align: middle;"><div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Sale][recycling_fee]" class="form-control input-sm" maxlength="10" id="sales_recycling_fee" onblur="calculateIncludingTax();" type="tel" value="11330"/>
+                      <input name="sale_recycling_fee" class="form-control input-sm" maxlength="10" id="sale_recycling_fee"  type="tel" value="{{$sale->recycling_fee}}"/>
                     </div>
                     <div class="col col-md-1" style="padding: 6px 0px;"> 円</div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="vertical-align:middle;">落札手数料</td>
                   <td class="successful_fee_td" style="vertical-align:middle;"><div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Sale][successful_fee]" class="form-control input-sm" maxlength="10" id="SaleSuccessfulFee" onblur="calculateIncludingTax();" type="tel" value="0"/>
+                      <input name="sale_bid_fee" class="form-control input-sm" maxlength="10" id="sale_bid_fee"  type="tel" value="{{$sale->bid_fee}}"/>
                     </div>
                     <div class="col col-md-1" style="padding: 6px 0px;"> 円</div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="vertical-align:middle;">還付金代</td>
                   <td class="refund_td" style="vertical-align:middle;"><div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Sale][refund]" class="form-control input-sm" maxlength="10" id="SaleRefund" onblur="calculateIncludingTax();" type="tel" value="0"/>
+                      <input name="sale_refund_fee" class="form-control input-sm" maxlength="10" id="sale_refund_fee"  type="tel" value="{{$sale->refund_fee}}"/>
                     </div>
                     <div class="col col-md-1 P6_0"> 円</div></td>
                 </tr>
                 <tr id="sale_agency_disposal_tr">
                   <td class="active">抹消代行費用</td>
                   <td class="sale_agency_disposal_td"><div class="col col-md-4 PL0">
-                      <input name="data[Sale][agency_disposal]" class="form-control input-sm" maxlength="10" id="SaleAgencyDisposal" onblur="calculateIncludingTax();" type="tel" value="0"/>
+                      <input name="sale_delete_agent_cost" class="form-control input-sm" maxlength="10" id="sale_delete_agent_cost" type="tel" value="{{$sale->delete_agent_cost}}"/>
                     </div>
                     <div class="col col-md-1 P6_0">円</div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">最終請求額 (税込)</td>
-                  <td style="vertical-align: middle;"><div class="col col-md-12" id="including_tax_output" style="padding: 6px 0px;"> 0 円 </div></td>
+                  <td style="vertical-align: middle;"><div class="col col-md-12" id="including_tax_output" style="padding: 6px 0px;"> {{$sale->final_charge_amount}} 円 </div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">販売先</td>
                   <td class="sales_contact_select_td" style="vertical-align: middle;"><!--id22：販売情報管理-->
                     
                     <div class="col col-md-6" style="padding-left: 0px;">
-                      <select name="data[Sale][sales_contact]" class="form-control input-sm" id="sales_contact" onchange="clearSalesContactInfo();">
-                        <option value="1">業者</option>
-                        <option value="2">業者 (書類)</option>
-                        <option value="3">業者 (Smartオークション)</option>
-                        <option value="4">オークション</option>
-                        <option value="5">国内販売</option>
-                        <option value="9">その他</option>
+                      <select name="sale_destination" class="form-control input-sm" id="sale_destination" >
+                        <option {{$sale->destination == 1?'selected':''}} value="1">業者</option>
+                        <option {{$sale->destination == 2?'selected':''}} value="2">業者 (書類)</option>
+                        <option {{$sale->destination == 3?'selected':''}} value="3">業者 (Smartオークション)</option>
+                        <option {{$sale->destination == 4?'selected':''}} value="4">オークション</option>
+                        <option {{$sale->destination == 5?'selected':''}} value="5">国内販売</option>
+                        <option {{$sale->destination == 6?'selected':''}} value="6">その他</option>
                       </select>
                     </div></td>
                 </tr>
@@ -3069,52 +1931,47 @@ var token = "{{csrf_token()}}";
                   <td style="vertical-align: middle;"><!-- id22：販売情報管理 -->
                     
                     <div class="col col-md-10 contact_name_div" style="padding-left: 0px;">
-                      <input name="data[Sale][contact_name]" class="form-control input-sm" maxlength="100" id="contact_name" autocomplete="off" onkeydown="clearSalesContactCode();" type="text"/>
+                      <input name="sale_distributor_name" class="form-control input-sm" maxlength="100" id="sale_distributor_name" type="text" value="{{$sale->distributor_name}}"/>
                     </div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">販売先コード</td>
                   <td style="vertical-align: middle;"><div class="col col-md-10" id="contact_cd_output" style="padding: 6px 0px;"> </div>
-                    <div class="col col-md-2" id="contact_phone_number_div" style="padding: 6px;"> </div>
-                    <input type="hidden" name="data[Sale][contact_cd]" id="contact_cd"/></td>
+                    <div class="col col-md-2" id="contact_phone_number_div" style="padding: 6px;">{{$sale->part_number}}</div>
                 </tr>
                 <tr class="sales_remark_tr" style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">販売備考</td>
                   <td class="sale_remark_td" style="vertical-align: middle;"><!--id22：販売情報管理-->
                     
                     <div class="col col-md-10" style="padding-left: 0px;">
-                      <textarea name="data[Sale][remark]" class="form-control input-sm" rows="3" cols="30" id="SaleRemark"></textarea>
+                      <textarea name="sale_remark1" class="form-control input-sm" rows="3" cols="30" id="sale_remark1">{{$sale->remark1}}</textarea>
                     </div>
-                    <div class="col col-md-2 text-center edit_sale_remark_div"> <a href="javascript:void(0);" class="btn btn-success btn-xs edit_sale_remark" sale_id="105239">編集</a> </div></td>
+                    </td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">差引額</td>
                   <td class="balance_td" style="vertical-align: middle;"><!--id24：差引額設定機能-->
                     
                     <div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Sale][balance]" class="form-control input-sm" maxlength="10" id="balance" onblur="calculateIncludingTax();" type="text" value="0"/>
+                      <input name="sale_deducion_amount" class="form-control input-sm" maxlength="10" id="sale_deducion_amount" type="text" value="{{$sale->deducion_amount}}"/>
                     </div>
                     <div class="col col-md-1" style="padding: 6px 0px;"> 円</div>
-                    <div class="col col-md-2 col-md-offset-5 text-center update_balance_button_div">
-                      <input  name="update_balance" class="btn btn-warning btn-xs update_balance" type="submit" value="更新"/>
-                    </div></td>
+                    </td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">入金期日</td>
                   <td class="due_date_td" style="vertical-align: middle;"><!-- id25：入金期日設定機能 -->
                     
                     <div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Sale][due_date]" class="form-control input-sm" maxlength="10" id="due_datepicker" type="tel"/>
+                      <input name="sale_deposite_due_date" class="form-control input-sm datepicker" maxlength="10" id="sale_deposite_due_date" type="tel" value="{{$sale->deposite_due_date}}"/>
                     </div>
-                    <div class="col col-md-2 col-md-offset-6 text-center update_due_date_button_div">
-                      <input  name="update_due_date" class="btn btn-warning btn-xs update_due_date" type="submit" value="更新"/>
-                    </div></td>
+                   </td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">売掛日</td>
                   <td style="vertical-align: middle;" id="credit_sale_date">
 					<div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Trade][Accounts_Receivable_Date]" class="form-control input-sm ime-disabled" maxlength="10" id="accounts_receivable_date" autocomplete="off" type="tel">
+                      <input name="sale_receivable_date" class="form-control input-sm ime-disabled datepicker" maxlength="10" id="sale_receivable_date" autocomplete="off" type="tel" value="{{$sale->receivable_date}}">
                     </div>
 				  </td>
                 </tr>
@@ -3123,7 +1980,7 @@ var token = "{{csrf_token()}}";
                   <td class="bill_td" style="vertical-align: middle;" id="sale_bill"><!-- id26：請求管理機能 -->
                     
                     <div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Trade][Request_Date]" class="form-control input-sm ime-disabled" maxlength="10" id="request_date" autocomplete="off" type="tel">
+                      <input name="sale_billing_date" class="form-control input-sm ime-disabled datepicker" maxlength="10" id="sale_billing_date" autocomplete="off" type="tel" value="{{$sale->billing_date}}">
                     </div>
                 </tr>
                 <!-- id27：請求差戻機能 -->
@@ -3131,7 +1988,7 @@ var token = "{{csrf_token()}}";
                   <td class="active" style="width: 120px; vertical-align: middle;">着金日</td>
                   <td class="receipts_td" style="vertical-align: middle;"><!-- id28：着金管理機能 -->
 					<div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Trade][Liner_Date]" class="form-control input-sm ime-disabled" maxlength="10" id="liner_date" autocomplete="off" type="tel">
+                      <input name="sale_golden_date" class="form-control input-sm ime-disabled datepicker" maxlength="10" id="sale_golden_date" autocomplete="off" type="tel" value="{{$sale->golden_date}}">
                     </div>
 				  </td>
                 </tr>
@@ -3139,18 +1996,18 @@ var token = "{{csrf_token()}}";
               </tbody>
               <!-- id22：請求書発行機能 -->
             </table>
+            </form>
           </div>
 
 <!-- Quan -->
           <div>
+            <form id="sale_confirm_form">
             <table class="table table-striped table-bordered table-condensed info_table" style="margin-top: 20px;">
               <thead>
                 <tr class="info">
                   <th colspan="2"> <div class="col col-md-10 lead PL0 MB0"><strong>販売確定情報</strong></div>
                     <div class="col col-md-2 text-center edit_sale_button_div"> 
-                      <a href="/crm/AgreementOrders/edit/118262" class="btn btn-primary btn-sm edit_sale" sale_id="105239" agreement_order_id="118262">編集</a> </div>
-                    <input type="hidden" name="data[Sale][id]" value="105239"/>
-                    <input type="hidden" name="data[Sale][bill]"/>
+                      <a href="#" class="btn btn-primary btn-sm edit_sale" id="edit_sale_confirm">編集</a> </div>
                   </th>
                 </tr>
               </thead>
@@ -3159,17 +2016,17 @@ var token = "{{csrf_token()}}";
                   <td class="active" style="width: 120px; vertical-align: middle;">車両本体価格（確定金額）</td>
                   <td style="vertical-align: middle;">
                   	<div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Sale][successful_fee]" class="form-control input-sm" maxlength="10" id="SaleSuccessfulFee" onblur="calculateIncludingTax();" value="0" type="tel">
+                      <input name="sale_confirm_body_price" class="form-control input-sm" maxlength="10" id="sale_confirm_body_price"  value="{{$sale->body_price}}" type="tel">
                     </div>
-				  </td>
+				          </td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">確定請求金額（税込）</td>
                   <td style="vertical-align: middle;">
                   	<div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Sale][successful_fee]" class="form-control input-sm" maxlength="10" id="SaleSuccessfulFee" onblur="calculateIncludingTax();" value="0" type="tel">
+                      <input name="sale_confirm_established_amount" class="form-control input-sm" maxlength="10" id="sale_confirm_established_amount"  value="{{$sale->established_amount}}" type="tel">
                     </div>
-				  </td>
+				          </td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">金額差異</td>
@@ -3177,60 +2034,61 @@ var token = "{{csrf_token()}}";
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">差引額</td>
-                  <td style="vertical-align: middle;"></td>
+                  <td style="vertical-align: middle;">{{$sale->deducion_amount}}</td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">入金期日（振込期日）</td>
                   <td style="vertical-align: middle;">
                   	<div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Trade][Liner_Date]" class="form-control input-sm ime-disabled" maxlength="10" id="money_date01" autocomplete="off" type="tel">
+                      <input name="sale_confirm_payment_deadline" class="form-control input-sm ime-disabled datepicker" maxlength="10" id="sale_confirm_payment_deadline" autocomplete="off" type="tel" value="{{$sale->payment_deadline}}">
                     </div>
-				  </td>
+				          </td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">最終売掛日</td>
                   <td style="vertical-align: middle;">
                   	<div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Trade][Liner_Date]" class="form-control input-sm ime-disabled" maxlength="10" id="money_date02" autocomplete="off" type="tel">
+                      <input name="sale_confirm_last_account_date" class="form-control input-sm ime-disabled datepicker" maxlength="10" id="sale_confirm_last_account_date" autocomplete="off" type="tel" value="{{$sale->last_account_date}}">
                     </div>
-				  </td>
+				          </td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">請求日</td>
                   <td style="vertical-align: middle;">
                   	<div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Trade][Liner_Date]" class="form-control input-sm ime-disabled" maxlength="10" id="money_date03" autocomplete="off" type="tel">
+                      <input name="sale_confirm_billing_date" class="form-control input-sm ime-disabled datepicker" maxlength="10" id="sale_confirm_billing_date" autocomplete="off" type="tel" value="{{$sale->billing_date}}">
                     </div>
-				  </td>
+				          </td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">着金日（振込日）</td>
                   <td style="vertical-align: middle;">
                   	<div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Trade][Liner_Date]" class="form-control input-sm ime-disabled" maxlength="10" id="money_date04" autocomplete="off" type="tel">
+                      <input name="sale_confirm_clothing_date" class="form-control input-sm ime-disabled datepicker" maxlength="10" id="sale_confirm_clothing_date" autocomplete="off" type="tel" value="{{$sale->clothing_date}}">
                     </div>
-				  </td>
+				          </td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">備考</td>
                   <td style="vertical-align: middle;">
                   	<div class="col col-md-10 PL0">
-                      <input name="data[SeekingPhotographerMail][note]" class="form-control input-sm" maxlength="50" id="photo_note" type="text">
+                      <input name="sale_confirm_remark2" class="form-control input-sm" maxlength="50" id="sale_confirm_remark2" type="text" value="{{$sale->remark2}}">
                     </div>
-				  </td>
+				          </td>
                 </tr>
               </tbody>
             </table>
+            </form>
           </div>
           <div>
+            <form id="transfer_form">
             <table class="table table-striped table-bordered table-condensed info_table" style="margin-top: 20px;">
               <thead>
                 <tr class="info">
                   <th colspan="2"> <div class="col col-md-10 lead PL0 MB0"><strong>顧客振込情報</strong></div>
                     <div class="col col-md-2 text-center edit_sale_button_div"> 
-                      <a href="/crm/AgreementOrders/edit/118262" class="btn btn-primary btn-sm edit_sale" sale_id="105239" agreement_order_id="118262">編集</a> </div>
-                    <input type="hidden" name="data[Sale][id]" value="105239"/>
-                    <input type="hidden" name="data[Sale][bill]"/>
+                      <a href="#" class="btn btn-primary btn-sm edit_sale" id="edit_transfer">編集</a> </div>
+                
                   </th>
                 </tr>
               </thead>
@@ -3239,7 +2097,7 @@ var token = "{{csrf_token()}}";
                   <td class="active" style="width: 120px; vertical-align: middle;">確定金額</td>
                   <td style="vertical-align: middle;">
 					<div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Sale][successful_fee]" class="form-control input-sm" maxlength="10" id="SaleSuccessfulFee" onblur="calculateIncludingTax();" value="0" type="tel">
+                      <input name="transfer_determine_amount" class="form-control input-sm" maxlength="10" id="transfer_determine_amount"  value="{{$sale->determine_amount}}" type="tel">
                     </div>
 				  </td>
                 </tr>
@@ -3247,238 +2105,152 @@ var token = "{{csrf_token()}}";
                   <td class="active" style="width: 120px; vertical-align: middle;">備考</td>
                   <td style="vertical-align: middle;">
 					<div class="col col-md-10 PL0">
-                      <input name="data[SeekingPhotographerMail][note]" class="form-control input-sm" maxlength="50" id="photo_note" type="text">
+                      <input name="transfer_remark3" class="form-control input-sm" maxlength="50" id="transfer_remark3" type="text" value="{{$sale->remark3}}">
                     </div>
 				  </td>
                 </tr>
               </tbody>
             </table>
+            </form>
           </div>
           <div>
+          
             <table class="table table-striped table-bordered table-condensed info_table" style="margin-top: 20px;">
               <thead>
                 <tr class="info">
                   <th colspan="2"> <div class="col col-md-10 lead PL0 MB0"><strong>Smartオークション出品情報</strong></div>
                     <div class="col col-md-2 text-center exhibit_scrap_auction_button_div"> 
                       <!--id30：Smart情報管理-->
-                      <input  name="exhibit_scrap_auction" class="btn btn-primary btn-sm exhibit_scrap_auction" type="submit" value="出品"/>
+                      <a href="#" class="btn btn-primary btn-sm exhibit_scrap_auction" id="edit_order">編集</a> </div>
                     </div>
-                    <input type="hidden" name="data[ScrapAuction][id]"/>
+                    <input type="hidden" name="order_id" id="order_id" value="{{$order->id}}"/>
                   </th>
                 </tr>
               </thead>
               <tbody>
+              <form id="order_form" >
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">出品状況</td>
                   <td style="vertical-align: middle;">
-					  <div class="col col-md-4 PL0">
-							<select name="data[AgreementOrder][License_Plate]" class="form-control input-sm" id="Licenseplate">
-							  <option value="">----------</option>
-							  <option value="1">未出品</option>
-							  <option value="2">出品中</option>
-							  <option value="3">落札</option>
-							  <option value="4">商談中</option>
-							  <option value="5">流札</option>
-							</select>
-						</div>
-				  </td>
+        					  <div class="col col-md-4 PL0">
+        							<select name="order_status" class="form-control input-sm" id="order_status">
+        							  <option value="">----------</option>
+        							  <option {{$order->status == 1?'selected':''}} value="1">未出品</option>
+        							  <option {{$order->status == 2?'selected':''}} value="2">出品中</option>
+        							  <option {{$order->status == 3?'selected':''}} value="3">落札</option>
+        							  <option {{$order->status == 4?'selected':''}} value="4">商談中</option>
+        							  <option {{$order->status == 5?'selected':''}} value="5">流札</option>
+        							</select>
+        						</div>
+        				  </td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">最低落札価格</td>
                   <td class="start_price_td" style="vertical-align: middle;"><div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[ScrapAuction][start_price]" class="form-control input-sm" maxlength="8" id="start_price" type="text" value="10000"/>
+                      <input name="order_asking_price" class="form-control input-sm" maxlength="8" id="order_asking_price" type="text" value="{{$order->asking_price}}"/>
                     </div>
                     <div class="col col-md-1" style="padding: 6px 0px;"> 円</div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">入札締切日時</td>
                   <td class="end_at_td" style="vertical-align: middle;"><div class="col col-md-4" style="padding-left: 0px;" for="end_at_datepicker">
-                      <input name="data[ScrapAuction][end_at_date]" class="form-control input-sm" maxlength="10" id="end_at_datepicker" autocomplete="off" type="text" value="2018-03-21"/>
+                      <input name="order_deadline_date" class="form-control input-sm datepicker" maxlength="10" id="order_deadline_date" autocomplete="off" type="text" value="{{$order->deadline_date}}"/>
                     </div>
                     <div class="col col-md-5">
-                      <select name="data[ScrapAuction][end_at_time][hour]" class="select-time" style="width: 55px; height: 30px; padding: 6px 6px; border: 1px solid #ccc; border-radius: 3px;" id="ScrapAuctionEndAtTimeHour">
-                        <option value="00">0</option>
-                        <option value="01">1</option>
-                        <option value="02">2</option>
-                        <option value="03">3</option>
-                        <option value="04">4</option>
-                        <option value="05">5</option>
-                        <option value="06">6</option>
-                        <option value="07">7</option>
-                        <option value="08">8</option>
-                        <option value="09">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13" selected="selected">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                        <option value="21">21</option>
-                        <option value="22">22</option>
-                        <option value="23">23</option>
+                      <select name="order_deadline_hour" class="select-time" style="width: 55px; height: 30px; padding: 6px 6px; border: 1px solid #ccc; border-radius: 3px;" id="order_deadline_hour">
+                        <option {{$order->deadline_hour == 0?'selected':''}} value="00">0</option>
+                        <option {{$order->deadline_hour == 1?'selected':''}} value="01">1</option>
+                        <option {{$order->deadline_hour == 2?'selected':''}} value="02">2</option>
+                        <option {{$order->deadline_hour == 3?'selected':''}} value="03">3</option>
+                        <option {{$order->deadline_hour == 4?'selected':''}} value="04">4</option>
+                        <option {{$order->deadline_hour == 5?'selected':''}} value="05">5</option>
+                        <option {{$order->deadline_hour == 6?'selected':''}} value="06">6</option>
+                        <option {{$order->deadline_hour == 7?'selected':''}} value="07">7</option>
+                        <option {{$order->deadline_hour == 8?'selected':''}} value="08">8</option>
+                        <option {{$order->deadline_hour == 9?'selected':''}} value="09">9</option>
+                        <option {{$order->deadline_hour == 10?'selected':''}} value="10">10</option>
+                        <option {{$order->deadline_hour == 11?'selected':''}} value="11">11</option>
+                        <option {{$order->deadline_hour == 12?'selected':''}} value="12">12</option>
+                        <option {{$order->deadline_hour == 13?'selected':''}} value="13">13</option>
+                        <option {{$order->deadline_hour == 14?'selected':''}} value="14">14</option>
+                        <option {{$order->deadline_hour == 15?'selected':''}} value="15">15</option>
+                        <option {{$order->deadline_hour == 16?'selected':''}} value="16">16</option>
+                        <option {{$order->deadline_hour == 17?'selected':''}} value="17">17</option>
+                        <option {{$order->deadline_hour == 18?'selected':''}} value="18">18</option>
+                        <option {{$order->deadline_hour == 19?'selected':''}} value="19">19</option>
+                        <option {{$order->deadline_hour == 20?'selected':''}} value="20">20</option>
+                        <option {{$order->deadline_hour == 21?'selected':''}} value="21">21</option>
+                        <option {{$order->deadline_hour == 22?'selected':''}} value="22">22</option>
+                        <option {{$order->deadline_hour == 23?'selected':''}} value="23">23</option>
                       </select>
                       :
-                      <select name="data[ScrapAuction][end_at_time][min]" class="select-time" style="width: 55px; height: 30px; padding: 6px 6px; border: 1px solid #ccc; border-radius: 3px;" id="ScrapAuctionEndAtTimeMin">
-                        <option value="00" selected="selected">00</option>
-                        <option value="15">15</option>
-                        <option value="30">30</option>
-                        <option value="45">45</option>
+                      <select name="order_deadline_minute" class="select-time" style="width: 55px; height: 30px; padding: 6px 6px; border: 1px solid #ccc; border-radius: 3px;" id="order_deadline_minute">
+                        <option {{$order->deadline_minute == 0?'selected':''}} value="00" selected="selected">00</option>
+                        <option {{$order->deadline_minute == 15?'selected':''}} value="15">15</option>
+                        <option {{$order->deadline_minute == 30?'selected':''}} value="30">30</option>
+                        <option {{$order->deadline_minute == 45?'selected':''}} value="45">45</option>
                       </select>
                     </div></td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">訂正備考</td>
                   <td style="vertical-align: middle;"><div class="col col-md-10" style="padding-left: 0px;">
-                      <textarea name="data[ScrapAuction][correction_remark]" class="form-control input-sm" rows="3" cols="30" id="ScrapAuctionCorrectionRemark"></textarea>
+                      <textarea name="order_remark" class="form-control input-sm" rows="3" cols="30" id="order_remark">{{$order->remark}}</textarea>
                     </div></td>
                 </tr>
+                </form>
                 <tr class="scrap_tender_list_tr" style="height: 41px;">
-				  <td class="active" style="width: 120px; vertical-align: middle;">入札状況</td>
-				  <td style="vertical-align: middle;" class="scrap_tender_list_td"><div class="col col-md-12 PA0 trader_row">
-					  <div class="col col-md-10 PA0" style="margin:0px 0px 5px;border-bottom:solid 1px #333333;">
-						<div class="col col-md-6" style="padding:4px 0px 2px;"> ○	森下自動車 </div>
-						<div class="col col-md-1 text-center" style="padding:4px 0px 2px;"></div>
-						<div class="col col-md-1 text-center text-primary" style="padding:4px 0px 2px;"> 有 </div>
-						<div class="col col-md-1 text-center" style="padding:4px 0px 2px;"> </div>
-						<div class="col col-md-1 text-center" style="padding:3px 0px 2px;"> <span style="background:#f0a400;color:#ffffff;padding:1px;3px;" class="hint--top-right" data-hint="+10,000 円">増</span> </div>
-						<div class="col col-md-2 text-right" style="padding:4px 0px 2px;">&yen; 75,000</div>
-					  </div>
-					  <div class="col col-md-2 text-center" style="padding:3px 0px 2px;"> 
-						<!--id78：入札キャンセル機能 --> 
-						<a href="/crm/AgreementOrders/edit/115391" class="btn btn-warning btn-xs tender_cancel" trader_cd="T00229960">取消</a> </div>
-					</div>
-					<div class="col col-md-12 PA0 trader_row">
-					  <div class="col col-md-10 PA0" style="margin:0px 0px 5px;border-bottom:solid 1px #333333;">
-						<div class="col col-md-6" style="padding:4px 0px 2px;"> ○	【未手配】 </div>
-						<div class="col col-md-1 text-center" style="padding:4px 0px 2px;">【代】</div>
-						<div class="col col-md-1 text-center text-primary" style="padding:4px 0px 2px;"> 有 </div>
-						<div class="col col-md-1 text-center" style="padding:4px 0px 2px;"> </div>
-						<div class="col col-md-1 text-center" style="padding:3px 0px 2px;"> <span style="background:#f0a400;color:#ffffff;padding:1px;3px;" class="hint--top-right" data-hint="+5,000 円"></span> </div>
-						<div class="col col-md-2 text-right" style="padding:4px 0px 2px;">&yen; 31,000</div>
-					  </div>
-					  <div class="col col-md-2 text-center" style="padding:3px 0px 2px;"> 
-						<!--id78：入札キャンセル機能 --> 
-						<a href="/crm/AgreementOrders/edit/115391" class="btn btn-warning btn-xs tender_cancel" trader_cd="T00143506">取消</a> </div>
-					</div>
-					<div class="col col-md-12 PA0 trader_row">
-					  <div class="col col-md-10 PA0" style="margin:0px 0px 5px;border-bottom:solid 1px #333333;">
-						<div class="col col-md-6" style="padding:4px 0px 2px;"> ○	カーショップチャンス </div>
-						<div class="col col-md-1 text-center" style="padding:4px 0px 2px;"></div>
-						<div class="col col-md-1 text-center text-primary" style="padding:4px 0px 2px;"> 有 </div>
-						<div class="col col-md-1 text-center" style="padding:4px 0px 2px;"> </div>
-						<div class="col col-md-1 text-center" style="padding:3px 0px 2px;"> <span style="background:#f0a400;color:#ffffff;padding:1px;3px;" class="hint--top-right" data-hint="+5,000 円">増</span> </div>
-						<div class="col col-md-2 text-right" style="padding:4px 0px 2px;">&yen; 5,000</div>
-					  </div>
-					  <div class="col col-md-2 text-center" style="padding:3px 0px 2px;"> 
-						<a href="/crm/AgreementOrders/edit/115391" class="btn btn-warning btn-xs tender_cancel" trader_cd="T00143506">取消</a> </div>
-					</div>
-					<div class="col col-md-12 PA0 trader_row">
-					  <div class="col col-md-10 PA0" style="margin:0px 0px 5px;border-bottom:solid 1px #333333;">
-						<div class="col col-md-6" style="padding:4px 0px 2px;"> ○	DEEP </div>
-						<div class="col col-md-1 text-center" style="padding:4px 0px 2px;"></div>
-						<div class="col col-md-1 text-center text-primary" style="padding:4px 0px 2px;"> 有 </div>
-						<div class="col col-md-1 text-center" style="padding:4px 0px 2px;"> </div>
-						<div class="col col-md-1 text-center" style="padding:3px 0px 2px;"> </div>
-						<div class="col col-md-2 text-right" style="padding:4px 0px 2px;">&yen; 2,000</div>
-					  </div>
-					  <div class="col col-md-2 text-center" style="padding:3px 0px 2px;"> 
-						<!--id78：入札キャンセル機能 --> 
-						<a href="/crm/AgreementOrders/edit/115391" class="btn btn-warning btn-xs tender_cancel" trader_cd="T00208231">取消</a> </div>
-					</div>
-					<div class="col col-md-12 PA0 trader_row">
-					  <div class="col col-md-10 PA0" style="margin:0px 0px 5px;border-bottom:solid 1px #333333;">
-						<div class="col col-md-6" style="padding:4px 0px 2px;"> ○	S・Sオート </div>
-						<div class="col col-md-1 text-center" style="padding:4px 0px 2px;"></div>
-						<div class="col col-md-1 text-center text-primary" style="padding:4px 0px 2px;"> 有 </div>
-						<div class="col col-md-1 text-center" style="padding:4px 0px 2px;"> <span style="background:#337ab7;color:#ffffff;padding:2px;3px;">判</span> </div>
-						<div class="col col-md-1 text-center" style="padding:3px 0px 2px;"> </div>
-						<div class="col col-md-2 text-right" style="padding:4px 0px 2px;">&yen; 2,000</div>
-					  </div>
-					  <div class="col col-md-2 text-center" style="padding:3px 0px 2px;"> 
-						<!--id78：入札キャンセル機能 --> 
-						<a href="/crm/AgreementOrders/edit/115391" class="btn btn-warning btn-xs tender_cancel" trader_cd="T00239351">取消</a> </div>
-					</div>
-					<div class="col col-md-12 PA0 trader_row">
-					  <div class="col col-md-10 PA0" style="margin:0px 0px 5px;border-bottom:solid 1px #333333;">
-						<div class="col col-md-6" style="padding:4px 0px 2px;"> ○	北中自動車 </div>
-						<div class="col col-md-1 text-center" style="padding:4px 0px 2px;"></div>
-						<div class="col col-md-1 text-center text-primary" style="padding:4px 0px 2px;"> 有 </div>
-						<div class="col col-md-1 text-center" style="padding:4px 0px 2px;"> <span style="background:#337ab7;color:#ffffff;padding:2px;3px;">判</span> </div>
-						<div class="col col-md-1 text-center" style="padding:3px 0px 2px;"> </div>
-						<div class="col col-md-2 text-right" style="padding:4px 0px 2px;">&yen; 1,000</div>
-					  </div>
-					  <div class="col col-md-2 text-center" style="padding:3px 0px 2px;"> 
-						<!--id78：入札キャンセル機能 --> 
-						<a href="/crm/AgreementOrders/edit/115391" class="btn btn-warning btn-xs tender_cancel" trader_cd="T00125405">取消</a> </div>
-					</div>
-					<div class="col col-md-12 PA0 trader_row">
-					  <div class="col col-md-10 PA0" style="margin:0px 0px 5px;border-bottom:solid 1px #333333;">
-						<div class="col col-md-6" style="padding:4px 0px 2px;"> ○	カーサポート ニーズ </div>
-						<div class="col col-md-1 text-center" style="padding:4px 0px 2px;"></div>
-						<div class="col col-md-1 text-center text-primary" style="padding:4px 0px 2px;"> 有 </div>
-						<div class="col col-md-1 text-center" style="padding:4px 0px 2px;"> <span style="background:#337ab7;color:#ffffff;padding:2px;3px;">判</span> </div>
-						<div class="col col-md-1 text-center" style="padding:3px 0px 2px;"> </div>
-						<div class="col col-md-2 text-right" style="padding:4px 0px 2px;">&yen; 1,000</div>
-					  </div>
-					  <div class="col col-md-2 text-center" style="padding:3px 0px 2px;"> 
-						<!--id78：入札キャンセル機能 --> 
-						<a href="/crm/AgreementOrders/edit/115391" class="btn btn-warning btn-xs tender_cancel" trader_cd="T00120534">取消</a> </div>
-					</div>
-					<div class="col col-md-12 PA0 trader_row">
-					  <div class="col col-md-10 PA0" style="margin:0px 0px 5px;border-bottom:solid 1px #333333;">
-						<div class="col col-md-6" style="padding:4px 0px 2px;"> ◎	比嘉解体所 </div>
-						<div class="col col-md-1 text-center" style="padding:4px 0px 2px;"></div>
-						<div class="col col-md-1 text-center text-primary" style="padding:4px 0px 2px;"> 有 </div>
-						<div class="col col-md-1 text-center" style="padding:4px 0px 2px;"> </div>
-						<div class="col col-md-1 text-center" style="padding:3px 0px 2px;"> </div>
-						<div class="col col-md-2 text-right" style="padding:4px 0px 2px;">&yen; 1,000</div>
-					  </div>
-					  <div class="col col-md-2 text-center" style="padding:3px 0px 2px;"> 
-						<!--id78：入札キャンセル機能 --> 
-						<a href="/crm/AgreementOrders/edit/115391" class="btn btn-warning btn-xs tender_cancel" trader_cd="T00125416">取消</a> </div>
-					</div></td>
-                </tr>
-				<tr>
-				  <td class="active" style="vertical-align: middle;">代理入札</td>
-				  <td style="vertical-align: middle;"><div class="col col-md-12">
-					  <div class="col col-md-4">業者名</div>
-					  <input name="data[ProxyBid][trader_name]" class="form-control input-sm ui-autocomplete-input" id="ProxyBidTraderName" value="" data-trader_cd="" type="text"/>
-					</div>
-					<div class="col col-md-12">
-					  <div class="col col-md-4">入札額</div>
-					  <input name="data[ProxyBid][amount]" class="form-control input-sm ui-autocomplete-input" id="ProxyBidAmount" type="tel"/>
-					</div>
-					<div class="col col-md-12" style="margin:10px auto;text-align:right;"> <a href="javascript:void(0);" id="ProxyBidButtonDocument" class="btn btn-primary">書類有入札</a> <a href="javascript:void(0);" id="ProxyBidButton" class="btn btn-danger">書類無入札</a> </div></td>
-				</tr>
-                <tr style="height: 41px;">
-                  <td class="active" style="width: 120px; vertical-align: middle;"> 業者質問 </td>
-                  <td class="quo_box" style="vertical-align: middle;"><div class="col col-md-8 quo_status_box" style="padding:6px 0px;"><span class="text-primary">Q</span>金田商店（大阪府）　2018-01-18 19:00:01</div>
-                    <div class="col col-md-4">
-                      <div class="quo_set_btn" style="padding:6px 0px;text-align:right;"> <a href="/crm/AgreementOrders/edit/118262" id="quo_price_change_btn" class="btn btn-success btn-xs quo_price_btn" style="margin-right:10px;" price_status="change">質問編集</a><a href="/crm/AgreementOrders/edit/118262" id="quo_send_btn1" class="btn btn-warning  btn-xs quo_send_btn" quo_send="1">未回答</a> </div>
+                <td class="active" style="width: 120px; vertical-align: middle;">入札状況</td>
+                  <td style="vertical-align: middle;" class="scrap_tender_list_td" id="order_content">
+                  @foreach($orderDetail as $item)
+                    @if($item->status == 0 )
+                      @continue;
+                    @endif
+                    <div class="col col-md-12 PA0 trader_row">
+                      <div class="col col-md-10 PA0" style="margin:0px 0px 5px;border-bottom:solid 1px #333333;">
+                      <div class="col col-md-10" style="padding:4px 0px 2px;"> ○  {{$item->name}} </div>
+                      <div class="col col-md-2 text-right" style="padding:4px 0px 2px;">&yen; {{$item->price}}</div>
+                      </div>
+                      <div class="col col-md-2 text-center" style="padding:3px 0px 2px;"> 
+                      <!--id78：入札キャンセル機能 --> 
+                      <a href="#" class="btn btn-warning btn-xs cancel_bid" data-id="{{$item->id}}">取消</a> </div>
                     </div>
-					<div>書類代金の内訳教えてください。重量重量税+アテアテ+</div>
-				  </td>
+                  @endforeach
+                  </td>
                 </tr>
+        				<tr>
+                  <form id="bid_price_form">
+                    <td class="active" style="vertical-align: middle;">代理入札</td>
+                    <td style="vertical-align: middle;"><div class="col col-md-12">
+                      <div class="col col-md-4">業者名</div>
+                      <input name="order_trader_name" class="form-control input-sm ui-autocomplete-input" id="order_trader_name" value=""  type="text"/>
+                    </div>
+                    <div class="col col-md-12">
+                      <div class="col col-md-4">入札額</div>
+                      <input name="order_trader_bid" class="form-control input-sm ui-autocomplete-input" id="order_trader_bid" type="tel"/>
+                    </div>
+                    <div class="col col-md-12" style="margin:10px auto;text-align:right;"> 
+                        <a href="#" id="order_bid_price" class="btn btn-primary">入札</a> </div></td>
+                  </form>
+                </tr>
+				
                 <!-- 業者質問管理　--> 
                 <!-- 業者クレーム管理　-->
               </tbody>
             </table>
+            
           </div>
           <div>
+          <form id="various_cost_form">
             <table class="table table-bordered table-condensed info_table" style="margin-bottom: 0px;">
               <thead>
                 <tr class="info">
                   <th colspan="4"> <div class="col col-md-10 lead PL0 MB0"><strong>オークション関連諸費用管理</strong></div>
-                    <div class="col col-md-2 text-center text-danger register_auction_cost_div"> <a href="/crm/AgreementOrders/edit/118262" class="btn btn-primary btn-sm register_auction_cost" agreement_order_id="118262">登録</a> </div>
+                    <div class="col col-md-2 text-center text-danger register_auction_cost_div"> <a href="#" class="btn btn-primary btn-sm register_auction_cost" id="add_various_cost">登録</a> </div>
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="various_cost_content">
                 <tr class="active text-center">
                   <td style="width: 120px; vertical-align: middle;">日付</td>
                   <td style="width: 150px; vertical-align: middle;">分類</td>
@@ -3487,10 +2259,10 @@ var token = "{{csrf_token()}}";
                 </tr>
                 <tr style="height: 41px;">
                   <td><div class="col col-md-12 required" style="padding-left: 0px; padding-right: 0px;">
-                      <input name="data[AuctionCost][date]" class="form-control input-sm ime-disabled" maxlength="10" id="auction_cost_datepicker" type="tel"/>
+                      <input name="various_cost_date" class="form-control input-sm ime-disabled datepicker" maxlength="10" id="various_cost_date" type="tel"/>
                     </div></td>
                   <td><div class="col col-md-12" style="padding-left: 0px; padding-right: 0px;">
-                      <select name="data[AuctionCost][cost_category]" class="form-control input-sm" id="auction_cost_category">
+                      <select name="various_cost_classification" class="form-control input-sm" id="various_cost_classification">
                         <option value="1">AA出品料</option>
                         <option value="2">AA成約料</option>
                         <option value="3">AAペナルティ</option>
@@ -3499,25 +2271,50 @@ var token = "{{csrf_token()}}";
                       </select>
                     </div></td>
                   <td><div class="col col-md-12" style="padding-left: 0px; padding-right: 0px;">
-                      <input name="data[AuctionCost][note]" class="form-control input-sm" maxlength="50" id="auction_cost_note" type="text"/>
+                      <input name="various_cost_remark" class="form-control input-sm" maxlength="50" id="various_cost_remark" type="text"/>
                     </div></td>
                   <td><div class="col col-md-11 required" style="padding-left: 0px;">
-                      <input name="data[AuctionCost][amount]" class="form-control input-sm ime-disabled" maxlength="7" id="auction_cost_amount" type="tel"/>
+                      <input name="various_cost_commission" class="form-control input-sm ime-disabled" maxlength="7" id="various_cost_commission" type="tel"/>
                     </div>
                     <div class="col col-md-1" style="padding: 6px 0px;"> 円</div></td>
                 </tr>
+                @foreach($variousCost as $item)
+                <tr style="height: 41px;">
+                  <td><div class="col col-md-12 required" style="padding-left: 0px; padding-right: 0px;">
+                      {{$item->date}}
+                    </div></td>
+                  <td><div class="col col-md-12" style="padding-left: 0px; padding-right: 0px;">
+                      <select  class="form-control input-sm" disabled="">
+                        <option {{$item->classification == 1?'checked':''}} value="1">AA出品料</option>
+                        <option {{$item->classification == 2?'checked':''}} value="2">AA成約料</option>
+                        <option {{$item->classification == 3?'checked':''}} value="3">AAペナルティ</option>
+                        <option {{$item->classification == 4?'checked':''}} value="4">陸送費</option>
+                        <option {{$item->classification == 5?'checked':''}} value="5">その他</option>
+                      </select>
+                    </div></td>
+                  <td><div class="col col-md-12" style="padding-left: 0px; padding-right: 0px;">
+                      {{$item->remark}}
+                    </div></td>
+                  <td><div class="col col-md-11 required" style="padding-left: 0px;">
+                      {{$item->commission}}
+                    </div>
+                    <div class="col col-md-1" style="padding: 6px 0px;"> 円</div></td>
+                </tr>
+                @endforeach
+                
               </tbody>
             </table>
+            </form>
           </div>
           <div class="auction_cost_list_div"> </div>
           <div>
+            <form id="recycling_form">
             <table class="table table-striped table-bordered table-condensed info_table" style="margin-top: 20px;">
               <thead>
                 <tr class="info">
                   <th colspan="2"> <div class="col col-md-10 lead PL0 MB0" id="recycling_deposit_box"><strong>リサイクル料管理</strong></div>
                   	<div class="col col-md-2 text-center edit_sale_button_div"> 
-                      <a href="/crm/AgreementOrders/edit/118262" class="btn btn-primary btn-sm edit_sale" sale_id="105239" agreement_order_id="118262">編集</a> </div>
-                    <input type="hidden" name="data[RecyclingDeposit][id]" value="105217"/>
+                      <a href="#" class="btn btn-primary btn-sm " id="edit_recycling" >編集</a> </div>
                   </th>
                 </tr>
               </thead>
@@ -3525,29 +2322,31 @@ var token = "{{csrf_token()}}";
                 <tr style="height: 41px;" id="recycling_deposit_status">
                   <td class="active" style="width: 120px; vertical-align: middle;">預託状況</td>
                   <td style="vertical-align: middle;">
-				    <div class="col col-md-8 PL0" id="recycling_deposit_status">
-						<input name="data[Trade][address]" class="form-control input-sm" maxlength="100" id="parking_address" value="預託済" type="text">
-					</div>
-                    <input type="hidden" name="data[RecyclingDeposit][finish_deposit]" value="1"/>
+        				    <div class="col col-md-8 PL0" id="recycling_deposit_status">
+          						<input name="recycling_deposite_situation" class="form-control input-sm" maxlength="100" id="recycling_deposite_situation" value="{{$sale->deposite_situation}}" type="text">
+          					</div>
+                  </td>
                 </tr>
                 <tr style="height: 41px;">
                   <td class="active" style="width: 120px; vertical-align: middle;">リサイクル料</td>
                   <td style="vertical-align: middle;"> <div class="col col-md-8 PL0" id="recycling_deposit_status">
-						<input name="data[Trade][address]" class="form-control input-sm" maxlength="100" id="parking_address" value="11,330 円" type="text">
-					</div>
-	  			 </td>
+        						<input name="recycling_recycling_fee" class="form-control input-sm" maxlength="100" id="recycling_recycling_fee" value="{{$sale->recycling_fee}}" type="text">
+        					</div>
+        	  			</td>
                 </tr>
               </tbody>
             </table>
+            </form>
           </div>
           <div>
+          <form id="refund_form">
             <table class="table table-striped table-bordered table-condensed info_table" style="margin-top: 20px;">
               <thead>
                 <tr class="info">
                   <th colspan="2"> <div class="col col-md-10 lead PL0 MB0"><strong>還付金管理</strong></div>
                   	<div class="col col-md-2 text-center edit_sale_button_div"> 
-                      <a href="/crm/AgreementOrders/edit/118262" class="btn btn-primary btn-sm edit_sale" sale_id="105239" agreement_order_id="118262">編集</a> </div>
-                    <input type="hidden" name="data[Refund][id]" value="105217"/>
+                      <a href="#" class="btn btn-primary btn-sm" id="edit_refund" >編集</a> </div>
+                    <input type="hidden" name="refund_id" id="refund_id" value="{{$refund->id}}"/>
                   </th>
                 </tr>
               </thead>
@@ -3556,7 +2355,7 @@ var token = "{{csrf_token()}}";
                   <td class="active" style="width: 120px; vertical-align: middle;">自賠責返戻</td>
                  <td style="vertical-align: middle;">
   				    <div class="col col-md-8 PL0" id="recycling_deposit_status">
-						<input name="data[Trade][address]" class="form-control input-sm" maxlength="100" id="parking_address" value="不要　(見込額： 0 円)" type="text">
+						<input name="refund_return_responsitory" class="form-control input-sm" maxlength="100" id="refund_return_responsitory" value="{{$refund->return_responsitory}}" type="text">
 					</div>
 				   </td>
                 </tr>
@@ -3564,7 +2363,7 @@ var token = "{{csrf_token()}}";
                   <td class="active" style="width: 120px; vertical-align: middle;">重量税還付</td>
                   <td style="vertical-align: middle;">
   				    <div class="col col-md-8 PL0" id="recycling_deposit_status">
-						<input name="data[Trade][address]" class="form-control input-sm" maxlength="100" id="parking_address" value="不要　(見込額： 0 円)" type="text">
+						<input name="refund_weight_tax_refund" class="form-control input-sm" maxlength="100" id="refund_weight_tax_refund" value="{{$refund->weight_tax_refund}}" type="text">
 					</div>
 				  </td>
                 </tr>
@@ -3572,7 +2371,7 @@ var token = "{{csrf_token()}}";
                   <td class="active" style="width: 120px; vertical-align: middle;">自動車税支払日</td>
                   <td style="vertical-align: middle;">
 					<div class="col col-md-4" style="padding-left: 0px;">
-                      <input name="data[Trade][Liner_Date]" class="form-control input-sm ime-disabled" maxlength="10" id="autocar_date" autocomplete="off" type="tel">
+                      <input name="refund_tax_date" class="form-control input-sm ime-disabled datepicker" maxlength="10" id="refund_tax_date" autocomplete="off" type="tel" value="{{$refund->tax_date}}">
                     </div>
 				  </td>
                 </tr>
@@ -3580,7 +2379,7 @@ var token = "{{csrf_token()}}";
                   <td class="active" style="width: 120px; vertical-align: middle;">支払金額</td>
                  <td style="vertical-align: middle;">
   				    <div class="col col-md-8 PL0" id="recycling_deposit_status">
-						<input name="data[Trade][address]" class="form-control input-sm" maxlength="100" id="parking_address" value="不要　(見込額： 0 円)" type="text">
+						<input name="refund_payment" class="form-control input-sm" maxlength="100" id="refund_payment" value="{{$refund->payment}}" type="text">
 					</div>
 				  </td>
                 </tr>
@@ -3588,12 +2387,13 @@ var token = "{{csrf_token()}}";
                   <td class="active" style="width: 120px; vertical-align: middle;">自動車税還付金</td>
                   <td style="vertical-align: middle;">
   				    <div class="col col-md-8 PL0" id="recycling_deposit_status">
-						<input name="data[Trade][address]" class="form-control input-sm" maxlength="100" id="parking_address" value="不要　(見込額： 0 円)" type="text">
+						<input name="refund_automobile_refund" class="form-control input-sm" maxlength="100" id="refund_automobile_refund" value="{{$refund->automobile_refund}}" type="text">
 					</div>
 				  </td>
                 </tr>
               </tbody>
             </table>
+            </form>
           </div>
         </div>
       </div>

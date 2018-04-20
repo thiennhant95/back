@@ -1,9 +1,28 @@
 $(document).ready(function() {
 	$("#reception_form").validate({
             rules : {
-            	reception_end_desired_date:{
+            	reception_term_consent:{
             		date:true,
-            	}
+            	},
+                reception_confirm_method:{
+                    maxlength:50,
+                },
+                reception_producer_urged:{
+                    maxlength:50,
+                },
+                reception_remark1:{
+                    maxlength:50,
+                },
+                minimum_recommend_price:{
+                    number:true,
+                    min:1
+                },
+                reception_end_desired_date:{
+                    date:true,
+                },
+                reception_notify_certified_copy:{
+                    maxlength:50,
+                },
             }, tooltip_options: {
             }
     });

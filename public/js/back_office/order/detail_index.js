@@ -33,6 +33,9 @@ $(function(){
 			return result;
 		}
 	});
+	$('.datepicker').datepicker({
+		minDate: 0
+	});
 	$('#disposal_datepicker').datepicker({
 		maxDate: 0
 	});
@@ -1980,7 +1983,7 @@ $(function(){
 	});
 
 // 販売管理編集
-	$(document).on('click', '.edit_sale', function(){
+	/*$(document).on('click', '.edit_sale', function(){
 		var edit_link = $(this);
 		var div = $(this).parent();
 		var sale_id = edit_link.attr('sale_id');
@@ -2133,7 +2136,7 @@ $(function(){
 				div.html(prev_html);
 			});
 		return false;
-	});
+	});*/
 
 // 販売備考編集
 	$(document).on('click', '.edit_sale_remark', function(){
@@ -2500,7 +2503,7 @@ $(function(){
 	});
 
 // 写真撮影スタッフ募集メール送信
-	$(document).on('click', '.send_seeking_photographer_mail', function(){
+	/*$(document).on('click', '.send_seeking_photographer_mail', function(){
 		var send_link = $(this);
 		var div = $(this).parent();
 		var agreement_order_id = send_link.attr('agreement_order_id');
@@ -2557,7 +2560,7 @@ $(function(){
 				$('.deny_taking_photo_button_div').html(prev_deny_html);
 			});
 		return false;
-	});
+	});*/
 
 // 写真撮影拒否
 	$(document).on('click', '.deny_taking_photo', function(){
@@ -2943,7 +2946,7 @@ $(function(){
 
 
 // オークション関連諸費用入力
-	$(document).on('click', '.register_auction_cost', function(){
+	/*$(document).on('click', '.register_auction_cost', function(){
 		var register_link = $(this);
 		var div = $(this).parent();
 		var agreement_order_id = register_link.attr('agreement_order_id');
@@ -3027,7 +3030,7 @@ $(function(){
 				$('#auction_cost_amount').attr('readonly', false);
 			});
 		return false;
-	});
+	});*/
 
 // オークション関連諸費用項目削除
 	$(document).on('click', '.delete_auction_cost', function(){
@@ -3926,13 +3929,13 @@ $(function(){
 		}
 	});
 
-	$(document).on('click','.exhibit_scrap_auction',function(){
+/*	$(document).on('click','.exhibit_scrap_auction',function(){
 		if($('#recyclingFeeSA').val() == 0){
 			alert('リサイクル料金が不明です。');
 			return false;
 		}
 		return true;
-	});
+	});*/
 
 // Smartオークション質問回答
 	$(document).on('click','.edit_sa_customer_question',function(){

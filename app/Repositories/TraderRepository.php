@@ -30,6 +30,18 @@ class TraderRepository extends BaseRepository
     }
 
     /**
+     * Function: getPaginateSortable
+     * get list news with limit
+     *
+     * @param   Request   $request
+     * @return  view _ return list of news
+     *
+     */
+    public function getPaginateSortable($n)
+    {
+        return $this->model->sortable()->paginate($n);
+    }
+    /**
      ***************************************************************************
      * Created: 2018/04/17
      * Query Search Trader
@@ -44,29 +56,62 @@ class TraderRepository extends BaseRepository
         $name = '%'.$search['name'].'%';
         $phone_number = '%'.$search['phone_number'].'%';
         $email = '%'.$search['email'].'%';
-        $staff = '%'.$search['staff'].'%';
-        $query = Trader::select('trader.*')->where('trader.name','like',$name)->where('phone','like',$phone_number)->where('email','like',$email)->where('member_status','like',$staff);
+        $status = '%'.$search['staff'].'%';
+        $bring_assessment='%'.$search['bring_assessment'].'%';
+        $assessment_classification='%'.$search['assessment_classification'].'%';
+        $query = Trader::select('trader.*')
+            ->where('trader.name','like',$name)
+            ->where('phone','like',$phone_number)
+            ->where('email','like',$email)
+            ->where('member_status','like',$status)
+        ;
+        if ($assessment_classification!='')
+        {
+            $query=$query->where('assessment_classification','like',$assessment_classification);
+        }
+        if ($bring_assessment!='')
+        {
+            $query=$query->where('bring_asssessment','like',$bring_assessment);
+        }
         if($search['pref_id'] != '')
         {
             $query = $query->where('erea_id','=',$search['pref_id']);
         }
+        if (isset($search['bid_approval']))
+        {
+            $query =$query->where('bid_approval',$search['bid_approval']);
+        }
 
-        if ($search['service_start_date'])
+        #search search service_date
+        if ($search['service_start_date']!=null)
         {
             $query = $query->where('service_date', '>=', date("Y-m-d 00:00:00", strtotime($search['service_start_date'])));
         }
 
-        if (strtotime($search['service_end_date'])!=null)
+        if ($search['service_end_date']!=null)
         {
             $query = $query->where('service_date', '<=', date("Y-m-d 00:00:00", strtotime($search['service_end_date'])));
         }
-        if ($search['curio_start_date'])
+
+        #search search curio_date
+        if ($search['curio_start_date']!=null)
         {
             $query=$query->where('curio_date','>=',date("Y-m-d 00:00:00", strtotime($search['curio_start_date'])));
         }
-        if ($search['curio_end_date'])
+        if ($search['curio_end_date']!=null)
         {
             $query=$query->where('curio_date','<=',date("Y-m-d 00:00:00", strtotime($search['curio_end_date'])));
+        }
+
+        #search excess
+
+        if (isset($search['excess_deficit_money']) && $search['excess_deficit_money']==0)
+        {
+            $query=$query->where('excess_deficit money','0');
+        }
+        else if (isset($search['excess_deficit_money']) && $search['excess_deficit_money']==1)
+        {
+            $query=$query->where('excess_deficit money','!=','null');
         }
         $query = $query->paginate($n);
         return $query;

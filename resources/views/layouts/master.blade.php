@@ -39,7 +39,7 @@
         <li> <a href="/assess">査定員管理</a></li>
         <li> <a href="/trader">業者管理</a> </li>
         <li> <a href="/user">ユーザー管理</a> </li>
-        
+        <li> <a href="/news">新着情報</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>

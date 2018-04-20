@@ -22,5 +22,11 @@ class ZoneRepository extends BaseRepository
     {
     	return Zone::all();
     }
+
+    public function GetZoneByName($name)
+    {
+    	$query = $this->model->select("zone.name")->join('erea', 'zone.id', '=', 'erea.zone_id')->where('erea.name','=',$name)->first();
+    	return $query;
+    }
 }
 ?>

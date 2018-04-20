@@ -6,6 +6,7 @@ use App\ValidateRequest\ValidateRequestOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use App\Repositories\SellerRepository;
+use App\Helper\FileHelper;
 /*****************************************************************************
 * Controller management seller
 ****************************************************************************
@@ -23,7 +24,15 @@ class SellerController extends Controller
     ****************************************************************************/
     public function edit(Request $p_request){
     	ValidateRequestOrder::validateSeller($p_request);
+        $sellerRepo = new SellerRepository();
     	$id = $p_request->input('id');
+        $sellerInfo = $sellerRepo->getById($id);
+        if($sellerInfo == null){
+            return Response::json([
+                "status" => false,
+                "message" => "fail"
+            ]);
+        }
         $seller['name'] = $p_request->input('name');
         $seller['kana_name'] = $p_request->input('kana_name');
         $seller['participant'] = $p_request->input('participant');
@@ -41,7 +50,7 @@ class SellerController extends Controller
         $seller['phone_check4'] = $p_request->input('phone_check4');
         $seller['fax'] = $p_request->input('fax');
         $seller['zip_code'] = $p_request->input('zip_code');
-        $seller['erea'] = $p_request->input('erea');
+        $seller['erea_id'] = $p_request->input('erea_id');
         $seller['address'] = $p_request->input('address');
         $seller['building_number'] = $p_request->input('building_number');
         $seller['age'] = $p_request->input('age');
@@ -50,9 +59,14 @@ class SellerController extends Controller
         $seller['email2'] = $p_request->input('email2');
         $seller['gender'] = $p_request->input('gender');
         $seller['license'] = $p_request->input('license');
-        $seller['license_img'] = $p_request->input('license_img');
+        $license_img = FileHelper::saveImage($p_request,'license_img','sl',$id);
+        if($license_img != null){
+            $seller['license_img'] = $license_img;
+            FileHelper::deleteImage($sellerInfo->license_img);
+        }
+        
         $seller['register_date'] = $p_request->input('register_date');
-        $sellerRepo = new SellerRepository();
+        
         $status = $sellerRepo->update($id,$seller);
         $result = [
             "status" => true,

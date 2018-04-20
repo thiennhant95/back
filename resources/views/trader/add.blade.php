@@ -78,7 +78,7 @@
 
             $(document).on('click','#changePassword',function(){
                 $('#trader_password').attr('type','password');
-                var html = '<div><div class="col col-md-2"><input name="data[Trader][password]" maxLength="50" id="trader_password" class="form-control" type="password"/></div></div>';
+                var html = '<div><div class="col col-md-2"><input name="data[trader][password]" maxLength="50" id="trader_password" class="form-control" type="password"/></div></div>';
                 $('#inputPassword').html(html);
                 return false;
             });
@@ -105,7 +105,7 @@
                         _t.remove();
                         if( mode == '1'){
                             $('.effective_date').html('無料会員');
-                            $('.smart_membership').html('<label class="col col-md-2 control-label">Smart利用可否</label><div class="col col-md-5"><label class="radio-inline" for="TraderSmart0"><input type="radio" name="data[Trader][smart]" id="TraderSmart0" value="0" checked="checked" /> 利用不可</label><label class="radio-inline" for="TraderSmart1"><input type="radio" name="data[Trader][smart]" id="TraderSmart1" value="1" /> 利用可</label></div>');
+                            $('.smart_membership').html('<label class="col col-md-2 control-label">Smart利用可否</label><div class="col col-md-5"><label class="radio-inline" for="TraderSmart0"><input type="radio" name="data[trader][smart]" id="TraderSmart0" value="0" checked="checked" /> 利用不可</label><label class="radio-inline" for="TraderSmart1"><input type="radio" name="data[trader][smart]" id="TraderSmart1" value="1" /> 利用可</label></div>');
                         } else {
                             $('.smart_membership').remove();
                             $('.effective_date').html('有料会員' + '[適用日:'+ json.data.effective_date +']');
@@ -129,18 +129,18 @@
                 'autoFocus' : true,
                 'minLength' : 0,
                 'select' : function(event,ui){
-                    $('#parent_trader_name').val(ui.item.Trader.trader_name);
-                    $('#parent_trader_cd').val(ui.item.Trader.trader_cd);
+                    $('#parent_trader_name').val(ui.item.trader.trader_name);
+                    $('#parent_trader_cd').val(ui.item.trader.trader_cd);
                     return false;
                 }
 
             }).data('ui-autocomplete')._renderItem = function(ul,item){
-                if(item.Trader.trader_name == ''){
+                if(item.trader.trader_name == ''){
                     $('#parent_trader_name').val('');
                     $('#parent_trader_cd').val('0');
                     return false;
                 }else{
-                    return $("<li>").append("<a>" + item.Trader.trader_name + "</a>").appendTo(ul);
+                    return $("<li>").append("<a>" + item.trader.trader_name + "</a>").appendTo(ul);
                 }
             };
         });
@@ -150,6 +150,7 @@
 @endsection
 @section('content')
 <div id="container">
+    {{--{{session()->get('save_erea')}}--}}
     <div id="header"></div>
     <div id="content">
         <!-- app/View/Traders/edit.ctp -->
@@ -157,21 +158,22 @@
         <div class="col col-md-12">
             <blockquote>業者編集 </blockquote>
         </div>
-        @if(count($errors)>0)
-            <div class="alert alert-danger">
-                @foreach($errors->all() as $err)
-                    {{$err}}<br>
-                @endforeach
-            </div>
-        @endif
-        @if(session('message'))
-            <div class="alert alert-danger">
-                {{session('message')}}
-            </div>
-        @endif
         <div id="traders_edit_page" class="col col-md-10 col-md-offset-1">
+            @if(count($errors)>0)
+                <div class="alert alert-danger">
+                    @foreach($errors->all() as $err)
+                        {{$err}}<br>
+                    @endforeach
+                </div>
+            @endif
+            @if(session('message'))
+                <div class="alert alert-danger">
+                    {{session('message')}}
+                </div>
+            @endif
             <form action="add.html" class="well form-horizontal" id="TraderEditForm" method="post" accept-charset="utf-8">
                 <input type="hidden" name="_token" value="{{csrf_token()}}">
+                <meta name="csrf-token" content="{{ csrf_token()}}">
                 <div style="display:none;">
                     <input type="hidden" name="_method" value="POST"/>
                 </div>
@@ -179,31 +181,31 @@
                     <div class="form-group col col-md-12 required">
                         <label for="TraderTraderName" class="col col-md-2 control-label">業者名</label>
                         <div class="col col-md-5 required">
-                            <input name="data[Trader][name]" class="form-control" maxLength="100" required="required" type="text"/>
+                            <input id="trader_family_name" name="data[trader][name]" class="form-control" maxLength="100" required="required" type="text"/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="TraderTraderKanaName" class="col col-md-2 control-label">ふりがな</label>
                         <div class="col col-md-5">
-                            <input name="data[Trader][phonetic]" class="form-control hiragana" maxLength="100" type="text"/>
+                            <input name="data[trader][phonetic]" class="form-control hiragana" maxLength="100" type="text"/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="TraderZipCode" class="col col-md-2 control-label">郵便番号</label>
                         <div class="col col-md-2">
                             <div class="col-md-8" style="padding: 0">
-                                <input name="data[Trader][zip_code]" class="form-control" maxLength="8" onKeyUp="AjaxZip3.zip2addr(this, &#039;&#039;, &#039;data[Trader][pref_id]&#039;, &#039;data[Trader][address]&#039;);" type="tel"/>
+                                <input name="data[trader][zip_code]" class="form-control" maxLength="8" type="tel" required/>
                             </div>
                             <div class="col col-md-4 text-center" style="margin-top: 6px;">
-                                <button type="button" class="btn btn-warning btn-xs" onclick="AjaxZip3.zip2addr('data[Customer][zip_code]', '', 'data[Customer][pref_id]', 'data[Customer][address]');">住所検索</button>
+                                <button type="button" class="btn btn-warning btn-xs" onclick="AjaxZip3.zip2addr('data[trader][zip_code]', &#039;&#039;, &#039;data[trader][pref_id]&#039;, &#039;data[trader][address]&#039;);">住所検索</button>
                             </div>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="TraderPrefId" class="col col-md-2 control-label">都道府県</label>
                         <div class="col col-md-1 required">
-                            <select name="data[Trader][pref_id]" class="form-control input-sm pref_name" id="TraderPrefId">
-                                <option value="">----------</option>
+                            <select name="data[trader][pref_id]" class="form-control input-sm pref_name" id="TraderPrefId" required>
+                                <option value="" readonly>----------</option>
                                 @foreach($list_zone as $key_zone => $zone)
                                     <optgroup label="{{ $zone->name }}">
                                         @foreach($list_erea as $key_ereas => $ereas)
@@ -221,92 +223,92 @@
                     <div class="form-group col col-md-12">
                         <label for="TraderAddress" class="col col-md-2 control-label">住所</label>
                         <div class="col col-md-5">
-                            <input name="data[Trader][address]" class="form-control" maxLength="100" type="text"/>
+                            <input name="data[trader][address]" class="form-control" maxLength="100" type="text"/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="TraderAddress" class="col col-md-2 control-label">建物名・部屋番号等</label>
                         <div class="col col-md-5">
-                            <input name="data[Trader][building_name]" class="form-control" maxLength="100" type="text"/>
+                            <input name="data[trader][building_name]" class="form-control" maxLength="100" type="text"/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="TraderPhoneNumber" class="col col-md-2 control-label">電話番号</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][phone_number]" class="form-control" maxLength="13" type="tel"/>
+                            <input name="data[trader][phone_number]" class="form-control" maxLength="13" type="tel"/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="TraderFaxNumber" class="col col-md-2 control-label">FAX番号</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][fax_number]" class="form-control" maxLength="13" type="tel"/>
+                            <input name="data[trader][fax_number]" class="form-control" maxLength="13" type="tel"/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="TraderFaxNumberForSendPdf" class="col col-md-2 control-label">精算明細書送付先FAX番号</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][destination_fax]" class="form-control" maxLength="13" type="tel"/>
+                            <input name="data[trader][destination_fax]" class="form-control" maxLength="13" type="tel"/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="TraderChargeName" class="col col-md-2 control-label">担当者名</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][contact_name]" class="form-control" maxLength="50" type="text" value=""/>
+                            <input name="data[trader][contact_name]" class="form-control" maxLength="50" type="text" value=""/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="TraderChargeKanaName" class="col col-md-2 control-label">担当者名 (ふりがな)</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][furigana_name]" class="form-control hiragana" maxLength="50" type="text" value=""/>
+                            <input name="data[trader][furigana_name]" class="form-control hiragana" maxLength="50" type="text" value=""/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="TraderChargePhoneNumber" class="col col-md-2 control-label">担当者電話番号</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][furigana_phone]" class="form-control" maxLength="13" type="tel"/>
+                            <input name="data[trader][furigana_phone]" class="form-control" maxLength="13" type="tel"/>
                         </div>
                     </div>
 
                     <div class="form-group col col-md-12">
                         <label for="TraderEmail" class="col col-md-2 control-label">メールアドレス</label>
                         <div class="col col-md-5">
-                            <input name="data[Trader][email]" class="form-control" maxLength="100" type="email" value=""/>
+                            <input name="data[trader][email]" class="form-control" maxLength="100" type="email" value=""/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="TraderUrl" class="col col-md-2 control-label">WEBサイト</label>
                         <div class="col col-md-5">
-                            <input name="data[Trader][website]" type="url" class="form-control" maxLength="255"/>
+                            <input name="data[trader][website]" type="url" class="form-control" maxLength="255"/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="contractdate" class="col col-md-2 control-label">サービス利用申込日</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][service_date]" class="form-control" maxLength="10" id="contractdate" type="tel"/>
+                            <input name="data[trader][service_date]" class="form-control" maxLength="10" id="contractdate" type="tel"/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="contractdate1" class="col col-md-2 control-label">古物商許可証確認日</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][curio_date]" class="form-control" maxLength="10" id="contractdate1" type="tel"/>
+                            <input name="data[trader][curio_date]" class="form-control" maxLength="10" id="contractdate1" type="tel"/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="" class="col col-md-2 control-label">古物商許可証番号</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][permit_number]" class="form-control" maxLength="13" type="tel" value=""/>
+                            <input name="data[trader][permit_number]" class="form-control" maxLength="13" type="tel" value=""/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="contractdate2" class="col col-md-2 control-label">その他申込時必要書類確認日</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][document_confirmation_date]" class="form-control" maxLength="10" id="contractdate2" type="tel"/>
+                            <input name="data[trader][document_confirmation_date]" class="form-control" maxLength="10" id="contractdate2" type="tel"/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="" class="col col-md-2 control-label">備考</label>
                         <div class="col col-md-5">
-                            <textarea name="data[Trader][remark]" class="form-control" rows="5" cols="30" id="">テキストテキストテキスト</textarea>
+                            <textarea name="data[trader][remark]" class="form-control" rows="5" cols="30" id="">テキストテキストテキスト</textarea>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
@@ -314,10 +316,10 @@
                             <label class="col col-md-2 control-label">出張査定可否区分</label>
                             <div class="col col-md-5">
                                 <label class="radio-inline" for="shucho0">
-                                    <input type="radio" name="data[Trader][assessment_classification]" id="shucho0" value="0" checked="checked" />
+                                    <input type="radio" name="data[trader][assessment_classification]" id="shucho0" value="0" checked="checked" />
                                     不可</label>
                                 <label class="radio-inline" for="shucho1">
-                                    <input type="radio" name="data[Trader][assessment_classification]" id="shucho1" value="1" />
+                                    <input type="radio" name="data[trader][assessment_classification]" id="shucho1" value="1" />
                                     可</label>
                             </div>
                         </div>
@@ -325,33 +327,35 @@
                     <div class="form-group col col-md-12">
                         <label for="" class="col col-md-2 control-label">出張査定レベル</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][assessment_level]" class="form-control" maxLength="13" type="tel" value=""/>
+                            <input name="data[trader][assessment_level]" class="form-control" maxLength="13" type="tel" value=""/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="" class="col col-md-2 control-label">出張査定単価</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][assessment_price]" class="form-control" maxLength="13" type="tel"/>
+                            <input name="data[trader][assessment_price]" class="form-control" maxLength="13" type="tel"/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="" class="col col-md-2 control-label">出張査定回数</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][assessment_trip]" class="form-control" maxLength="13" type="tel" value="1"/>
+                            <input name="data[trader][assessment_trip]" class="form-control" maxLength="13" type="tel" value="1"/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="" class="col col-md-2 control-label">備考</label>
                         <div class="col col-md-5">
-                            <textarea name="data[Trader][remark1]" class="form-control" rows="5" cols="30" id="">テキストテキストテキスト</textarea>
+                            <textarea name="data[trader][remark1]" class="form-control" rows="5" cols="30" id="">テキストテキストテキスト</textarea>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="TraderTerritory" class="col col-md-2 control-label">出張査定対応地域</label>
                         <div class="col col-md-5">
-                            <textarea name="data[Trader][assessment_area]" class="form-control" rows="3" cols="30" id="TraderTerritory"></textarea>
+                            <textarea  name="data[trader][assessment_area]" value="" class="form-control" rows="3" cols="30" id="TraderTerritory"></textarea>
                         </div>
-                        <div class="col col-md-5" style="padding: 15px;"><a href="./area.html" class="btn btn-success btn-small" target="_blank"><span class="glyphicon glyphicon-road"></span> 対応地域設定</a></div>
+                        <div class="col col-md-5" style="padding: 15px;">
+                            <button type="button" class="btn btn-success btn-small popup"><span class="glyphicon glyphicon-road"></span> 対応地域設定</button>
+                        </div>
                     </div>
                     <!-- <div class="form-group col col-md-12">
                       <label class="control-label col col-md-2">対応都道府県</label>
@@ -581,10 +585,10 @@
                             <label class="col col-md-2 control-label">持込査定可否区分</label>
                             <div class="col col-md-5">
                                 <label class="radio-inline" for="tokukomi0">
-                                    <input type="radio" name="data[Trader][bring_assessment]" id="tokukomi0" value="0" checked="checked" />
+                                    <input type="radio" name="data[trader][bring_assessment]" id="tokukomi0" value="0" checked="checked" />
                                     不可</label>
                                 <label class="radio-inline" for="tokukomi1">
-                                    <input type="radio" name="data[Trader][bring_assessment]" id="tokukomi1" value="1" />
+                                    <input type="radio" name="data[trader][bring_assessment]" id="tokukomi1" value="1" />
                                     可</label>
                             </div>
                         </div>
@@ -592,25 +596,25 @@
                     <div class="form-group col col-md-12">
                         <label for="" class="col col-md-2 control-label">持込査定レベル</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][bought_level]" class="form-control" maxLength="13" type="tel" value=""/>
+                            <input name="data[trader][bought_level]" class="form-control" maxLength="13" type="tel" value=""/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="" class="col col-md-2 control-label">持込査定単価</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][bought_price]" class="form-control" maxLength="13" type="tel"/>
+                            <input name="data[trader][bought_price]" class="form-control" maxLength="13" type="tel"/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="" class="col col-md-2 control-label">持込査定回数</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][bought_frequency]" class="form-control" maxLength="13" type="tel" value="1"/>
+                            <input name="data[trader][bought_frequency]" class="form-control" maxLength="13" type="tel" value="1"/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="" class="col col-md-2 control-label">備考</label>
                         <div class="col col-md-5">
-                            <textarea name="data[Trader][remark2]" class="form-control" rows="5" cols="30" id="">テキストテキストテキスト</textarea>
+                            <textarea name="data[trader][remark2]" class="form-control" rows="5" cols="30" id="">テキストテキストテキスト</textarea>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
@@ -618,16 +622,16 @@
                             <label class="col col-md-2 control-label">会員状況</label>
                             <div class="col col-md-5">
                                 <label class="radio-inline" for="Staff_stt0">
-                                    <input type="radio" name="data[Trader][member_status]" id="Staff_stt0" value="0" checked="checked" />
+                                    <input type="radio" name="data[trader][member_status]" id="Staff_stt0" value="0" checked="checked" />
                                     非会員</label>
                                 <label class="radio-inline" for="Staff_stt1">
-                                    <input type="radio" name="data[Trader][member_status]" id="Staff_stt1" value="1" />
+                                    <input type="radio" name="data[trader][member_status]" id="Staff_stt1" value="1" />
                                     無料会員</label>
                                 <label class="radio-inline" for="Staff_stt2">
-                                    <input type="radio" name="data[Trader][member_status]" id="Staff_stt2" value="1" />
+                                    <input type="radio" name="data[trader][member_status]" id="Staff_stt2" value="2" />
                                     有料会員</label>
                                 <label class="radio-inline" for="Staff_stt3">
-                                    <input type="radio" name="data[Trader][member_status]" id="Staff_stt3" value="1" />
+                                    <input type="radio" name="data[trader][member_status]" id="Staff_stt3" value="3" />
                                     取引中止</label>
                             </div>
                         </div>
@@ -635,7 +639,7 @@
                     <div class="form-group col col-md-12">
                         <label class="col col-md-2 control-label">備考</label>
                         <div class="col col-md-5">
-                            <textarea name="data[Trader][remark3]" class="form-control" rows="5" cols="30" id="">テキストテキストテキスト</textarea>
+                            <textarea name="data[trader][remark3]" class="form-control" rows="5" cols="30" id="">テキストテキストテキスト</textarea>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
@@ -643,10 +647,10 @@
                             <label class="col col-md-2 control-label">入札可否区分</label>
                             <div class="col col-md-5">
                                 <label class="radio-inline" for="Exhi0">
-                                    <input type="radio" name="data[Trader][bid_approval]" id="Exhi0" value="0" checked="checked" />
+                                    <input type="radio" name="data[trader][bid_approval]" id="Exhi0" value="0" checked="checked" />
                                     不可</label>
                                 <label class="radio-inline" for="Exhi1">
-                                    <input type="radio" name="data[Trader][bid_approval]" id="Exhi1" value="1" />
+                                    <input type="radio" name="data[trader][bid_approval]" id="Exhi1" value="1" />
                                     可</label>
                             </div>
                         </div>
@@ -655,17 +659,17 @@
                         <label class="col col-md-2 control-label">サービス利用可否区分</label>
                         <div class="col col-md-5">
                             <label class="radio-inline" for="TraderSmart0">
-                                <input type="radio" name="data[Trader][service_classification]" id="TraderSmart0" value="0" checked="checked" />
+                                <input type="radio" name="data[trader][service_classification]" id="TraderSmart0" value="0" checked="checked" />
                                 利用不可</label>
                             <label class="radio-inline" for="TraderSmart1">
-                                <input type="radio" name="data[Trader][service_classification]" id="TraderSmart1" value="1" />
+                                <input type="radio" name="data[trader][service_classification]" id="TraderSmart1" value="1" />
                                 利用可</label>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="" class="col col-md-2 control-label">備考</label>
                         <div class="col col-md-5">
-                            <textarea name="data[Trader][remark4]" class="form-control" rows="5" cols="30" id="">テキストテキストテキスト</textarea>
+                            <textarea name="data[trader][remark4]" class="form-control" rows="5" cols="30" id="">テキストテキストテキスト</textarea>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
@@ -673,10 +677,10 @@
                             <label class="col col-md-2 control-label">出品新着メール可否区分</label>
                             <div class="col col-md-5">
                                 <label class="radio-inline" for="Exhibit0">
-                                    <input type="radio" name="data[Trader][email_classification]" id="Exhibit0" value="0" checked="checked" />
+                                    <input type="radio" name="data[trader][email_classification]" id="Exhibit0" value="0" checked="checked" />
                                     送信可</label>
                                 <label class="radio-inline" for="Exhibit1">
-                                    <input type="radio" name="data[Trader][email_classification]" id="Exhibit1" value="1" />
+                                    <input type="radio" name="data[trader][email_classification]" id="Exhibit1" value="1" />
                                     送信不可</label>
                             </div>
                         </div>
@@ -684,7 +688,7 @@
                     <div class="form-group col col-md-12">
                         <label for="TraderEmail" class="col col-md-2 control-label">出品新着メール受取アドレス</label>
                         <div class="col col-md-5">
-                            <input name="data[Trader][new_email]" class="form-control" maxLength="100" type="email" value=""/>
+                            <input name="data[trader][new_email]" class="form-control" maxLength="100" type="email" value=""/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
@@ -692,10 +696,10 @@
                             <label class="col col-md-2 control-label">販促メルマガ可否区分</label>
                             <div class="col col-md-5">
                                 <label class="radio-inline" for="ExhibitR0">
-                                    <input type="radio" name="data[Trader][promotion_email_classification]" id="ExhibitR0" value="0" checked="checked" />
+                                    <input type="radio" name="data[trader][promotion_email_classification]" id="ExhibitR0" value="0" checked="checked" />
                                     可</label>
                                 <label class="radio-inline" for="ExhibitR1">
-                                    <input type="radio" name="data[Trader][promotion_email_classification]" id="ExhibitR1" value="1" />
+                                    <input type="radio" name="data[trader][promotion_email_classification]" id="ExhibitR1" value="1" />
                                     不可</label>
                             </div>
                         </div>
@@ -703,7 +707,7 @@
                     <div class="form-group col col-md-12">
                         <label for="TraderEmail" class="col col-md-2 control-label">販促メルマガ受取アドレス</label>
                         <div class="col col-md-5">
-                            <input name="data[Trader][promotion_email]" class="form-control" maxLength="100" type="email" value=""/>
+                            <input name="data[trader][promotion_email]" class="form-control" maxLength="100" type="email" value=""/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
@@ -711,10 +715,10 @@
                             <label class="col col-md-2 control-label">業務メール可否区分</label>
                             <div class="col col-md-5">
                                 <label class="radio-inline" for="ExhibitRx0">
-                                    <input type="radio" name="data[Trader][business_email_classification]" id="ExhibitRx0" value="0" checked="checked" />
+                                    <input type="radio" name="data[trader][business_email_classification]" id="ExhibitRx0" value="0" checked="checked" />
                                     可</label>
                                 <label class="radio-inline" for="ExhibitRx1">
-                                    <input type="radio" name="data[Trader][business_email_classification]" id="ExhibitRx1" value="1" />
+                                    <input type="radio" name="data[trader][business_email_classification]" id="ExhibitRx1" value="1" />
                                     不可</label>
                             </div>
                         </div>
@@ -722,16 +726,16 @@
                     <div class="form-group col col-md-12">
                         <label for="TraderEmail" class="col col-md-2 control-label">業務メール受取アドレス</label>
                         <div class="col col-md-5">
-                            <input name="data[Trader][business_email]" class="form-control" maxLength="100" type="email" value=""/>
+                            <input name="data[trader][business_email]" class="form-control" maxLength="100" type="email" value=""/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="parent_trader_name" class="col col-md-2 control-label">親会社</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][parent_company]" class="form-control" id="parent_trader_name" value="" type="text"/>
+                            <input name="data[trader][parent_company]" class="form-control" id="parent_trader_name" value="" type="text"/>
                         </div>
                     </div>
-                    <input type="hidden" name="data[Trader][parent_trader_cd]" class="form-control" id="parent_trader_cd"/>
+                    <input type="hidden" name="data[trader][parent_trader_cd]" class="form-control" id="parent_trader_cd"/>
                     <div class="form-group col col-md-12">
                         <label class="col col-md-2 control-label"> <a href="javascript:void(0);" class="btn btn-default btn-xs" id="changePassword">パスワード変更</a></label>
                         <div class="col col-md-10" id="inputPassword"> </div>
@@ -740,25 +744,25 @@
                         <label class="col col-md-2 control-label">主業態</label>
                         <div class="col col-md-7">
                             <label class="radio-inline" for="TraderMainBusiness1">
-                                <input type="radio" name="data[Trader][business_type]" id="TraderMainBusiness1" value="1" />
+                                <input type="radio" name="data[trader][business_type]" id="TraderMainBusiness1" value="1" checked="checked" />
                                 解体業者</label>
                             <label class="radio-inline" for="TraderMainBusiness2">
-                                <input type="radio" name="data[Trader][business_type]" id="TraderMainBusiness2" value="2" checked="checked" />
+                                <input type="radio" name="data[trader][business_type]" id="TraderMainBusiness2" value="2"  />
                                 陸送業者</label>
                             <label class="radio-inline" for="TraderMainBusiness3">
-                                <input type="radio" name="data[Trader][business_type]" id="TraderMainBusiness3" value="3" />
+                                <input type="radio" name="data[trader][business_type]" id="TraderMainBusiness3" value="3" />
                                 レッカー業者</label>
                             <label class="radio-inline" for="TraderMainBusiness4">
-                                <input type="radio" name="data[Trader][business_type]" id="TraderMainBusiness4" value="4" />
+                                <input type="radio" name="data[trader][business_type]" id="TraderMainBusiness4" value="4" />
                                 輸出業者</label>
                             <label class="radio-inline" for="TraderMainBusiness5">
-                                <input type="radio" name="data[Trader][business_type]" id="TraderMainBusiness5" value="5" />
+                                <input type="radio" name="data[trader][business_type]" id="TraderMainBusiness5" value="5" />
                                 中古車販売業者</label>
                             <label class="radio-inline" for="TraderMainBusiness6">
-                                <input type="radio" name="data[Trader][business_type]" id="TraderMainBusiness6" value="6" />
+                                <input type="radio" name="data[trader][business_type]" id="TraderMainBusiness6" value="6" />
                                 整備業者</label>
                             <label class="radio-inline" for="TraderMainBusiness7">
-                                <input type="radio" name="data[Trader][business_type]" id="TraderMainBusiness7" value="7" />
+                                <input type="radio" name="data[trader][business_type]" id="TraderMainBusiness7" value="7" />
                                 ガソリンスタンド</label>
                         </div>
                     </div>
@@ -767,32 +771,32 @@
                         <div class="col col-md-10">
                             <div class="row">
                                 <div class="col col-md-1 form-control-static" for="TraderScrap">
-                                    {{--<input type="hidden" name="data[Trader][category][]" id="TraderScrap_" value="0"/>--}}
-                                    <input type="checkbox" name="data[Trader][category][]"  value="1" id="TraderScrap"/>
+                                    {{--<input type="hidden" name="data[trader][category][]" id="TraderScrap_" value="0"/>--}}
+                                    <input type="checkbox" name="data[trader][category][]"  value="1" id="TraderScrap" checked="checked"/>
                                     解体業者 </div>
                                 <div class="col col-md-1 form-control-static" for="TraderTransporter">
-                                    {{--<input type="hidden" name="data[Trader][category][]" id="TraderTrasnporter_" value="0"/>--}}
-                                    <input type="checkbox" name="data[Trader][category][]"  value="1" id="TraderTrasnporter"/>
+                                    {{--<input type="hidden" name="data[trader][category][]" id="TraderTrasnporter_" value="0"/>--}}
+                                    <input type="checkbox" name="data[trader][category][]"  value="2" id="TraderTrasnporter"/>
                                     陸送業者 </div>
                                 <div class="col col-md-2 form-control-static" for="TraderWrecker">
-                                    {{--<input type="hidden" name="data[Trader][category][]" id="TraderWrecker_" value="0"/>--}}
-                                    <input type="checkbox" name="data[Trader][category][]"  value="1" id="TraderWrecker"/>
+                                    {{--<input type="hidden" name="data[trader][category][]" id="TraderWrecker_" value="0"/>--}}
+                                    <input type="checkbox" name="data[trader][category][]"  value="3" id="TraderWrecker"/>
                                     レッカー業者 </div>
                                 <div class="col col-md-1 form-control-static" for="TraderExporter">
-                                    {{--<input type="hidden" name="data[Trader][category][]" id="TraderExporter_" value="0"/>--}}
-                                    <input type="checkbox" name="data[Trader][category][]"  value="1" id="TraderExporter"/>
+                                    {{--<input type="hidden" name="data[trader][category][]" id="TraderExporter_" value="0"/>--}}
+                                    <input type="checkbox" name="data[trader][category][]"  value="4" id="TraderExporter"/>
                                     輸出業者 </div>
                                 <div class="col col-md-2 form-control-static" for="TraderResaler">
-                                    {{--<input type="hidden" name="data[Trader][category][]" id="TraderResaler_" value="0"/>--}}
-                                    <input type="checkbox" name="data[Trader][category][]"  value="1" id="TraderResaler"/>
+                                    {{--<input type="hidden" name="data[trader][category][]" id="TraderResaler_" value="0"/>--}}
+                                    <input type="checkbox" name="data[trader][category][]"  value="1" id="TraderResaler"/>
                                     中古車販売業者 </div>
                                 <div class="col col-md-1 form-control-static" for="TraderRepair">
-                                    {{--<input type="hidden" name="data[Trader][category][]" id="TraderRepair_" value="0"/>--}}
-                                    <input type="checkbox" name="data[Trader][category][]"  value="1" id="TraderRepair"/>
+                                    {{--<input type="hidden" name="data[trader][category][]" id="TraderRepair_" value="0"/>--}}
+                                    <input type="checkbox" name="data[trader][category][]"  value="5" id="TraderRepair"/>
                                     整備業者 </div>
                                 <div class="col col-md-2 form-control-static" for="TraderGasStation">
-                                    {{--<input type="hidden" name="data[Trader][category][]" id="TraderGasStation_" value="0"/>--}}
-                                    <input type="checkbox" name="data[Trader][category][]"  value="1" id="TraderGasStation"/>
+                                    {{--<input type="hidden" name="data[trader][category][]" id="TraderGasStation_" value="0"/>--}}
+                                    <input type="checkbox" name="data[trader][category][]"  value="6" id="TraderGasStation"/>
                                     ガソリンスタンド </div>
                             </div>
                         </div>
@@ -802,24 +806,24 @@
                             <div class="col col-md-10">
                             <div class="row">
                                 <div class="col col-md-2 form-control-static" for="TraderCash">
-                                    {{--<input type="hidden" name="data[Trader][additional_correspondence][]" id="TraderCash_" value="0"/>--}}
-                                    <input type="checkbox" name="data[Trader][additional_correspondence][]"  value="1" id="TraderCash"/>
+                                    {{--<input type="hidden" name="data[trader][additional_correspondence][]" id="TraderCash_" value="0"/>--}}
+                                    <input type="checkbox" name="data[trader][additional_correspondence][]"  value="1" id="TraderCash" checked="checked"/>
                                     現金対応 </div>
                                 <div class="col col-md-2 form-control-static" for="TraderOnSaturday">
-                                    {{--<input type="hidden" name="data[Trader][additional_correspondence][]" id="TraderOnSaturday_" value="0"/>--}}
-                                    <input type="checkbox" name="data[Trader][additional_correspondence][]"  value="1" id="TraderOnSaturday"/>
+                                    {{--<input type="hidden" name="data[trader][additional_correspondence][]" id="TraderOnSaturday_" value="0"/>--}}
+                                    <input type="checkbox" name="data[trader][additional_correspondence][]"  value="2" id="TraderOnSaturday"/>
                                     土曜日対応 </div>
                                 <div class="col col-md-2 form-control-static" for="TraderOnSunday">
-                                    {{--<input type="hidden" name="data[Trader][additional_correspondence][]" id="TraderOnSunday_" value="0"/>--}}
-                                    <input type="checkbox" name="data[Trader][additional_correspondence][]"  value="1" id="TraderOnSunday"/>
+                                    {{--<input type="hidden" name="data[trader][additional_correspondence][]" id="TraderOnSunday_" value="0"/>--}}
+                                    <input type="checkbox" name="data[trader][additional_correspondence][]"  value="3" id="TraderOnSunday"/>
                                     日曜日対応 </div>
                                 <div class="col col-md-2 form-control-static" for="TraderOnHoliday">
-                                    {{--<input type="hidden" name="data[Trader][additional_correspondence][]" id="TraderOnHoliday_" value="0"/>--}}
-                                    <input type="checkbox" name="data[Trader][additional_correspondence][]"  value="1" id="TraderOnHoliday"/>
+                                    {{--<input type="hidden" name="data[trader][additional_correspondence][]" id="TraderOnHoliday_" value="0"/>--}}
+                                    <input type="checkbox" name="data[trader][additional_correspondence][]"  value="4" id="TraderOnHoliday"/>
                                     祝日対応 </div>
                                 <div class="col col-md-2 form-control-static" for="TraderCollectDocument">
-                                    {{--<input type="hidden" name="data[Trader][additional_correspondence][]" id="TraderCollectDocument_" value="0"/>--}}
-                                    <input type="checkbox" name="data[Trader][additional_correspondence][]"  value="1" id="TraderCollectDocument"/>
+                                    {{--<input type="hidden" name="data[trader][additional_correspondence][]" id="TraderCollectDocument_" value="0"/>--}}
+                                    <input type="checkbox" name="data[trader][additional_correspondence][]"  value="5" id="TraderCollectDocument"/>
                                     書類回収代行 </div>
                             </div>
                         </div>
@@ -828,41 +832,35 @@
                         <label class="col col-md-2 control-label">引取依頼書送付方法</label>
                         <div class="col col-md-5">
                             <label class="radio-inline" for="TraderTradeRequestFax1">
-                                <input type="radio" name="data[Trader][withdraw_method]" id="TraderTradeRequestFax1" value="1" checked="checked" />
+                                <input type="radio" name="data[trader][withdraw_method]" id="TraderTradeRequestFax1" value="1" checked="checked" />
                                 FAX送信OK</label>
                             <label class="radio-inline" for="TraderTradeRequestFax0">
-                                <input type="radio" name="data[Trader][withdraw_method]" id="TraderTradeRequestFax0" value="0" />
+                                <input type="radio" name="data[trader][withdraw_method]" id="TraderTradeRequestFax0" value="0" />
                                 FAX以外希望</label>
-                        </div>
-                    </div>
-                    <div class="form-group col col-md-12">
-                        <label class="control-label col col-md-2">取引回数</label>
-                        <div class="col col-md-5">
-                        <input name="data[Trader][number_transaction]" class="form-control" maxLength="13" type="tel" value="1"/>回
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="" class="col col-md-2 control-label">顧客クレーム回数</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][complaint_count]" class="form-control" maxLength="13" type="tel" value="1"/>
+                            <input name="data[trader][complaint_count]" class="form-control" maxLength="13" type="tel" value="1"/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="" class="col col-md-2 control-label">備考</label>
                         <div class="col col-md-5">
-                            <textarea name="data[Trader][remark5]" class="form-control" rows="5" cols="30" id="">テキストテキストテキスト</textarea>
+                            <textarea name="data[trader][remark5]" class="form-control" rows="5" cols="30" id="">テキストテキストテキスト</textarea>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="" class="col col-md-2 control-label">業者側クレーム回数</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][claim_number]" class="form-control" maxLength="13" type="tel" value="1"/>
+                            <input name="data[trader][claim_number]" class="form-control" maxLength="13" type="tel" value="1"/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="" class="col col-md-2 control-label">備考</label>
                         <div class="col col-md-5">
-                            <textarea name="data[Trader][remark6]" class="form-control" rows="5" cols="30" id="">テキストテキストテキスト</textarea>
+                            <textarea name="data[trader][remark6]" class="form-control" rows="5" cols="30" id="">テキストテキストテキスト</textarea>
                         </div>
                     </div>
 
@@ -870,19 +868,19 @@
                         <label class="col col-md-2 control-label">支払締日</label>
                         <div class="col col-md-5">
                             <label class="radio-inline" for="TraderClosingDay1">
-                                <input type="radio" name="data[Trader][payment_closing_date]" id="TraderClosingDay1" value="1" checked="checked" />
+                                <input type="radio" name="data[trader][payment_closing_date]" id="TraderClosingDay1" value="1" checked="checked" />
                                 引取5日後 (都度払い)</label>
                             <label class="radio-inline" for="TraderClosingDay2">
-                                <input type="radio" name="data[Trader][payment_closing_date]" id="TraderClosingDay2" value="2" />
+                                <input type="radio" name="data[trader][payment_closing_date]" id="TraderClosingDay2" value="2" />
                                 半月締</label>
                             <label class="radio-inline" for="TraderClosingDay3">
-                                <input type="radio" name="data[Trader][payment_closing_date]" id="TraderClosingDay3" value="3" />
+                                <input type="radio" name="data[trader][payment_closing_date]" id="TraderClosingDay3" value="3" />
                                 月末締</label>
                             <label class="radio-inline" for="TraderClosingDay4">
-                                <input type="radio" name="data[Trader][payment_closing_date]" id="TraderClosingDay4" value="4" />
+                                <input type="radio" name="data[trader][payment_closing_date]" id="TraderClosingDay4" value="4" />
                                 翌月末締</label>
                             <label class="radio-inline" for="TraderClosingDay9">
-                                <input type="radio" name="data[Trader][payment_closing_date]" id="TraderClosingDay9" value="9" />
+                                <input type="radio" name="data[trader][payment_closing_date]" id="TraderClosingDay9" value="5" />
                                 その他</label>
                         </div>
                     </div>
@@ -890,16 +888,16 @@
                         <label class="col col-md-2 control-label">得意先度 (総合評価)</label>
                         <div class="col col-md-5">
                             <label class="radio-inline" for="TraderTotalQuality1">
-                                <input type="radio" name="data[Trader][customer_degree]" id="TraderTotalQuality1" value="1" />
+                                <input type="radio" name="data[trader][customer_degree]" id="TraderTotalQuality1" value="1" checked="checked" />
                                 C</label>
                             <label class="radio-inline" for="TraderTotalQuality2">
-                                <input type="radio" name="data[Trader][customer_degree]" id="TraderTotalQuality2" value="2" />
+                                <input type="radio" name="data[trader][customer_degree]" id="TraderTotalQuality2" value="2" />
                                 B</label>
                             <label class="radio-inline" for="TraderTotalQuality3">
-                                <input type="radio" name="data[Trader][customer_degree]" id="TraderTotalQuality3" value="3" checked="checked" />
+                                <input type="radio" name="data[trader][customer_degree]" id="TraderTotalQuality3" value="3"  />
                                 A</label>
                             <label class="radio-inline" for="TraderTotalQuality4">
-                                <input type="radio" name="data[Trader][customer_degree]" id="TraderTotalQuality4" value="4" />
+                                <input type="radio" name="data[trader][customer_degree]" id="TraderTotalQuality4" value="4" />
                                 S</label>
                         </div>
                     </div>
@@ -907,100 +905,101 @@
                         <label class="col col-md-2 control-label">精算明細書送付方法</label>
                         <div class="col col-md-5">
                             <label class="radio-inline" for="TraderSendType1">
-                                <input type="radio" name="data[Trader][method_statement]" id="TraderSendType1" value="1" />
+                                <input type="radio" name="data[trader][method_statement]" id="TraderSendType1" value="1" checked="checked"/>
                                 メール</label>
                             <label class="radio-inline" for="TraderSendType2">
-                                <input type="radio" name="data[Trader][method_statement]" id="TraderSendType2" value="2" checked="checked" />
+                                <input type="radio" name="data[trader][method_statement]" id="TraderSendType2" value="2" />
                                 FAX</label>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="TraderRemark" class="col col-md-2 control-label">備考</label>
                         <div class="col col-md-5">
-              <textarea name="data[Trader][remark7]" class="form-control" rows="5" cols="30" id="TraderRemark">ナンバーカットと郵送以外は書類の預かり等してくれない車台番号がないと嫌がられる月末締め、翌月払い。＜真田＞</textarea>
+              <textarea name="data[trader][remark7]" class="form-control" rows="5" cols="30" id="TraderRemark">テキストテキストテキスト</textarea>
                         </div>
                     </div>
                     <div class="form-group col col-md-4">
                         <label for="TraderCredit" class="col col-md-6 control-label" style="padding-right: 5px;">与信額</label>
                         <div class="col col-md-5 required" style="padding-left: 25px;">
-                            <input name="data[Trader][credit]" class="form-control" maxlength="10" type="number" value="300000"/>
+                            <input name="data[trader][credit]" id="trader_credit" onkeyup="balance_credit()" class="form-control" maxlength="10" type="number" value=""/>
                         </div>
                         <div class="col col-md-1 form-control-static"> 円</div>
                     </div>
                     <div class="form-group col col-md-4">
                         <label for="TraderDeposit" class="col col-md-4 control-label" style="padding-right: 10px;">預り金</label>
                         <div class="col col-md-7 required" style="width: 198px; padding-left: 20px;">
-                            <input name="data[Trader][deposite]" class="form-control" maxlength="10" type="number" value="0"/>
+                            <input name="data[trader][deposite]" id="trader_desposite" onkeyup="balance_credit()" class="form-control" maxlength="10" type="number" value=""/>
                         </div>
                         <div class="col col-md-1 form-control-static"> 円</div>
                     </div>
                     <div class="form-group col col-md-4">
                         <label class="col col-md-4 control-label">与信残高</label>
-                        <div class="col col-md-4 form-control-static text-right">300,000 円</div>
+                        <div class="col col-md-4 form-control-static text-right" id="balance_credit" ></div>
                     </div>
                     <!--id39：与信額編集機能-->
                     <div class="form-group col col-md-12">
                         <label for="TraderDeficiencyAccount" class="col col-md-2 control-label">過不足金</label>
                         <div class="col col-md-2" style="width: 188px;">
-                            <input name="data[Trader][excess_deficit money]" class="form-control" maxLength="10" type="number" value="0"/>
+                            <input name="data[trader][excess_deficit_money]" class="form-control" maxLength="10" type="number" value="0"/>
                         </div>
                         <div class="col col-md-1 form-control-static"> 円</div>
                     </div>
                     <div class="form-group col col-md-4">
                         <label for="TraderBankName" class="col col-md-6 control-label" style="padding-right: 5px;">銀行名</label>
                         <div class="col col-md-6" style="padding-left: 25px;">
-                            <input name="data[Trader][bank_name]" class="form-control" maxLength="30" type="text" value=""/>
+                            <input name="data[trader][bank_name]" class="form-control" maxLength="30" type="text" value=""/>
                         </div>
                     </div>
                     <div class="form-group col col-md-8">
                         <label for="TraderBankCode" class="col col-md-2 control-label">金融機関コード</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][bank_code]" class="form-control" maxLength="4" type="tel" value=""/>
+                            <input name="data[trader][bank_code]" class="form-control" maxLength="4" type="tel" value=""/>
                         </div>
                     </div>
                     <div class="form-group col col-md-4">
                         <label for="TraderBranchName" class="col col-md-6 control-label" style="padding-right: 5px;">支店名</label>
                         <div class="col col-md-6" style="padding-left: 25px;">
-                            <input name="data[Trader][branch_name]" class="form-control" maxLength="30" type="text" value=""/>
+                            <input name="data[trader][branch_name]" class="form-control" maxLength="30" type="text" value=""/>
                         </div>
                     </div>
                     <div class="form-group col col-md-8">
                         <label for="TraderBranchNumber" class="col col-md-2 control-label">支店番号</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][branch_code]" class="form-control" maxLength="3" type="tel" value=""/>
+                            <input name="data[trader][branch_code]" class="form-control" maxLength="3" type="tel" value=""/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label class="col col-md-2 control-label">口座種別</label>
                         <div class="col col-md-5">
-                            <input type="hidden" name="data[Trader][account_type]" id="trader_account_classification_" value=""/>
+                            <input type="hidden" name="data[trader][account_type]" id="trader_account_classification_" value="" />
                             <label class="radio-inline" for="TraderAccountClassification1">
-                                <input type="radio" name="data[Trader][account_type]" id="TraderAccountClassification1" value="1"  checked="checked"/>
+                                <input type="radio" name="data[trader][account_type]" id="TraderAccountClassification1" value="1" checked="checked"/>
                                 普通 </label>
                             <label class="radio-inline" for="TraderAccountClassification2">
-                                <input type="radio" name="data[Trader][account_type]" id="TraderAccountClassification2" value="2" />
+                                <input type="radio" name="data[trader][account_type]" id="TraderAccountClassification2" value="2" />
                                 当座 </label>
                             <label class="radio-inline" for="TraderAccountClassification4">
-                                <input type="radio" name="data[Trader][account_type]" id="TraderAccountClassification4" value="4" />
+                                <input type="radio" name="data[trader][account_type]" id="TraderAccountClassification4" value="3" />
                                 貯蓄 </label>
                             <label class="radio-inline" for="TraderAccountClassification9">
-                                <input type="radio" name="data[Trader][account_type]" id="TraderAccountClassification9" value="9" />
+                                <input type="radio" name="data[trader][account_type]" id="TraderAccountClassification9" value="4" />
                                 その他 </label>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="TraderAccountNumber" class="col col-md-2 control-label">口座番号</label>
                         <div class="col col-md-2">
-                            <input name="data[Trader][account_number]" class="form-control" maxLength="7" type="tel" value=""/>
+                            <input name="data[trader][account_number]" class="form-control" maxLength="7" type="tel" value=""/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
                         <label for="TraderNomineeName" class="col col-md-2 control-label">口座名義人 (カタカナ)</label>
                         <div class="col col-md-5">
-                            <input name="data[Trader][account_holder]" class="form-control katakana" maxLength="100" type="text" value=""/>
+                            <input name="data[trader][account_holder]" class="form-control katakana" maxLength="100" type="text" value=""/>
                         </div>
                     </div>
                     <div class="col col-md-10 col-md-offset-2">
+                        <input type="hidden" id="erea_status" value="0">
                         <input  class="btn btn-default" id="submit" type="submit" value="変更"/>
                     </div>
                 </fieldset>
@@ -1008,4 +1007,44 @@
         </div>
     </div>
 </div>
+<script type="text/javascript" src="{{ url('js/back_office/trader/trader_detail.js')}}"></script>
+    <script>
+        $(document).ready(function () {
+            $("#TraderEditForm").on('click','.popup',function(e){
+                var name =$("#trader_family_name").val();
+                if (name=='')
+                {
+                    alert('You must enter a name!');
+                }
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    var first_name = $("#trader_family_name").val();
+                    if (first_name == '') {
+                        e.preventDefault();
+                    }
+                    else {
+                        var current_token = '{{csrf_token()}}';
+                        $.ajax({
+                            url: 'getinfo',
+                            dataType: 'text',
+                            type: 'post',
+                            contentType: 'application/x-www-form-urlencoded',
+                            data: {first_name: first_name, fuel_csrf_token: current_token},
+                            success: function (data, textStatus, jQxhr) {
+                                $('#erea_status').val('1');
+                                window.open('area', '_blank');
+                            },
+                            error: function (jqXhr, textStatus, errorThrown) {
+                                console.log(errorThrown);
+                            }
+                        });
+                    }
+                })
+        });
+    </script>
+
+
 @endsection

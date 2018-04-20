@@ -1,18 +1,27 @@
 <?php
 
-namespace App\Helper;
+namespace App\Models;
 
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 /*****************************************************************************
-* Helper
+* Model order
 ****************************************************************************
-* This is Hepler file. Used to perform additional processing
+* This is order model
 *
 **************************************************************************
 * @author: Nguyen
 ****************************************************************************/
-
-class Helper
+class OrderDetail extends Model
 {
-
+    protected $table = 'order_detail';
+    public $timestamps = false;
+    protected $fillable = [
+        'seller_car_id',
+		'trader_id',
+		'name',
+		'price',
+		'remark',
+		'status',
+		'date'
+    ];
 }

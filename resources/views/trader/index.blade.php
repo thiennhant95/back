@@ -99,7 +99,7 @@
             </div>
         @endif
         @if(session('message'))
-            <div class="alert alert-danger">
+            <div class="alert alert-success">
                 {{session('message')}}
             </div>
         @endif
@@ -115,13 +115,13 @@
                         <div class="form-group col col-md-3">
                             <label for="TraderName" class="col col-md-4 control-label">業者名</label>
                             <div class="col col-md-8">
-                                <input name="data[Trader][name]" maxlength="10" class="form-control input-sm" placeholder="部分一致" type="text"/>
+                                <input name="data[trader][name]" maxlength="10" class="form-control input-sm" placeholder="部分一致" type="text"/>
                             </div>
                         </div>
                         <div class="form-group col col-md-3">
                             <label for="TraderPrefId" class="col col-md-4 control-label">都道府県</label>
                             <div class="col col-md-8 required">
-                                <select name="data[Trader][pref_id]" class="form-control input-sm pref_name" id="TraderPrefId">
+                                <select name="data[trader][pref_id]" class="form-control input-sm pref_name" id="TraderPrefId">
                                     <option value="">----------</option>
                                     @foreach($list_zone as $key_zone => $zone)
                                         <optgroup label="{{ $zone->name }}">
@@ -140,13 +140,13 @@
                         <div class="form-group col col-md-3">
                             <label for="TraderPhoneNumber" class="col col-md-4 control-label">TEL/FAX</label>
                             <div class="col col-md-8">
-                                <input name="data[Trader][phone_number]" maxlength="13" class="form-control input-sm" placeholder="完全一致" type="tel"/>
+                                <input name="data[trader][phone_number]" maxlength="13" class="form-control input-sm" placeholder="完全一致" type="tel"/>
                             </div>
                         </div>
                         <div class="form-group col col-md-3">
                             <label for="TraderEmail" class="col col-md-4 control-label">E-mail</label>
                             <div class="col col-md-8">
-                                <input name="data[Trader][email]" maxlength="13" class="form-control input-sm" placeholder="部分一致" type="tel"/>
+                                <input name="data[trader][email]" maxlength="13" class="form-control input-sm" placeholder="部分一致" type="tel"/>
                             </div>
                         </div>
                     </div>
@@ -154,19 +154,19 @@
                         <div class="form-group col col-md-3">
                             <label for="TraderEmail" class="col col-md-4 control-label">会員状況</label>
                             <div class="col col-md-8">
-                                <input name="data[Trader][staff]" maxlength="13" class="form-control input-sm" type="text"/>
+                                <input name="data[trader][staff]" maxlength="13" class="form-control input-sm" type="text"/>
                             </div>
                         </div>
                         <div class="form-group col col-md-3">
                             <label for="TraderEmail" class="col col-md-4 control-label">持込査定</label>
                             <div class="col col-md-8">
-                                <input name="data[Trader][]" maxlength="13" class="form-control input-sm" type="text"/>
+                                <input name="data[trader][bring_assessment]" maxlength="13" class="form-control input-sm" type="text"/>
                             </div>
                         </div>
                         <div class="form-group col col-md-3">
                             <label for="TraderEmail" class="col col-md-4 control-label">出張査定</label>
                             <div class="col col-md-8">
-                                <input name="data[Trader][]" maxlength="13" class="form-control input-sm" type="text"/>
+                                <input name="data[trader][assessment_classification]" maxlength="13" class="form-control input-sm" type="text"/>
                             </div>
                         </div>
                     </div>
@@ -174,25 +174,25 @@
                         <div class="form-group col col-md-3">
                             <label for="ReTELDateFrom" class="col col-md-4 control-label" style="padding: 7px 0px 0px;">営業再TEL日</label>
                             <div class="col col-md-8">
-                                <input name="data[Trader][service_start_date]" class="form-control input-sm" maxlength="10" id="ReTELDateFrom" autocomplete="off" type="tel"/>
+                                <input name="data[trader][service_start_date]" class="form-control input-sm" maxlength="10" id="ReTELDateFrom" autocomplete="off" type="tel"/>
                             </div>
                         </div>
                         <div class="form-group col col-md-3">
                             <label for="ReTELDateTo" class="col col-md-4 text-center form-control-static" style="padding: 7px 0px 0px;">～</label>
                             <div class="col col-md-8">
-                                <input name="data[Trader][service_end_date]" class="form-control input-sm" maxlength="10" id="ReTELDateTo" autocomplete="off" type="tel"/>
+                                <input name="data[trader][service_end_date]" class="form-control input-sm" maxlength="10" id="ReTELDateTo" autocomplete="off" type="tel"/>
                             </div>
                         </div>
                         <div class="form-group col col-md-3">
                             <label for="LastTELDateFrom" class="col col-md-4 control-label" style="padding: 7px 0px 0px;">営業前回TEL日</label>
                             <div class="col col-md-8">
-                                <input name="data[Trader][curio_start_date]" class="form-control input-sm" maxlength="10" id="LastTELDateFrom" autocomplete="off" type="tel"/>
+                                <input name="data[trader][curio_start_date]" class="form-control input-sm" maxlength="10" id="LastTELDateFrom" autocomplete="off" type="tel"/>
                             </div>
                         </div>
                         <div class="form-group col col-md-3">
                             <label for="LastTELDateTo" class="col col-md-4 text-center form-control-static" style="padding: 7px 0px 0px;">～</label>
                             <div class="col col-md-8">
-                                <input name="data[Trader][curio_end_date]" class="form-control input-sm" maxlength="10" id="LastTELDateTo" autocomplete="off" type="tel"/>
+                                <input name="data[trader][curio_end_date]" class="form-control input-sm" maxlength="10" id="LastTELDateTo" autocomplete="off" type="tel"/>
                             </div>
                         </div>
                     </div>
@@ -201,10 +201,10 @@
                             <label class="col col-md-4 control-label">過不足金額</label>
                             <div class="col col-md-8">
                                 <label class="radio-inline" for="TraderStopOrder">
-                                    <input type="radio" name="data[Trader][stop_order]" id="TraderStopOrder" value="" />
+                                    <input type="radio" name="data[trader][excess_deficit_money]" id="TraderStopOrder" value="1" />
                                     有</label>
                                 <label class="radio-inline" for="TraderStopOrder0">
-                                    <input type="radio" name="data[Trader][stop_order]" id="TraderStopOrder0" value="0" />
+                                    <input type="radio" name="data[trader][excess_deficit_money]" id="TraderStopOrder0" value="0" />
                                     無</label>
                             </div>
                         </div>
@@ -212,10 +212,10 @@
                             <label class="col col-md-4 control-label">入札可否</label>
                             <div class="col col-md-8">
                                 <label class="radio-inline" for="OrderNo">
-                                    <input type="radio" name="data[Trader][OrderYes]" id="OrderNo" value="" />
+                                    <input type="radio" name="data[trader][bid_approval]" id="OrderNo" value="0" />
                                     不可</label>
                                 <label class="radio-inline" for="OrderYes">
-                                    <input type="radio" name="data[Trader][OrderYes]" id="OrderYes" value="0" />
+                                    <input type="radio" name="data[trader][bid_approval]" id="OrderYes" value="1" />
                                     可能</label>
                             </div>
                         </div>
@@ -233,41 +233,67 @@
                 </div>
             </form>
         </div>
-        <div class="col col-md-12">  {{count($list_trader)}} 件中 1 ページ目 (1 ～ 50 件表示)<br>
             <div class="paging">
-                {{ $list_trader->links() }}
+                {{ $list_trader->links('layouts.pagination') }}
             </div>
         </div>
         <div class="col col-md-12">
             <table class="table table-striped table-bordered table-hover table-condensed">
                 <thead>
                 <tr>
-                    <th><a class="sort" id="id" href="/crm/Traders/index/sort:trader_cd/direction:asc">業者コード</a></th>
-                    <th style="width: 180px;"><a id="name" class="sort" href="/crm/Traders/index/sort:trader_kana_name/direction:asc">業者名</a></th>
-                    <th style="width: 85px;"><a class="sort" href="/crm/Traders/index/sort:zip_code/direction:asc">郵便番号</a></th>
-                    <th style="width: 170px;"><a class="sort" href="/crm/Traders/index/sort:pref_id/direction:asc">住所</a></th>
-                    <th style="width: 150px;"><a class="sort" href="/crm/Traders/index/sort:phone_number/direction:asc">電話番号</a></th>
-                    <th style="width: 125px;"><a class="sort" href="/crm/Traders/index/sort:fax_number/direction:asc">FAX番号</a></th>
-                    <th style="width: 100px;"><a class="sort" href="/crm/Traders/index/sort:smart/direction:asc">会員状況</a></th>
-                    <th style="width: 100px;"><a class="sort" href="/crm/Traders/index/sort:on_saturday/direction:asc">与信額</a></th>
-                    <th style="width: 100px;"><a class="sort" href="/crm/Traders/index/sort:on_sunday/direction:asc">過不足金額</a></th>
-                    <th style="width: 50px;"><a class="sort" href="/crm/Traders/index/sort:on_holiday/direction:asc">持込査定可否区分</a></th>
-                    <th style="width: 50px;"><a class="sort" href="/crm/Traders/index/sort:cash/direction:asc">出張査定可否区分</a></th>
-                    <th style="width: 50px;"><a class="sort" href="/crm/Traders/index/sort:quality_estimate/direction:asc">入札可否区分</a></th>
-                    <th style="width: 50px;"><a class="sort" href="/crm/Traders/index/sort:quality_response/direction:asc">買取台数（累積）</a></th>
-                    <th style="width: 50px;"><a class="sort" href="/crm/Traders/index/sort:deal_times/direction:asc">買取台数（当月）</a></th>
-                    <th style="width: 50px;"><a class="sort" href="/crm/Traders/index/sort:credit/direction:asc">入札数（累積）</a></th>
-                    <th style="width: 50px;"><a class="sort" href="/crm/Traders/index/sort:deposit/direction:asc">入札数（当月）</a></th>
-                    <th style="width: 50px;"><a class="sort" href="/crm/Traders/index/sort:deficiency_account/direction:asc">落札台数（累積）</a></th>
-                    <th style="width: 50px;"><a class="sort" href="/crm/Traders/index/sort:balance/direction:asc">落札台数（当月）</a></th>
-                    <th style="width: 50px;"><a class="sort" href="/crm/Traders/index/sort:balance/direction:asc">顧客クレーム回数</a></th>
-                    <th style="width: 50px;"><a class="sort" href="/crm/Traders/index/sort:balance/direction:asc">業者クレーム回数</a></th>
-                    <th style="width: 50px;"><a class="sort" href="/crm/Traders/index/sort:balance/direction:asc">営業TEL回数</a></th>
-                    <th style="width: 100px;"><a class="sort" href="/crm/Traders/index/sort:balance/direction:asc">営業再TEL日</a></th>
-                    <th style="width: 50px;"><a class="sort" href="/crm/Traders/index/sort:balance/direction:asc">営業前回TEL日</a></th>
-                    <th style="width: 100px;"><a class="sort" href="/crm/Traders/index/sort:balance/direction:asc">営業TEL最終対応者</a></th>
-                    <th style="width: 150px;"><a class="sort" href="/crm/Traders/index/sort:balance/direction:asc">営業架電備考</a></th>
-                    <th style="width: 150px;"><a class="sort" href="/crm/Traders/index/sort:balance/direction:asc">備考</a></th>
+                    {{--<th><a class="sort" id="id" href="">@sortablelink('id','業者コード')</a></th>--}}
+                    {{--<th style="width: 180px;"><a id="name" class="sort" href="">@sortablelink('name','業者名')</a></th>--}}
+                    {{--<th style="width: 85px;"><a class="sort" href="#">@sortablelink('zip_code','郵便番号')</a></th>--}}
+                    {{--<th style="width: 170px;"><a class="sort" href="#">@sortablelink('address','住所')</a></th>--}}
+                    {{--<th style="width: 150px;"><a class="sort" href="#">@sortablelink('phone','電話番号')</a></th>--}}
+                    {{--<th style="width: 125px;"><a class="sort" href="#">@sortablelink('fax','FAX番号')</a></th>--}}
+                    {{--<th style="width: 100px;"><a class="sort" href="#">@sortablelink('member_status','会員状況')</a></th>--}}
+                    {{--<th style="width: 100px;"><a class="sort" href="#">@sortablelink('credit','与信額')</a></th>--}}
+                    {{--<th style="width: 100px;"><a class="sort" href="#">@sortablelink('excess_deficit money','過不足金額')</a></th>--}}
+                    {{--<th style="width: 50px;"><a class="sort" href="#">@sortablelink('bring_assessment','持込査定可否区分')</a></th>--}}
+                    {{--<th style="width: 50px;"><a class="sort" href="#">@sortablelink('assessment_classification','出張査定可否区分')</a></th>--}}
+                    {{--<th style="width: 50px;"><a class="sort" href="#">@sortablelink('bid_approva','入札可否区分')</a></th>--}}
+                    {{--<th style="width: 50px;"><a class="sort" href="#">買取台数（累積）</a></th>--}}
+                    {{--<th style="width: 50px;"><a class="sort" href="#">買取台数（当月）</a></th>--}}
+                    {{--<th style="width: 50px;"><a class="sort" href="#">入札数（累積）</a></th>--}}
+                    {{--<th style="width: 50px;"><a class="sort" href="#">入札数（当月）</a></th>--}}
+                    {{--<th style="width: 50px;"><a class="sort" href="#">落札台数（累積）</a></th>--}}
+                    {{--<th style="width: 50px;"><a class="sort" href="#">落札台数（当月）</a></th>--}}
+                    {{--<th style="width: 50px;"><a class="sort" href="#">@sortablelink('complaint_count','顧客クレーム回数')</a></th>--}}
+                    {{--<th style="width: 50px;"><a class="sort" href="#">@sortablelink('claim_number','業者クレーム回数')</a></th>--}}
+                    {{--<th style="width: 50px;"><a class="sort" href="#">@sortablelink('furigana_phone','営業TEL回数')</a></th>--}}
+                    {{--<th style="width: 100px;"><a class="sort" href="#">@sortablelink('service_date','営業再TEL日')</a></th>--}}
+                    {{--<th style="width: 50px;"><a class="sort" href="#">@sortablelink('curio_date','営業前回TEL日')</a></th>--}}
+                    {{--<th style="width: 100px;"><a class="sort" href="#">@sortablelink('account_holder','営業TEL最終対応者')</a></th>--}}
+                    {{--<th style="width: 150px;"><a class="sort" href="#">@sortablelink('remark','営業架電備考')</a></th>--}}
+                    {{--<th style="width: 150px;"><a class="sort" href="#">@sortablelink('remark1','備考')</a></th>--}}
+
+                    <th><a class="sort" id="id" href="#">業者コード</a></th>
+                    <th style="width: 180px;"><a id="name" class="sort" href="#">業者名</a></th>
+                    <th style="width: 85px;"><a class="sort" href="#">郵便番号</a></th>
+                    <th style="width: 170px;"><a class="sort" href="#">住所</a></th>
+                    <th style="width: 150px;"><a class="sort" href="#">電話番号</a></th>
+                    <th style="width: 125px;"><a class="sort" href="#">FAX番号</a></th>
+                    <th style="width: 100px;"><a class="sort" href="#">会員状況</a></th>
+                    <th style="width: 100px;"><a class="sort" href="#">与信額</a></th>
+                    <th style="width: 100px;"><a class="sort" href="#">過不足金額</a></th>
+                    <th style="width: 50px;"><a class="sort" href="#">持込査定可否区分</a></th>
+                    <th style="width: 50px;"><a class="sort" href="#">出張査定可否区分</a></th>
+                    <th style="width: 50px;"><a class="sort" href="#">入札可否区分</a></th>
+                    <th style="width: 50px;"><a class="sort" href="#">買取台数（累積）</a></th>
+                    <th style="width: 50px;"><a class="sort" href="#">買取台数（当月）</a></th>
+                    <th style="width: 50px;"><a class="sort" href="#">入札数（累積）</a></th>
+                    <th style="width: 50px;"><a class="sort" href="#">入札数（当月）</a></th>
+                    <th style="width: 50px;"><a class="sort" href="#">落札台数（累積）</a></th>
+                    <th style="width: 50px;"><a class="sort" href="#">落札台数（当月）</a></th>
+                    <th style="width: 50px;"><a class="sort" href="#">顧客クレーム回数</a></th>
+                    <th style="width: 50px;"><a class="sort" href="#">業者クレーム回数</a></th>
+                    <th style="width: 50px;"><a class="sort" href="#">営業TEL回数</a></th>
+                    <th style="width: 100px;"><a class="sort" href="#">営業再TEL日</a></th>
+                    <th style="width: 50px;"><a class="sort" href="#">営業前回TEL日</a></th>
+                    <th style="width: 100px;"><a class="sort" href="#">営業TEL最終対応者</a></th>
+                    <th style="width: 150px;"><a class="sort" href="#">営業架電備考</a></th>
+                    <th style="width: 150px;"><a class="sort" href="#">備考</a></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -278,7 +304,7 @@
                 @endif
                 @foreach($list_trader as $row_trader)
                     <tr>
-                        <td><a href="trader">{{$row_trader['id']}}</a></td>
+                        <td><a href="trader/edit/{{$row_trader['id']}}">{{$row_trader['id']}}</a></td>
                         <td>{{$row_trader['name']}}<br></td>
                         <td>{{$row_trader['zip_code']}}</td>
                         <td> {{$row_trader['address']}}<br><br></td>
@@ -294,37 +320,49 @@
                         <td>
                             <div class="col col-md-12 text-left" style="padding-left: 0px; border-bottom: 1px dashed rgb(192, 192, 192);">{{$row_trader['fax']}}<br>
                             </div>
-                            <div class="col col-md-12 text-left" style="padding-left: 0px;"></div></td>
-                        <td class="text-center"><?php if ($row_trader['member_status']) ?></td>
+                            <div class="col col-md-12 text-left" style="padding-left: 0px;"></div>
+                        </td>
+                        <td class="text-center">
+                             @if ($row_trader['member_status']==0)
+                              {{"非会員"}}
+                                 @endif
+                             @if ($row_trader['member_status']==1)
+                            {{"無料会員"}}
+                                 @endif
+                             @if ($row_trader['member_status']==2)
+                            {{"有料会員"}}
+                                 @endif
+                             @if ($row_trader['member_status']==3)
+                            {{"取引中止"}}
+                                 @endif
+                        </td>
                         <td class="text-right">{{number_format($row_trader['credit'])}}円</td>
                         <td class="text-right">{{number_format($row_trader['excess_deficit money'])}}円</td>
-                        <td class="text-center">{{$row_trader['bring_assessment']}}</td>
-                        <td class="text-center">{{$row_trader['service_classification']}}</td>
-                        <td class="text-center">{{$row_trader['bid_approval']}}</td>
+                        <td class="text-center">{{$row_trader['bring_assessment']==1?'不可':'可'}}</td>
+                        <td class="text-center">{{$row_trader['assessment_classification']=='1'?'不可':'可'}}</td>
+                        <td class="text-center">{{$row_trader['bid_approval']==1?' 不可':'可'}}</td>
                         <td class="text-center"></td>
                         <td class="text-center"></td>
                         <td class="text-right"></td>
                         <td class="text-right"></td>
                         <td class="text-right"></td>
                         <td class="text-right"></td>
-                        <td class="text-center"></td>
                         <td class="text-center">{{$row_trader['complaint_count']}}</td>
-                        <td class="text-center"></td>
+                        <td class="text-center">{{$row_trader['claim_number']}}</td>
+                        <td class="text-center">{{$row_trader['furigana_phone']}}</td>
                         <td class="text-center">{{date("d-m-Y", strtotime($row_trader['service_date']))}}</td>
                         <td class="text-center">{{date("d-m-Y", strtotime($row_trader['curio_date']))}}</td>
-                        <td class="text-center">山田</td>
-                        <td class="text-center">{{$row_trader['remax']}}</td>
-                        <td class="text-center">{{$row_trader['remax1']}}</td>
+                        <td class="text-center">{{$row_trader['account_holder']}}</td>
+                        <td class="text-center">{{$row_trader['remark']}}</td>
+                        <td class="text-center">{{$row_trader['remark1']}}</td>
                     </tr>
                 @endforeach
                 </tbody>
             </table>
         </div>
-        <div class="col col-md-12"> {{count($list_trader)}} 件中 1 ページ目 (1 ～ 50 件表示)<br>
-            <div class="paging">
-                {{ $list_trader->links() }}
-            </div>
-        </div>
+    <div class="paging">
+        {{ $list_trader->links('layouts.pagination') }}
+    </div>
     </div>
 </div>
 <script type="text/javascript" src="{{ url('js/back_office/trader/trader_index.js')}}"></script>

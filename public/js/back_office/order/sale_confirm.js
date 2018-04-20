@@ -1,0 +1,67 @@
+$(document).ready(function() {
+	$("#sale_confirm_form").validate({
+            rules : {
+            	sale_confirm_body_price:{
+            		number:true,
+                    maxlength:10,
+                    min:0
+            	},
+                sale_confirm_established_amount:{
+                    number:true,
+                    maxlength:10,
+                    min:0
+                },
+                sale_confirm_payment_deadline:{
+                    date:true
+                },
+                sale_confirm_last_account_date:{
+                    date:true
+                },
+                sale_confirm_billing_date:{
+                    date:true
+                },
+                sale_confirm_clothing_date:{
+                    date:true
+                },
+                sale_confirm_remark2:{
+                    maxlength:50
+                }
+            }, tooltip_options: {
+            }
+    });
+	$("#edit_sale_confirm").click(function(){
+		if(!$('#sale_confirm_form').valid() || !$('#sale_confirm_form').data("validator")){
+            return false;
+        }
+        $.ajax({
+        	url: base_url+'/seller-car/edit-sale-confirm',
+        	data: getSaleConfirmData(),
+        	method:"POST",
+        	success:function(result){
+        		if(result != null && result['status'] == true){
+        			alert("success");
+        		}else{
+        			alert("fail");
+        		}
+        	},
+        	error:function(result){
+
+        	}
+        })
+        return false;
+	})
+	function getSaleConfirmData(){
+		var data = {};
+		data.id = $("#sale_id").val();
+		data.body_price = $("#sale_confirm_body_price").val();
+		data.established_amount = $("#sale_confirm_established_amount").val();
+		data.payment_deadline = $("#sale_confirm_payment_deadline").val();
+		data.last_account_date = $("#sale_confirm_last_account_date").val();
+		data.billing_date = $("#sale_confirm_billing_date").val();
+		data.clothing_date = $("#sale_confirm_clothing_date").val();
+		data.remark2 = $("#sale_confirm_remark2").val();
+		data._token = token;
+		return data;
+		
+	}
+})

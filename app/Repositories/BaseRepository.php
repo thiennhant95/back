@@ -86,7 +86,10 @@ class BaseRepository
        foreach ($p_obj as $key => $value) {
            $this->model->$key = $value;
        }
-       return $this->model->save();
+       $rs = $this->model->save();
+       if($rs == false)
+        return false;
+       return $this->model->id;
     }
 
     /**

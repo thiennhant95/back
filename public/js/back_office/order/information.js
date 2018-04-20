@@ -1,9 +1,85 @@
 $(document).ready(function() {
 	$("#infor_form").validate({
             rules : {
-            	status_re_tel_date:{
-            		date:true,
-            	}
+            	infor_car_year:{
+            		digits:true,
+            		maxlength:2,
+            	},
+            	infor_car_month:{
+            		digits:true,
+            		maxlength:2,
+            	},
+            	infor_mileage:{
+            		number:true,
+            		min:0,
+            		maxlength:10
+            	},
+            	infor_inspection_year:{
+            		digits:true,
+            		maxlength:2,
+            	},
+            	infor_inspection_month:{
+            		digits:true,
+            		maxlength:2,
+            	},
+            	infor_inspection_day:{
+            		digits:true,
+            		maxlength:2,
+            	},
+            	infor_body_color:{
+            		maxlength:20
+            	},
+            	infor_displacement:{
+            		number:true,
+            		maxlength:5,
+            		min:0
+            	},
+            	infor_engine_model:{
+            		maxlength:10
+            	},
+            	infor_type:{
+            		maxlength:30
+            	},
+            	infor_model_number:{
+            		digits:true,
+            		maxlength:6
+            	},
+            	infor_category_number:{
+            		digits:true,
+            		maxlength:4
+            	},
+            	infor_grade:{
+            		maxlength:50
+            	},
+            	infor_owner:{
+            		maxlength:50
+            	},
+            	infor_residence:{
+            		maxlength:100
+            	},
+            	infor_number_stamp:{
+            		number:true,
+            		min:0,
+            		maxlength:1
+            	},
+            	infor_balance_status:{
+            		maxlength:50
+            	},
+            	infor_written_guarantee:{
+            		maxlength:50
+            	},
+            	infor_record_book:{
+            		maxlength:50
+            	},
+            	infor_remark:{
+            		maxlength:50
+            	},
+            	infor_vehicle_number:{
+            		maxlength:20
+            	},
+            	infor_chassis_number:{
+            		maxlength:30
+            	},
             }, tooltip_options: {
             }
     });
@@ -113,6 +189,7 @@ $(document).ready(function() {
 		}else if($("#infor_turbo2").is(":checked") == true){
 			data.turbo = 2;
 		}
+		data.type = $("#infor_type").val();
 		data.ambiguous_check = $("#infor_ambiguous_check").is(":checked")?1:0;
 		data.model_number = $("#infor_model_number").val();
 		data.category_number = $("#infor_category_number").val();
@@ -224,4 +301,37 @@ $(document).ready(function() {
 		return data;
 		
 	}
+
+	$("#infor_maker_id").change(function(){
+		var maker_id = $(this).val();
+		$.ajax({
+			url: base_url+"/car/get-by-maker",
+			data:{maker_id:maker_id},
+			method:'GET',
+			dataType:'json',
+			success:function(data){
+				var html = '<option value="">----------</option>';
+				if(data != null && data.length > 0){
+					for(var i=0;i<data.length;i++){
+						html += '<option value="'+data[i]['id']+'">'+data[i]['name']+'</option>';
+					}
+				}
+				$("#infor_car_id").html(html);
+				var car_name = $("#infor_maker_id").find(":selected").text();
+				if($("#infor_maker_id").val() == "")
+					car_name = "";
+				$("#infor_car_name").val(car_name);
+			}
+		})
+	})
+
+	$("#infor_car_id").change(function(){
+		var car_name = $("#infor_maker_id").find(":selected").text();
+		if($("#infor_maker_id").val() == "")
+			car_name = "";
+		car_name += $(this).val() == ""?"":" "+$(this).find(":selected").text();
+		$("#infor_car_name").val(car_name);
+	})
+
+	$("#infor_car_id").trigger("change");
 })

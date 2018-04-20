@@ -9,6 +9,19 @@ $(document).ready(function() {
                 },
                 retrieval_third_date:{
                     date:true,
+                },
+                retrieval_takeover_place:{
+                    maxlength:100,
+                },
+                retrieval_company_code:{
+                    digits:true,
+                    maxlength:10,
+                },
+                retrieval_end_recognition_day:{
+                    date:true,
+                },
+                retrieval_end_quotation:{
+                    date:true,
                 }
             }, tooltip_options: {
             }

@@ -21,13 +21,9 @@ Route::post('checkLogin', 'UserController@PostLogin');
 Route::get('logout', 'UserController@GetLogOut');
 //route middleware adminLogin
 Route::group(['middleware' => 'adminLogin'], function () {
-    Route::get('inquiries', function () {
-        return view('inquiries.index');
-    });
+    
     #router order
-    Route::get('order', function () {
-        return view('order.index');
-    });
+    Route::get('order',"OrderController@index");
     Route::get('order/detail.html',"OrderController@orderDetail");
     Route::post('seller/edit',"SellerController@edit");
     Route::post('seller/edit-account',"SellerController@editAccount");
@@ -38,27 +34,65 @@ Route::group(['middleware' => 'adminLogin'], function () {
     Route::post('seller-car/edit-retrieval',"SellerCarController@editRetrieval");
     Route::post('seller-car/add-question',"SellerCarController@addQuestion");
     Route::post('seller-car/edit-reception',"SellerCarController@editReception");
+    Route::post('seller-car/edit-sale',"SellerCarController@editSale");
+    Route::post('seller-car/edit-sale-confirm',"SellerCarController@editSaleConfirm");
+    Route::post('seller-car/edit-assessment',"SellerCarController@editAssessment");
+    Route::post('seller-car/edit-transfer',"SellerCarController@editTransfer");
+    Route::post('seller-car/edit-order',"SellerCarController@editOrder");
+    Route::post('seller-car/add-bid',"SellerCarController@addBid");
+    Route::post('seller-car/remove-bid',"SellerCarController@removeBid");
+    Route::post('seller-car/add-various-cost',"SellerCarController@addVariousCost");
+    Route::post('seller-car/edit-recycling',"SellerCarController@editRecycling");
+    Route::post('seller-car/edit-refund',"SellerCarController@editRefund");
+    Route::post('seller-car/add-image',"SellerCarController@addImage");
+    Route::post('seller-car/edit-image',"SellerCarController@editImage");
+    Route::post('seller-car/remove-image',"SellerCarController@removeImage");
+    #route car
+    Route::get('car/get-by-maker',"CarController@getByMaker");
     #route trader
     Route::get('trader', "TraderController@index");
     Route::post('trader', "TraderController@index");
     Route::post('trader-sort', "TraderController@sort");
     Route::get('trader/add.html', "TraderController@add");
     Route::post('trader/add.html', "TraderController@add");
-    Route::get('trader/detail.html', function () {
-        return view('trader.detail');
-    });
-    Route::get('assess', 'AssessController@index');
+    Route::get('trader/area','TraderController@area');
+    Route::post('trader/getinfo','TraderController@getinfo');
+    Route::post('trader/ajaxerea','TraderController@ajaxerea');
+    Route::post('trader/saveerea','TraderController@saveerea');
+    Route::post('trader/getErea','TraderController@getErea');
+    Route::get('trader/edit/{id}', 'TraderController@edit');
+    Route::post('trader/edit/{id}', 'TraderController@edit');
+    Route::post('trader/loadzone','TraderController@loadzone');
+
+    #route assess
+    Route::get('assess', 'AssessController@index')->name('assess');
     Route::post('assess', 'AssessController@index');
     Route::post('assess-sort', 'AssessController@sort');
-    Route::get('assess/edit/{id}', 'AssessController@edit');
+    Route::get('assess/edit/{id}', 'AssessController@edit')->name('assess-edit');
     Route::post('assess/edit/{id}', 'AssessController@edit');
     Route::get('assess/add', 'AssessController@add');
     Route::post('assess/add', 'AssessController@add');
+    Route::get('assess/area','AssessController@area');
+    Route::post('assess/getinfo','AssessController@getinfo');
+    Route::post('assess/ajaxerea','AssessController@ajaxerea');
+    Route::post('assess/saveerea','AssessController@saveerea');
+    Route::post('assess/loadzone','AssessController@loadzone');
+    Route::get('assess/delete/{id}','AssessController@delete')->name('assess-delete');
     Route::get('user', function () {
         return view('user.index');
     });
     Route::get('user/detail.html', function () {
         return view('user.detail');
     });
+
+    Route::get('news', 'NewController@index');
+    Route::post('news', 'NewController@index');
+    Route::get('news/edit/{id}', 'NewController@edit');
+    Route::post('news/edit/{id}', 'NewController@edit');
+    Route::get('news/add', 'NewController@add');
+    Route::post('news/add', 'NewController@add');
+    Route::post('news/updateShow', 'NewController@updateShow');
+    Route::post('news/deleteNew', 'NewController@deleteNew');
+    Route::get('inquiries', 'InquiryController@index');
 
 });

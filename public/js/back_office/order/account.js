@@ -1,9 +1,27 @@
 $(document).ready(function() {
 	$("#account_form").validate({
             rules : {
-            	seller_seller_name:{
-            		required:true,
-            	}
+            	account_bank_name:{
+            		maxlength:30,
+            	},
+            	account_bank_code:{
+            		digits:true,
+            		maxlength:4,
+            	},
+            	account_branch_name:{
+            		maxlength:30,
+            	},
+            	account_branch_code:{
+            		digits:true,
+            		maxlength:3,
+            	},
+            	account_number:{
+            		digits:true,
+            		maxlength:7,
+            	},
+            	account_holder:{
+            		maxlength:50,
+            	},
             }, tooltip_options: {
             }
     });

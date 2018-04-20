@@ -39,14 +39,15 @@ $(document).ready(function() {
 		}else if($("#document_document_arrival3").is(":checked") == true){
 			data.document_arrival = 3;
 		}
-		data.vehicle_license = $("#document_vehicle_license").is(":checked")?1:0;
+		/*data.vehicle_license = $("#document_vehicle_license").is(":checked")?1:0;
 		data.insurance_card = $("#document_insurance_card").is(":checked")?1:0;
 		data.recycling_ticket = $("#document_recycling_ticket").is(":checked")?1:0;
 		data.seal_certificate = $("#document_seal_certificate").is(":checked")?1:0;
 		data.transfer_certificate = $("#document_transfer_certificate").is(":checked")?1:0;
 		data.power_attorney = $("#document_power_attorney").is(":checked")?1:0;
 		data.resident_card = $("#document_resident_card").is(":checked")?1:0;
-		data.inheritance = $("#document_inheritance").is(":checked")?1:0;
+		data.inheritance = $("#document_inheritance").is(":checked")?1:0;*/
+		data.condition = $("#document_condition").val();
 		data.license_plate = $("#document_license_plate").val();
 		data.remark = $("#document_remark").val();
 		data._token = token;

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\ValidateRequest\ValidateRequestOrder;
 use App\Repositories\SellerRepository;
-use App\Repositories\OrderRepository;
 use App\Repositories\SellerCarRepository;
 use App\Repositories\SellerCarStatusRepository;
 use App\Repositories\SellerCarDocumentRepository;
@@ -14,11 +13,19 @@ use App\Repositories\SellerCarEquipmentRepository;
 use App\Repositories\SellerCarCorrespondenceHistoryRepository;
 use App\Repositories\SellerCarReceptionRepository;
 use App\Repositories\SellerCarQuestionRepository;
+use App\Repositories\SellerCarVariousCostRepository;
+use App\Repositories\SellerCarRefundRepository;
 use App\Repositories\MakerRepository;
 use App\Repositories\CarRepository;
 use App\Repositories\EquipmentRepository;
 use App\Repositories\SellerCarRetrievalRepository;
+use App\Repositories\SellerCarSaleRepository;
+use App\Repositories\SellerCarAssessmentRepository;
+use App\Repositories\SellerCarImageRepository;
+use App\Repositories\OrderRepository;
+use App\Repositories\OrderDetailRepository;
 use Carbon\Carbon;
+use App\Repositories\EreaRepository;
 /*****************************************************************************
 * Controller order
 ****************************************************************************
@@ -40,12 +47,23 @@ class OrderController extends Controller
         $this->sellerCarEquipmentRepository = new SellerCarEquipmentRepository();
         $this->sellerCarCorrespondenceHistory = new SellerCarCorrespondenceHistoryRepository();
         $this->sellerCarRetrievalRepository = new SellerCarRetrievalRepository();
-        $this->sellerCarQuestionRepository = new SellerCarQuestionRepository();
         $this->sellerCarReceptionRepository = new SellerCarReceptionRepository();
+        $this->sellerCarQuestionRepository = new SellerCarQuestionRepository();
+        $this->sellerCarVariousCostRepository = new SellerCarVariousCostRepository();
+        $this->sellerCarSaleRepository = new SellerCarSaleRepository();
+        $this->sellerCarRefundRepository = new SellerCarRefundRepository();
         $this->sellerCarRepository = new SellerCarRepository();
+        $this->sellerCarAssessmentRepository = new SellerCarAssessmentRepository();
+        $this->sellerCarImageRepository = new SellerCarImageRepository();
+        $this->sellerCarVariousCostRepository = new SellerCarVariousCostRepository();
+        $this->orderRepository = new OrderRepository();
+        $this->orderDetailRepository = new OrderDetailRepository();
         $this->carRepository = new CarRepository();
         $this->makerRepository = new MakerRepository();
         $this->equipmentRepository = new EquipmentRepository();
+        $this->ereaRepository = new EreaRepository();
+        //duy
+        $this->orderRepository = new OrderRepository();
     }
 
 
@@ -54,11 +72,16 @@ class OrderController extends Controller
     ***************************************************************************
     * @author: Nguyen
     ****************************************************************************/
-    public function orderDetail(){
-        $seller_car = $this->sellerCarRepository->getById(1);
-    	$seller = $this->sellerRepository->getById(1);
+    public function orderDetail(Request $p_request){
+        $id = $p_request->input("id");
+        $sellerCar = $this->sellerCarRepository->getById($id);
+        if($sellerCar == null){
+            return redirect('order');;
+        }
+        $data['sellerCar'] = $sellerCar;
+    	$seller = $this->sellerRepository->getById($sellerCar->seller_id);
     	$data['seller'] = $seller;
-        $status = $this->sellerCarStatusRepository->getByCarSeller(1);
+        $status = $this->sellerCarStatusRepository->getByCarSeller($id);
         $status->pursuit = explode(',',$status->pursuit);
         if(count($status->pursuit) < 3){
             $status->pursuit = array();
@@ -67,9 +90,9 @@ class OrderController extends Controller
             $status->pursuit = array_prepend ($status->pursuit, 0);
         }
         $data['status'] = $status;
-        $document = $this->sellerCarDocumentRepository->getByCarSeller(1);
+        $document = $this->sellerCarDocumentRepository->getByCarSeller($id);
         $data['document'] = $document;
-        $information = $this->sellerCarInformationRepository->getByCarSeller(1);
+        $information = $this->sellerCarInformationRepository->getByCarSeller($id);
         $information->self_propelled2 = explode(',',$information->self_propelled2);
         if(count($information->self_propelled2) != 8){
             $information->self_propelled2 = array();
@@ -107,11 +130,11 @@ class OrderController extends Controller
         $information->inspection_year = $information->inspection_date[1];
         $car = $this->carRepository->getAll();
         $data['car'] = $car;
-        $information->car = $car->where("id",$seller_car->car_id)->first();
-        $information->car_id = $seller_car->car_id;
+        $information->car = $car->where("id",$sellerCar->car_id)->first();
+        $information->car_id = $sellerCar->car_id;
         $information->maker_id = $information->car == null?null:$information->car->maker_id;
         $information->remove_part = explode(',', $information->remove_part);
-        $information->equipment = $this->sellerCarEquipmentRepository->getByCarSeller(1);
+        $information->equipment = $this->sellerCarEquipmentRepository->getByCarSeller($id);
 
         if($information->equipment != null){
             $temp= array();
@@ -127,19 +150,62 @@ class OrderController extends Controller
         $data['car'] = $car;
         $equipment = $this->equipmentRepository->getAll();
         $data['equipment'] = $equipment;
-        $history = $this->sellerCarCorrespondenceHistory->getByCarSeller(1);
+        $history = $this->sellerCarCorrespondenceHistory->getByCarSeller($id);
         $data['history'] = $history;
-        $retrieval = $this->sellerCarRetrievalRepository->getByCarSeller(1);
+        $retrieval = $this->sellerCarRetrievalRepository->getByCarSeller($id);
         $data['retrieval'] = $retrieval;
-        $question = $this->sellerCarQuestionRepository->getByCarSeller(1);
+        $question = $this->sellerCarQuestionRepository->getByCarSeller($id);
         foreach ($question as $key => $value) {
             $question[$key]->date = Carbon::parse($question[$key]->date)->format('d-m-Y(h:i)');
         }
         $data['question'] = $question;
-        $reception = $this->sellerCarReceptionRepository->getByCarSeller(1);
+        $reception = $this->sellerCarReceptionRepository->getByCarSeller($id);
         $data['reception'] = $reception;
+        $sale = $this->sellerCarSaleRepository->getByCarSeller($id);
+        $data['sale'] = $sale;
+        $assessment = $this->sellerCarAssessmentRepository->getByCarSeller($id);
+        $data['assessment'] = $assessment;
+        $order = $this->orderRepository->getByCarSeller($id);
+        $order->deadline_date = null;
+        $order->deadline_hour = null;
+        $order->deadline_minute = null;
+        if($order->deadline != null){
+            $deadline = Carbon::parse($order->deadline);
+            $order->deadline_date = $deadline->format('Y-m-d');
+            $order->deadline_hour = $deadline->hour;
+            $order->deadline_minute = $deadline->minute;
+        }
+        $data['order'] = $order;
+        $orderDetail = $this->orderDetailRepository->getByCarSeller($id);
+        $data['orderDetail'] = $orderDetail;
+        $variousCost = $this->sellerCarVariousCostRepository->getByCarSeller($id);
+        $data['variousCost'] = $variousCost;
+        $refund = $this->sellerCarRefundRepository->getByCarSeller($id);
+        $data['refund'] = $refund;
+        $images = $this->sellerCarImageRepository->getByCarSeller($id);
+        $data['images'] = $images;
+        $erea = $this->ereaRepository->getByGroupByZone();
+        $data['erea'] = $erea;
     	return view("order.detail",$data);
     }
 
-
+    /*****************************************************************************
+    * Created: 2018/04/20
+    * View order index
+    ***************************************************************************
+    * @author: Duy
+    ****************************************************************************/
+    public function index()
+    {
+        $list_order = $this->orderRepository->GetOrderIndex(5);
+        $data['list_order'] = $list_order;
+        foreach($list_order as $order_id)
+        {
+            $seller_car_information = $this->orderRepository->GetSellerCar($order_id->seller_id);
+            $data['list_seller_car'][$order_id->seller_id] = $seller_car_information;
+            $data['list_seller_car_information'][$order_id->id] = $this->orderRepository->GetInformationSellerCar($order_id->id);
+            $data['list_seller_car_reception'][$order_id->id] = $this->orderRepository->GetReceptionSellerCar($order_id->id);   
+        }
+        return view("order.index",$data);
+    }
 }
