@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Kyslik\ColumnSortable\Sortable;
 /*****************************************************************************
 * Model seller car status
 ****************************************************************************
@@ -15,6 +16,7 @@ class SellerCarStatus extends Model
 {
     protected $table = 'seller_car_status';
     public $timestamps = false;
+    public $sortable = ['re_tel_date', 'first_inquiry_date', 'listing_accuracy', 'tel_number_again'];
     protected $fillable = [
 		'seller_car_id',
 		'first_inquiry_date',
@@ -27,4 +29,8 @@ class SellerCarStatus extends Model
 		'campaign',
 		'word_preparation'
     ];
+    public function sellerCar()
+    {
+        return $this->belongsTo('App\Models\SellerCar', 'seller_car_id');
+    }
 }

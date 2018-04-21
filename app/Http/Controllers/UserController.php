@@ -67,7 +67,7 @@ class UserController extends Controller
         }
         else
         {
-            return redirect('login.html')->with('message','User or Password incorrect. Please enter again!');
+            return redirect('login.html')->with('message','ユーザーまたはパスワードが間違っています。再入力してください。!');
         }
     }
 

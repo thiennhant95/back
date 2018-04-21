@@ -15,6 +15,8 @@ class ValidateRequestTrader extends ValidateRequest
 {
 
     public static function validateTrader(Request $request){
+        #get data input
+        $data = $request->input('data');
         $arr_rule = [
             'data.trader.name'=>'required',
             'data.trader.phone_number'=>'required|numeric|min:8',
@@ -35,6 +37,8 @@ class ValidateRequestTrader extends ValidateRequest
             'data.trader.customer_degree'=>'required',
             'data.trader.method_statement'=>'required',
             'data.trader.document_confirmation_date'=>'required',
+//            'data.trader.assessment_price'=>'regex:/^\d*(\.\d{2})?$/',
+//            'data.trader.bought_price'=>'regex:/^\d*(\.\d{2})?$/'
             ];
         self::setRule($arr_rule);
         self::validate($request);

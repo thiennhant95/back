@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Kyslik\ColumnSortable\Sortable;
 
 class SellerCarAssessment extends Model
 {
+	use Sortable;
     protected $table = 'seller_car_assessment';
     public $timestamps = false;
+    public $sortable = ['situation', 'request_date', 'advance'];
     protected $fillable = [
 		'seller_car_id',
 		'advance',
@@ -34,4 +37,8 @@ class SellerCarAssessment extends Model
 		'rater',
 		'remark2'
     ];
+    public function sellerCar()
+    {
+        return $this->belongsTo('App\Models\SellerCar', 'seller_car_id');
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Kyslik\ColumnSortable\Sortable;
 /*****************************************************************************
 * Model seller car document
 ****************************************************************************
@@ -13,8 +14,10 @@ use Illuminate\Database\Eloquent\Model;
 ****************************************************************************/
 class SellerCarInformation extends Model
 {
+	use Sortable;
     protected $table = 'seller_car_information';
     public $timestamps = false;
+    public $sortable = ['car_name', 'car_year'];
     protected $fillable = [
 		'seller_car_id',
 		'car_name',
@@ -65,4 +68,8 @@ class SellerCarInformation extends Model
 		'chassis_number',
 		'remove_part'	
     ];
+    public function sellerCar()
+    {
+        return $this->belongsTo('App\Models\SellerCar', 'seller_car_id');
+    }
 }

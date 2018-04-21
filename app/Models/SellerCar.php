@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Kyslik\ColumnSortable\Sortable;
 /*****************************************************************************
 * Model seller car
 ****************************************************************************
@@ -13,8 +14,10 @@ use Illuminate\Database\Eloquent\Model;
 ****************************************************************************/
 class SellerCar extends Model
 {
+	use Sortable;
     protected $table = 'seller_car';
     public $timestamps = false;
+    public $sortable = ['seller_id', 'remark','displacement', 'mileage'];
     protected $fillable = [
 		'seller_id',
 		'assess_id',
@@ -64,4 +67,23 @@ class SellerCar extends Model
 		'document_photo',
 		'document_register_date'
     ];
+    public function seller()
+    {
+        return $this->belongsTo('App\Models\Seller', 'seller_id');
+    }
+
+    public function sellerCarAssessment()
+    {
+        return $this->hasOne('App\Models\SellerCarAssessment');
+    }
+
+    public function sellerCarInformation()
+    {
+        return $this->hasOne('App\Models\SellerCarInformation');
+    }
+
+    public function sellerCarStatus()
+    {
+        return $this->hasOne('App\Models\SellerCarStatus');
+    }
 }

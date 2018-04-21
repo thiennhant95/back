@@ -318,7 +318,7 @@
             ?>
             <div class="col col-md-offset-5 col-md-2">
                 <input type="hidden" id="status_erea" value="<?php Session::get('status_erea'); ?>">
-                <button type="button" class="btn btn-primary btn-sm " id="save">Save</button>
+                <button type="button" onclick="window.close()" class="btn btn-primary btn-sm " id="save">Save</button>
             </div>
         </div>
         <script>

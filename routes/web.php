@@ -11,17 +11,20 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 
 Route::get('login.html', ['as' => 'login.html', 'uses' => 'UserController@GetLogin']);
 Route::post('checkLogin', 'UserController@PostLogin');
-Route::get('logout', 'UserController@GetLogOut');
 //route middleware adminLogin
 Route::group(['middleware' => 'adminLogin'], function () {
-    
+
+    Route::get('/', 'InquiryController@index');
+    // Route::get('inquiries', function () {
+    //     return view('inquiries.index');
+    // });
     #router order
     Route::get('order',"OrderController@index");
     Route::get('order/detail.html',"OrderController@orderDetail");
@@ -63,6 +66,7 @@ Route::group(['middleware' => 'adminLogin'], function () {
     Route::get('trader/edit/{id}', 'TraderController@edit');
     Route::post('trader/edit/{id}', 'TraderController@edit');
     Route::post('trader/loadzone','TraderController@loadzone');
+    Route::post('trader/check_Zipcode/{id}','TraderController@check_Zipcode');
 
     #route assess
     Route::get('assess', 'AssessController@index')->name('assess');
@@ -94,5 +98,9 @@ Route::group(['middleware' => 'adminLogin'], function () {
     Route::post('news/updateShow', 'NewController@updateShow');
     Route::post('news/deleteNew', 'NewController@deleteNew');
     Route::get('inquiries', 'InquiryController@index');
+    Route::post('inquiries/deleteInquiry', 'InquiryController@deleteInquiry');
+    Route::get('inquiries/search', 'InquiryController@search');
+
+    Route::get('logout', 'UserController@GetLogOut');
 
 });

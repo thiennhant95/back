@@ -337,7 +337,7 @@
                                  @endif
                         </td>
                         <td class="text-right">{{number_format($row_trader['credit'])}}円</td>
-                        <td class="text-right">{{number_format($row_trader['excess_deficit money'])}}円</td>
+                        <td class="text-right">{{number_format($row_trader['excess_deficit_money'])}}円</td>
                         <td class="text-center">{{$row_trader['bring_assessment']==1?'不可':'可'}}</td>
                         <td class="text-center">{{$row_trader['assessment_classification']=='1'?'不可':'可'}}</td>
                         <td class="text-center">{{$row_trader['bid_approval']==1?' 不可':'可'}}</td>

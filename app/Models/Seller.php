@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Kyslik\ColumnSortable\Sortable;
 /*****************************************************************************
 * Model seller
 ****************************************************************************
@@ -13,8 +14,10 @@ use Illuminate\Database\Eloquent\Model;
 ****************************************************************************/
 class Seller extends Model
 {
+	use Sortable;
     protected $table = 'seller';
     public $timestamps = false;
+    public $sortable = ['name','phone1','address'];
     protected $fillable = [
         'seller_code',
 		'name',
@@ -57,4 +60,8 @@ class Seller extends Model
 		'transfer_status',
 		'is_contact',
     ];
+    public function sellerCars()
+    {
+        return $this->hasMany('App\Models\SellerCar');
+    }
 }

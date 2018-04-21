@@ -10,7 +10,7 @@ class Trader extends Model
     use Sortable;
     protected $table = 'trader';
     public $timestamps = false;
-    public $sortable = ['id','name','zip_code','address','phone','fax','member_status','credit','excess_deficit money','bring_assessment',
+    public $sortable = ['id','name','zip_code','address','phone','fax','member_status','credit','excess_deficit_money','bring_assessment',
     'assessment_classification','bid_approval','complaint_count','claim_number','furigana_phone','service_date','curio_date','account_holder',
         'remark','remark1'
     ];

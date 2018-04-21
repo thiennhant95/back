@@ -194,10 +194,10 @@
                         <label for="TraderZipCode" class="col col-md-2 control-label">郵便番号</label>
                         <div class="col col-md-2">
                             <div class="col-md-8" style="padding: 0">
-                                <input name="data[trader][zip_code]" class="form-control" maxLength="8" type="tel" required/>
+                                <input name="data[trader][zip_code]" id="zip_code" class="form-control" maxLength="8" type="tel" required/>
                             </div>
                             <div class="col col-md-4 text-center" style="margin-top: 6px;">
-                                <button type="button" class="btn btn-warning btn-xs" onclick="AjaxZip3.zip2addr('data[trader][zip_code]', &#039;&#039;, &#039;data[trader][pref_id]&#039;, &#039;data[trader][address]&#039;);">住所検索</button>
+                                <button type="button" id="ajax_zip3" class="btn btn-warning btn-xs ajax_zip3" onclick="AjaxZip3.zip2addr('data[trader][zip_code]', &#039;&#039;, &#039;data[trader][pref_id]&#039;, &#039;data[trader][address]&#039;);">住所検索</button>
                             </div>
                         </div>
                     </div>
@@ -327,7 +327,7 @@
                     <div class="form-group col col-md-12">
                         <label for="" class="col col-md-2 control-label">出張査定レベル</label>
                         <div class="col col-md-2">
-                            <input name="data[trader][assessment_level]" class="form-control" maxLength="13" type="tel" value=""/>
+                            <input name="data[trader][assessment_level]" class="form-control" maxLength="13" type="number" value=""/>
                         </div>
                     </div>
                     <div class="form-group col col-md-12">
@@ -1000,7 +1000,7 @@
                     </div>
                     <div class="col col-md-10 col-md-offset-2">
                         <input type="hidden" id="erea_status" value="0">
-                        <input  class="btn btn-default" id="submit" type="submit" value="変更"/>
+                        <input  class="btn btn-default" id="submit" type="submit" value="変更" onclick="return confirm('Are you sure you want to add this data?');"/>
                     </div>
                 </fieldset>
             </form>

@@ -51,7 +51,7 @@ class TraderRepository extends BaseRepository
      ***************************************************************************
      */
 
-    public function GetSearchTrader($search=array(),$n)
+    public function GetSearchTrader($search,$n)
     {
         $name = '%'.$search['name'].'%';
         $phone_number = '%'.$search['phone_number'].'%';
@@ -107,11 +107,11 @@ class TraderRepository extends BaseRepository
 
         if (isset($search['excess_deficit_money']) && $search['excess_deficit_money']==0)
         {
-            $query=$query->where('excess_deficit money','0');
+            $query=$query->where('excess_deficit_money','0');
         }
         else if (isset($search['excess_deficit_money']) && $search['excess_deficit_money']==1)
         {
-            $query=$query->where('excess_deficit money','!=','null');
+            $query=$query->where('excess_deficit_money','!=','null');
         }
         $query = $query->paginate($n);
         return $query;

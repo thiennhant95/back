@@ -182,10 +182,10 @@
                   <label class="col col-md-2 control-label">業者コード</label>
                   <div class="col col-md-5 form-control-static">{{$trader['id']}}</div>
               </div>
-            <div class="form-group col col-md-12 required">
+            <div class="form-group col col-md-12 ">
               <label for="TraderTraderName" class="col col-md-2 control-label">業者名</label>
-              <div class="col col-md-5 required">
-                <input id="trader_family_name" name="data[trader][name]" value="{{$trader['name']}}" class="form-control" maxLength="100" required="required" type="text"/>
+              <div class="col col-md-5 ">
+                <input id="trader_family_name" name="data[trader][name]" value="{{$trader['name']}}" class="form-control" maxLength="100" ="" type="text"/>
               </div>
             </div>
             <div class="form-group col col-md-12">
@@ -198,16 +198,16 @@
               <label for="TraderZipCode" class="col col-md-2 control-label">郵便番号</label>
               <div class="col col-md-2">
                 <div class="col-md-8" style="padding: 0">
-                  <input name="data[trader][zip_code]" value="{{$trader['zip_code']}}" class="form-control" maxLength="8" type="tel" required/>
+                  <input name="data[trader][zip_code]" id="zip_code" value="{{$trader['zip_code']}}" class="form-control" maxLength="8" type="tel" />
                 </div>
                 <div class="col col-md-4 text-center" style="margin-top: 6px;">
-                  <button type="button" class="btn btn-warning btn-xs" onclick="AjaxZip3.zip2addr('data[trader][zip_code]', &#039;&#039;, &#039;data[trader][pref_id]&#039;, &#039;data[trader][address]&#039;);">住所検索</button>
+                  <button type="button" class="btn btn-warning btn-xs ajax_zip3" id="ajax_zip3" onclick="AjaxZip3.zip2addr('data[trader][zip_code]', &#039;&#039;, &#039;data[trader][pref_id]&#039;, &#039;data[trader][address]&#039;);">住所検索</button>
                 </div>
               </div>
             </div>
             <div class="form-group col col-md-12">
               <label for="TraderPrefId" class="col col-md-2 control-label">都道府県</label>
-              <div class="col col-md-1 required">
+              <div class="col col-md-1 ">
                   <select name="data[trader][pref_id]" class="form-control pref_name">
                       <option value="">----------</option>
                       @foreach($list_zone as $key_zone => $zone)
@@ -335,7 +335,7 @@
             <div class="form-group col col-md-12">
               <label for="" class="col col-md-2 control-label">出張査定レベル</label>
               <div class="col col-md-2">
-                <input name="data[trader][assessment_level]" class="form-control" maxLength="13" type="tel" value="{{$trader['assessment_level']}}"/>
+                <input name="data[trader][assessment_level]" class="form-control" maxLength="13" type="number" value="{{$trader['assessment_level']}}"/>
               </div>
             </div>
             <div class="form-group col col-md-12">
@@ -607,7 +607,7 @@
             <div class="form-group col col-md-12">
               <label for="" class="col col-md-2 control-label">持込査定レベル</label>
               <div class="col col-md-2">
-                <input name="data[trader][bought_level]" class="form-control" maxLength="13" type="tel" value="{{$trader['bought_level']}}"/>
+                <input name="data[trader][bought_level]" class="form-control" maxLength="13" type="number" value="{{$trader['bought_level']}}"/>
               </div>
             </div>
             <div class="form-group col col-md-12">
@@ -857,6 +857,10 @@
                   FAX以外希望</label>
               </div>
             </div>
+              <div class="form-group col col-md-12">
+                  <label class="control-label col col-md-2">取引回数</label>
+                  <div class="col col-md-10 form-control-static">{{$trader['number_transaction']!=''?$trader['number_transaction'].'回':'いいえ'}}</div>
+              </div>
             <div class="form-group col col-md-12">
               <label for="" class="col col-md-2 control-label">顧客クレーム回数</label>
               <div class="col col-md-2">
@@ -938,14 +942,14 @@
             </div>
             <div class="form-group col col-md-4">
               <label for="TraderCredit" class="col col-md-6 control-label" style="padding-right: 5px;">与信額</label>
-              <div class="col col-md-5 required" style="padding-left: 25px;">
+              <div class="col col-md-5 " style="padding-left: 25px;">
                 <input name="data[trader][credit]" id="trader_credit" onkeyup="balance_credit()" class="form-control" maxlength="10" type="number" value="{{$trader['credit']}}"/>
               </div>
               <div class="col col-md-1 form-control-static"> 円</div>
             </div>
             <div class="form-group col col-md-4">
               <label for="TraderDeposit" class="col col-md-4 control-label" style="padding-right: 10px;">預り金</label>
-              <div class="col col-md-7 required" style="width: 198px; padding-left: 20px;">
+              <div class="col col-md-7 " style="width: 198px; padding-left: 20px;">
                 <input name="data[trader][deposite]" id="trader_desposite" onkeyup="balance_credit()" class="form-control" maxlength="10" type="number" value="{{$trader['deposite']}}"/>
               </div>
               <div class="col col-md-1 form-control-static"> 円</div>
@@ -1017,7 +1021,7 @@
               </div>
             </div>
             <div class="col col-md-10 col-md-offset-2">
-              <input  class="btn btn-default" id="submit" type="submit" value="変更"/>
+              <input  class="btn btn-default" id="submit" type="submit" value="変更" onclick="return confirm('Are you sure you want to edit this data?');"/>
             </div>
               <input type="hidden" id="erea_status" value="0">
           </fieldset>

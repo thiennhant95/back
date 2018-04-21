@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Repositories\TraderRepository;
 use App\Repositories\EreaRepository;
 use App\Repositories\ZoneRepository;
+use App\Repositories\ZipcodeRepository;
 use Illuminate\Support\Facades\Route;
 use App\ValidateRequest\ValidateRequestTrader;
 use Hash;
@@ -31,12 +32,14 @@ class TraderController extends Controller
     protected $TraderRepository;
     protected $ereaRepository;
     protected $zoneRepository;
+    protected $ZipcodeRepository;
     protected $Validate;
     public function __construct()
     {
         $this->TraderRepository = new TraderRepository;
         $this->ereaRepository = new EreaRepository;
         $this->zoneRepository = new ZoneRepository;
+        $this->ZipcodeRepository= new ZipcodeRepository;
     }
     /**
      * Function index
@@ -59,9 +62,6 @@ class TraderController extends Controller
         #get list erea
         $data['list_erea'] = $list_erea;
         $data['list_trader'] = $this->TraderRepository->getPaginate(2);
-//        echo "<pre>";
-//        print_r($data['list_trader']);
-//        die();
         $search = $request->input('data');
         $pagination_url = 'trader?';
         //search
@@ -85,9 +85,7 @@ class TraderController extends Controller
         }
         else
         {
-            if(isset($_GET['name']) && isset($_GET['phone']) && isset($_GET['email']) && isset($_GET['erea']) && isset($_GET['status'])
-                && isset($_GET['service_start'] )&& isset($_GET['service_end']) && isset($_GET['curio_start']) && isset($_GET['curio_end'])
-                && isset($_GET['bring'] )&& isset($_GET['classification']))
+            if(isset($_GET['name']))
             {
                 $search['trader']=[
                     'name' => $_GET['name'],
@@ -104,15 +102,11 @@ class TraderController extends Controller
                 ];
                 if (isset($_GET['deficit']))
                 {
-                    $search['trader']=[
-                        'excess_deficit_money' => $_GET['deficit']
-                    ];
+                    $search['trader']['excess_deficit_money']=$_GET['deficit'];
                 }
-                if (isset($_GET['bid_approval']))
+                if (isset($_GET['bid']))
                 {
-                    $search['trader']=[
-                        'bid_approval' => $_GET['bid']
-                    ];
+                    $search['trader']['bid_approval']=$_GET['bid'];
                 }
                 $data['list_trader'] = $this->TraderRepository->GetSearchTrader($search['trader'],2);
                 $pagination_url .= ($search['trader']['name'] !== '') ? 'name=' . $search['trader']['name'] : 'name=';
@@ -421,6 +415,7 @@ class TraderController extends Controller
             {
                 $info_trader['password'] = Hash::make($data['trader']['password']);
             }
+
             //if update data trader success
             if ($insert = $this->TraderRepository->update($id,$info_trader))
             {
@@ -501,6 +496,8 @@ class TraderController extends Controller
     {
         $data=['erea'=>$erea=session()->get('save_erea')];
         echo json_encode($data);
+        $request->session()->forget('save_erea');
+        $request->session()->flush();
         die();
     }
 
@@ -520,6 +517,28 @@ class TraderController extends Controller
         if($get_erea->name != null)
         {
             $request->session()->put('zone',$get_erea->name);
+        }
+    }
+
+    /**
+     ***************************************************************************
+     * Created: 2018/04/19
+     * Check exist zip code
+     ***************************************************************************
+     * @author: Nhan Viet Vang
+     *
+     ***************************************************************************
+     */
+    public function check_Zipcode(Request $request,$zip_code)
+    {
+        $izip=$this->ZipcodeRepository->GetZipcode($zip_code);
+        if ($izip)
+        {
+            return json_encode(['status'=>1]);
+        }
+        else
+        {
+            return json_encode(['status'=>0]);
         }
     }
 }
