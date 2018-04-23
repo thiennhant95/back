@@ -1,3 +1,20 @@
+ $(document).ready(function() { 
+  $("#TraderEditForm").validate({
+            rules : {
+              'data[category]':{
+                required:true,
+              },
+              'data[title]':{
+                required:true,
+                maxlength:100,
+              },
+              'data[content]':{
+                maxlength:255,
+              },
+            }, tooltip_options: {
+            }
+    });
+})
 $(function(){
 
   $(document).on('click', '.updateShow', function(){

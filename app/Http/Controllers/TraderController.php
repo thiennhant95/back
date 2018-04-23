@@ -23,8 +23,6 @@ use Hash;
  *
  * This is a controller management trader
  *
- ***************************************************************************
- * @author: Nhan Viet Vang
  *****************************************
  **/
 class TraderController extends Controller
@@ -47,7 +45,6 @@ class TraderController extends Controller
      * @param
      * @param array of object information
      * @access public
-     * @author Nhan- VietVang JSC
      */
     public function index(Request $request)
     {
@@ -61,14 +58,15 @@ class TraderController extends Controller
         }
         #get list erea
         $data['list_erea'] = $list_erea;
-        $data['list_trader'] = $this->TraderRepository->Trader(2);
-        $data['list_trader1'] = $this->customTrader($data['list_trader']);
+        if (!isset($_GET['column']) && !isset($_GET['sort']) && !isset($_GET['name'])) {
+            $data['list_trader'] = $this->TraderRepository->Trader(2);
+        }
         $search = $request->input('data');
         $pagination_url = 'trader?';
         //search
         if($request->isMethod('post'))
         {
-            $data['list_trader'] = $this->TraderRepository->GetSearchTrader($search['trader'],2);
+            $data['list_trader'] = $this->TraderRepository->GetSearchTrader($search['trader'],2,null,null);
             $pagination_url .= ($search['trader']['name'] !== '') ? '&name=' . $search['trader']['name'] : null;
             $pagination_url .= ($search['trader']['phone_number'] !== '') ? '&phone=' . $search['trader']['phone_number'] : null;
             $pagination_url .= ($search['trader']['email'] !== '') ? '&email=' . $search['trader']['email'] : null;
@@ -82,6 +80,7 @@ class TraderController extends Controller
             $pagination_url .= ($search['trader']['assessment_classification'] !== '') ? '&classification=' . $search['trader']['assessment_classification'] : null;
             $pagination_url .= (isset($search['trader']['excess_deficit_money']) && $search['trader']['excess_deficit_money'] !== '') ? '&deficit=' . $search['trader']['excess_deficit_money'] : '';
             $pagination_url .= (isset($search['trader']['bid_approval']) && $search['trader']['bid_approval'] !== '') ? '&bid=' . $search['trader']['bid_approval'] : null;
+            $data['url']=$pagination_url;
             $data['list_trader']->setPath($pagination_url);
         }
         else
@@ -109,7 +108,16 @@ class TraderController extends Controller
                 {
                     $search['trader']['bid_approval']=$_GET['bid'];
                 }
-                $data['list_trader'] = $this->TraderRepository->GetSearchTrader($search['trader'],2);
+                if (isset($_GET['column']) && isset($_GET['sort']))
+                {
+                    $search['trader']['column']=$_GET['column'];
+                    $search['trader']['sort']=$_GET['sort'];
+                    $data['list_trader'] = $this->TraderRepository->GetSearchTrader($search['trader'],2,$_GET['column'],$_GET['sort']);
+                }
+                else
+                {
+                    $data['list_trader'] = $this->TraderRepository->GetSearchTrader($search['trader'],2,null,null);
+                }
                 $pagination_url .= ($search['trader']['name'] !== '') ? 'name=' . $search['trader']['name'] : 'name=';
                 $pagination_url .= ($search['trader']['phone_number'] !== '') ? '&phone=' . $search['trader']['phone_number'] : '&phone=';
                 $pagination_url .= ($search['trader']['email'] !== '') ? '&email=' . $search['trader']['email'] : '&email=';
@@ -123,83 +131,20 @@ class TraderController extends Controller
                 $pagination_url .= ($search['trader']['assessment_classification'] !== '') ? '&classification=' . $search['trader']['assessment_classification'] : '&classification=';
                 $pagination_url .= (isset($search['trader']['excess_deficit_money']) && $search['trader']['excess_deficit_money'] !== '') ? '&excess_deficit_money=' . $search['trader']['excess_deficit_money'] : '';
                 $pagination_url .= (isset($search['trader']['bid_approval']) && $search['trader']['bid_approval'] !== '') ? '&bid=' . $search['trader']['bid_approval'] : '';
+                $pagination_url .= (isset($search['trader']['column']) &&($_GET['column']!== '')) ? '&column=' . $_GET['column'] : '';
+                $pagination_url .= (isset($search['trader']['sort']) &&($_GET['sort'] !== '')) ? '&sort=' . $_GET['sort'] : '';
                 $data['list_trader']->setPath($pagination_url);
             }
 
-            if(isset($_GET['col']) && isset($_GET['sort']))
+            else if (isset($_GET['column']) && isset($_GET['sort']) && !isset($_GET['name']))
             {
-                $col = $_GET['col'];
-                $sort = $_GET['sort'];
-                $data['list_trader'] = $this->TraderRepository->GetSort($col,$sort,2);
-                $pagination_url .= ($col !== '') ? 'col=' . $col : 'col=';
-                $pagination_url .= ($sort !== '') ? '&sort=' . $sort : '&sort=';
-                $data['list_trader']->setPath($pagination_url);
+                    $data['list_trader'] = $this->TraderRepository->GetSort($_GET['column'],$_GET['sort'],2);
+                    $pagination_url .= ($_GET['column']!== '') ? 'column=' . $_GET['column'] : 'column=';
+                    $pagination_url .= ($_GET['sort'] !== '') ? '&sort=' . $_GET['sort'] : '&sort=';
+                    $data['list_trader']->setPath($pagination_url);
             }
         }
         return view('trader.index',$data);
-    }
-
-    /**
-     * Function sort
-     * sort infomation trader
-     * @param array of object information
-     * @access public
-     * @author Nhan- VietVang JSC
-     */
-    public function sort(Request $request)
-    {
-//        if($request->isMethod('post'))
-//        {
-            echo $sort = $request->input('sort');
-            echo $column = $request->input('column');
-            $list_trader = $this->TraderRepository->GetSort($column,$sort,5);
-            $content = '';
-            $pagination_url = 'trader?';
-            $data['count_list_trader'] = count($list_trader);
-            foreach ($list_trader as $trader)
-            {
-                $data['id'][] = $trader->id;
-                $data['name'][] = $trader->name;
-                $data['phonetic'][] = $trader->phonetic;
-                $data['zip_code'][] = $trader->zip_code;
-                $data['address'][]=$trader->address;
-                $data['phone'][]=$trader->phone;
-                $data['fax'][]=$trader->fax;
-                if ($trader->fax==0)
-                {
-                    $data['member_status']="非会員";
-                }
-                elseif($trader->fax==1)
-                {
-                    $data['member_status']="無料会員";
-                }
-                elseif($trader->fax==2)
-                {
-                    $data['member_status']="有料会員";
-                }
-                elseif($trader->fax==3)
-                {
-                    $data['member_status']="取引中止";
-                }
-                $data['credit'][] = number_format($trader->credit);
-                $data['excess_deficit_money'][] = number_format($trader->excess_deficit_money);
-                $trader->bring_assessment=='1'?$data['bring_assessment'][] ='不可':$data['bring_assessment'][]='可';
-                $trader->assessment_classification=='1'?$data['assessment_classification'][] ='不可':$data['assessment_classification'][]='可';
-                $trader->bid_approval=='1'?$data['bid_approval'][] ='不可':$data['bid_approval'][]='可';
-
-//                $data['email'][] = $trader->email;
-//                $data['report_delivery_method'][] = $trader->report_delivery_method;
-//                $data['number_complain'][] = $trader->number_complain;
-            }
-            echo "<pre>";
-            print_r($data);
-            exit();
-            $pagination_url .= ($column !== '' && $sort !== '') ? 'col=' . $column . '&sort=' . $sort : null;
-            $list_trader->setPath($pagination_url);
-            $data['content'] = $content;
-            $data['pagination'] = $list_trader->links()->toHtml();
-            return json_encode( $data);
-//        }
     }
 
     /**
@@ -310,11 +255,13 @@ class TraderController extends Controller
                 session()->forget('save_erea');
                 session()->forget('corresponding_erea');
                 $request->session()->forget('save_erea');
+                #return message success
                 return redirect('trader')->with('message','Inserted!');
             }
             //if insert data trader fail
             else
             {
+                #return message fail
                 return redirect('trader/add.html')->with('message','Insert Fail!');
             }
         }
@@ -429,11 +376,13 @@ class TraderController extends Controller
                 session()->forget('save_erea');
                 session()->forget('corresponding_erea');
                 $request->session()->forget('save_erea');
+                #return message success
                 return redirect('trader')->with('message','Updated!');
             }
             //if update data trader fail
             else
             {
+                #return message fail
                 return redirect('trader/update/'.$id)->with('message','Update Fail!');
             }
         }
@@ -454,10 +403,6 @@ class TraderController extends Controller
             $request->session()->put('corresponding_erea',$request->input('corresponding_erea'));
             echo session()->get('corresponding_erea');
         }
-//        echo $request->input('first_name');
-//        echo session()->get('trader_first_name');
-//        echo session()->get('corresponding_erea');
-//        die();
     }
 
     /**
@@ -511,13 +456,8 @@ class TraderController extends Controller
     }
 
     /**
-     ***************************************************************************
-     * Created: 2018/04/19
-     * Load zone edit Trader
-     ***************************************************************************
-     * @author: Nhan Viet Vang
-     *
-     ***************************************************************************
+     * Load zone
+     * @access public
      */
     public function loadzone(Request $request)
     {
@@ -530,13 +470,10 @@ class TraderController extends Controller
     }
 
     /**
-     ***************************************************************************
-     * Created: 2018/04/19
-     * Check exist zip code
-     ***************************************************************************
-     * @author: Nhan Viet Vang
-     *
-     ***************************************************************************
+     * Function check zip code on DB
+     * @param input $zip_code
+     * @return id json status
+     * @access public
      */
     public function check_Zipcode(Request $request,$zip_code)
     {
@@ -559,9 +496,6 @@ class TraderController extends Controller
      */
     public function customTrader($adata)
     {
-//        echo "<pre>";
-//        print_r($adata);
-//        die();
         $status_buy=0;
         foreach ($adata as $row)
         {
@@ -578,8 +512,5 @@ class TraderController extends Controller
             }
         }
         echo   $status_buy;
-
-
-//        die();
     }
 }

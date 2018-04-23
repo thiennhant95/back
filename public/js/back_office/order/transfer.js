@@ -33,6 +33,30 @@ $(document).ready(function() {
         })
         return false;
 	})
+    $("#add_transfer").click(function(){
+        if(!$('#transfer_form').valid() || !$('#transfer_form').data("validator")){
+            return false;
+        }
+        $.ajax({
+            url: base_url+'/seller-car/add-transfer',
+            data: getTransferData(),
+            method:"POST",
+            success:function(result){
+                if(result != null && result['status'] == true){
+                    alert("success");
+                    if(result['new_id'] != null && result["new_id"].length != 0){
+                        renewId(result['new_id']);
+                    }
+                }else{
+                    alert("fail");
+                }
+            },
+            error:function(result){
+
+            }
+        })
+        return false;
+    })
 	function getTransferData(){
 		var data = {};
 		data.id = $("#sale_id").val();

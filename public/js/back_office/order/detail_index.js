@@ -33,112 +33,7 @@ $(function(){
 			return result;
 		}
 	});
-	$('.datepicker').datepicker({
-		minDate: 0
-	});
-	$('#disposal_datepicker').datepicker({
-		maxDate: 0
-	});
-	$('#end_at_datepicker').datepicker({
-		minDate: 0
-	});
-	$('#satei_datepicker1').datepicker({
-		minDate: 0
-	});
-	$('#satei_datepicker2').datepicker({
-		minDate: 0
-	});	
-	$('#zentei_datepicker1').datepicker({
-		minDate: 0
-	});
-	$('#zentei_datepicker2').datepicker({
-		minDate: 0
-	});
-	$('#zentei_datepicker3').datepicker({
-		minDate: 0
-	});
-	
-	$('#due_datepicker').datepicker({
-		minDate: 0
-	});
-	$('#receipts_datepicker').datepicker({
-		maxDate: 0
-	});
-	$('#auction_cost_datepicker').datepicker({
-		maxDate: 0
-	});
-	$('#recycle_due_datepicker').datepicker({
-		minDate: 0
-	});
-	$('#recycle_receipts_datepicker').datepicker({
-		maxDate: 0
-	});
-	$('#apply_insurance_datepicker').datepicker({
-		maxDate: 0
-	});
-	$('#receive_insurance_datepicker').datepicker({
-		maxDate: 0
-	});
-	$('#apply_weight_tax_datepicker').datepicker({
-		maxDate: 0
-	});
-	$('#receive_weight_tax_datepicker').datepicker({
-		maxDate: 0
-	});
-	$('#scrap_date_datepicker').datepicker({
-		maxDate: 0
-	});
-			$('#trade_datepicker').datepicker({
-		minDate: 0
-	});
-	$('#trade_datepicker2').datepicker({
-		minDate: 0
-	});
-	$('#trade_datepicker3').datepicker({
-		minDate: 0
-	});
-	$('#tel_date').datepicker({
-		minDate: 0
-	});
-	$('#customer_comfirm_date').datepicker({
-		minDate: 0
-	});
-	$('#customer_finish_date').datepicker({
-		minDate: 0
-	});
-	$('#sale_date').datepicker({
-		minDate: 0
-	});
-	$('#accounts_receivable_date').datepicker({
-		minDate: 0
-	});
-	$('#request_date').datepicker({
-		minDate: 0
-	});
-	$('#liner_date').datepicker({
-		minDate: 0
-	});	
-	$('#money_date01').datepicker({
-		minDate: 0
-	});	
-	$('#money_date02').datepicker({
-		minDate: 0
-	});	
-	$('#money_date03').datepicker({
-		minDate: 0
-	});	
-	$('#money_date04').datepicker({
-		minDate: 0
-	});	
-	$('#autocar_date').datepicker({
-		minDate: 0
-	});	
-		$('#second_trade_trade_schedule_date').datepicker({minDate:0});
-
-	$('.receipts_date_datepicker').datepicker({maxDate: 0});
-
-	$('#photo_term_date').datepicker({minDate: 0});
-	$('#transport_receipts_date').datepicker();
+	$(".datepicker").datepicker();
 
 	/* 桁数表示 */
 	$(document).on('blur', '.numeric', function(){
@@ -148,8 +43,7 @@ $(function(){
 		$(this).val(delFigure($(this).val()));
 	});
 
-	$('#vehicle_tax_due_date').datepicker({minDate: 0});
-	$('#sales_contact').change(function() {
+	/*$('#sales_contact').change(function() {
 		if ($('#sales_contact option:selected').val() == 1			|| $('#sales_contact option:selected').val() == 2			|| $('#sales_contact option:selected').val() == 3			|| $('#sales_contact option:selected').val() == 6			|| $('#sales_contact option:selected').val() == 7 ) {
 			$('#contact_name').autocomplete({
 				source: '/crm/Traders/autoCompleteContactName',
@@ -191,7 +85,7 @@ $(function(){
 				disabled: true
 			});
 		}
-	});
+	});*/
 
 		if ($('#sales_contact option:selected').val() == 1			|| $('#sales_contact option:selected').val() == 2			|| $('#sales_contact option:selected').val() == 3			|| $('#sales_contact option:selected').val() == 6			|| $('#sales_contact option:selected').val() == 7 ) {
 		$('#contact_name').autocomplete({
@@ -399,7 +293,7 @@ $(function(){
 	});*/
 
 // SMS送信
-	$(document).on('click', '.send_short_message', function(){
+	/*$(document).on('click', '.send_short_message', function(){
 		var send_link = $(this);
 		var div = $(this).parent();
 		var inquiry_id = send_link.attr('inquiry_id');
@@ -516,7 +410,7 @@ $(function(){
 				target_phone_input.attr('readonly', false);
 			});
 		return false;
-	});
+	});*/
 
 // ナンバープレート到着処理
 	$(document).on('click', '.receive_np', function(){
@@ -4534,4 +4428,18 @@ $(document).ready(function(){
 	}).data('ui-autocomplete')._renderItem = function(ul,item){
 		return $("<li>").append("<a>" + item.Employee.family_name + ' ' + item.Employee.first_name + "</a>").appendTo(ul);
 	};*/
+
+	
 });
+function renewId(data){
+		$("#seller_seller_id").val(data['seller_id']);
+		$("#assessment_id").val(data['assessment_id']);
+		$("#document_id").val(data['document_id']);
+		$("#infor_id").val(data['infor_id']);
+		$("#order_id").val(data['order_id']);
+		$("#retrieval_id").val(data['retrieval_id']);
+		$("#reception_id").val(data['reception_id']);
+		$("#sale_id").val(data['sale_id']);
+		$("#status_id").val(data['status_id']);
+		$("#seller_car_id").val(data['seller_car_id']);
+	}

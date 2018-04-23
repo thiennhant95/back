@@ -10,7 +10,7 @@ class SellerCarAssessment extends Model
 	use Sortable;
     protected $table = 'seller_car_assessment';
     public $timestamps = false;
-    public $sortable = ['situation', 'request_date', 'advance'];
+    public $sortable = ['situation', 'request_date', 'advance','advance_method'];
     protected $fillable = [
 		'seller_car_id',
 		'advance',

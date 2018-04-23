@@ -310,8 +310,11 @@
                     </tr>
                 </tbody>
             </table>
+            <?php
+            Session::put('status_erea', '0');
+            ?>
 		 <div class="col col-md-offset-5 col-md-2">
-               <button type="button" class="btn btn-primary btn-sm " id="save">Save</button>
+               <button type="button" class="btn btn-primary btn-sm " id="save" onclick="window.close()">Save</button>
                </div>
         </div>
     </div>
@@ -319,7 +322,7 @@
 
  	$(document).ready(function(){
         $(function() {
-    $(".col-md-12").mouseover(function() {
+    $(window).load(function() {
         $.ajaxSetup({
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -339,7 +342,10 @@
               contentType: 'application/x-www-form-urlencoded',
               data: {erea: erea,fuel_csrf_token: current_token},
                 success: function( data, textStatus, jQxhr ){
-
+                        if(!window.location.hash) {
+                            window.location = window.location + '#loaded';
+                            window.location.reload();
+                    }
                 },
                 error: function( jqXhr, textStatus, errorThrown ){
                     console.log( errorThrown );

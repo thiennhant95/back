@@ -2,7 +2,8 @@ $(document).ready(function() {
     $(document).on("click",".image_edit_ajax",function(){
         var id = $(this).data('id');
         var formData = new FormData();
-        formData.append('url', $("#image_url"+id)[0].files[0]);
+        if($("#image_url"+id)[0].files[0] != null)
+            formData.append('url', $("#image_url"+id)[0].files[0]);
         formData.append('index', $("#image_index_edit"+id).val());
         formData.append('name', $("#image_name_edit"+id).val());
         formData.append('id', id);
@@ -39,7 +40,8 @@ $(document).ready(function() {
 
     $("#image_add_ajax").click(function(){
         var formData = new FormData();
-        formData.append('url', $("#image_add")[0].files[0]);
+        if($("#image_add")[0].files[0] != null)
+            formData.append('url', $("#image_add")[0].files[0]);
         formData.append('index', $("#image_index_add").val());
         formData.append('name', $("#image_name_add").val());
         formData.append('seller_car_id', $("#seller_car_id").val());
@@ -54,6 +56,9 @@ $(document).ready(function() {
                 if(result != null && result['status'] == true){
                     alert("success");
                     imageInsertRow(result['data']);
+                    if(result['new_id'] != null && result["new_id"].length != 0){
+                        renewId(result['new_id']);
+                    }
                 }else{
                     alert("fail");
                 }

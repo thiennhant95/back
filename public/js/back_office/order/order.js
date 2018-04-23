@@ -33,12 +33,38 @@ $(document).ready(function() {
         })
         return false;
 	})
+    $("#add_order").click(function(){
+        if(!$('#order_form').valid() || !$('#order_form').data("validator")){
+            return false;
+        }
+        $.ajax({
+            url: base_url+'/seller-car/add-order',
+            data: getOrderData(),
+            method:"POST",
+            success:function(result){
+                if(result != null && result['status'] == true){
+                    alert("success");
+                    if(result['new_id'] != null && result["new_id"].length != 0){
+                        renewId(result['new_id']);
+                    }
+                }else{
+                    alert("fail");
+                }
+            },
+            error:function(result){
+
+            }
+        })
+        return false;
+    })
 	function getOrderData(){
 		var data = {};
 		data.id = $("#order_id").val();
 		data.status = $("#order_status").val();
 		data.asking_price = $("#order_asking_price").val();
         data.deadline = $("#order_deadline_date").val() +" "+ $("#order_deadline_hour").val() +":"+ $("#order_deadline_minute").val();
+        if($("#order_deadline_date").val() == "")
+            data.deadline = "";
         data.remark = $("#order_remark").val();
 		data._token = token;
 		return data;
@@ -82,6 +108,9 @@ $(document).ready(function() {
                     html += '<a href="#" class="btn btn-warning btn-xs cancel_bid" data-id="'+result['data']['id']+'">取消</a> </div>'
                     html += '</div>';  
                     $("#order_content").append(html);
+                    if(result['new_id'] != null && result["new_id"].length != 0){
+                        renewId(result['new_id']);
+                    }
                 }else{
                     alert("fail");
                 }

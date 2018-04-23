@@ -45,6 +45,30 @@ $(document).ready(function() {
         })
         return false;
 	})
+    $("#add_refund").click(function(){
+        if(!$('#refund_form').valid() || !$('#refund_form').data("validator")){
+            return false;
+        }
+        $.ajax({
+            url: base_url+'/seller-car/add-refund',
+            data: getRefundData(),
+            method:"POST",
+            success:function(result){
+                if(result != null && result['status'] == true){
+                    alert("success");
+                    if(result['new_id'] != null && result["new_id"].length != 0){
+                        renewId(result['new_id']);
+                    }
+                }else{
+                    alert("fail");
+                }
+            },
+            error:function(result){
+
+            }
+        })
+        return false;
+    })
 	function getRefundData(){
 		var data = {};
 		data.id = $("#refund_id").val();

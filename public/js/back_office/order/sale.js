@@ -19,6 +19,11 @@ $(document).ready(function() {
                     maxlength:10,
                     min:0
                 },
+                sale_bid_fee:{
+                    number:true,
+                    maxlength:10,
+                    min:0
+                },
                 sale_refund_fee:{
                     number:true,
                     maxlength:10,
@@ -73,6 +78,30 @@ $(document).ready(function() {
         })
         return false;
 	})
+    $("#add_sale").click(function(){
+        if(!$('#sale_form').valid() || !$('#sale_form').data("validator")){
+            return false;
+        }
+        $.ajax({
+            url: base_url+'/seller-car/add-sale',
+            data: getSaleData(),
+            method:"POST",
+            success:function(result){
+                if(result != null && result['status'] == true){
+                    alert("success");
+                    if(result['new_id'] != null && result["new_id"].length != 0){
+                        renewId(result['new_id']);
+                    }
+                }else{
+                    alert("fail");
+                }
+            },
+            error:function(result){
+
+            }
+        })
+        return false;
+    })
 	function getSaleData(){
 		var data = {};
 		data.id = $("#sale_id").val();
@@ -100,4 +129,36 @@ $(document).ready(function() {
 		return data;
 		
 	}
+
+    $(document).on("change","#sale_amount,#sale_body_price,#sale_recycling_fee,#sale_bid_fee,#sale_refund_fee,#sale_delete_agent_cost",function(){
+        var sale_amount = parseFloat($("#sale_amount").val());
+        var sale_body_price = parseFloat($("#sale_body_price").val());
+        var sale_recycling_fee = parseFloat($("#sale_recycling_fee").val());
+        var sale_bid_fee = parseFloat($("#sale_bid_fee").val());
+        var sale_refund_fee = parseFloat($("#sale_refund_fee").val());
+        var sale_delete_agent_cost = parseFloat($("#sale_delete_agent_cost").val());
+        if(isNaN(sale_amount))
+            sale_amount = 0;
+        if(isNaN(sale_body_price))
+            sale_body_price = 0;
+        if(isNaN(sale_recycling_fee))
+            sale_recycling_fee = 0;
+        if(isNaN(sale_bid_fee))
+            sale_bid_fee = 0;
+        if(isNaN(sale_refund_fee))
+            sale_refund_fee = 0;
+        if(isNaN(sale_delete_agent_cost))
+            sale_delete_agent_cost = 0;
+        var total = sale_amount+sale_body_price*1.08+sale_recycling_fee+sale_bid_fee+sale_refund_fee+sale_delete_agent_cost;
+        $("#sale_final_charge_amount").text(total.toFixed(0)+' 円');
+        var sale_confirm_body_price = parseFloat($("#sale_confirm_body_price").val());
+        if(isNaN(sale_confirm_body_price))
+            sale_confirm_body_price = 0;
+        var sale_confirm_established_amount = parseFloat($("#sale_confirm_established_amount").val());
+        if(isNaN(sale_confirm_established_amount))
+            sale_confirm_established_amount = 0;
+        $("#sale_confirm_difference").text((total-sale_confirm_body_price).toFixed(0));
+        $("#sale_confirm_deduction").text((total-sale_confirm_established_amount).toFixed(0));
+    })
+
 })

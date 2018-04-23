@@ -73,10 +73,10 @@
             <label for="TraderZipCode" class="col col-md-2 control-label">郵便番号</label>
             <div class="col col-md-2">
               <div class="col-md-8" style="padding: 0">
-                  <input name="data[photographer][zip_code]" class="form-control ime-disabled" maxLength="8" type="tel" value="{{ $assess->zip_code }}"/>
+                  <input name="data[photographer][zip_code]" id="zip_code" class="form-control ime-disabled" maxLength="8" type="tel" value="{{ $assess->zip_code }}"/>
               </div>
               <div class="col col-md-4 text-center" style="margin-top: 6px;">
-                      <button type="button" class="btn btn-warning btn-xs" onclick="AjaxZip3.zip2addr('data[photographer][zip_code]', '', 'data[photographer][pref_id]', 'data[photographer][address1]');">住所検索</button>
+                      <button type="button" class="btn btn-warning btn-xs ajax_zip3" onclick="AjaxZip3.zip2addr('data[photographer][zip_code]', '', 'data[photographer][pref_id]', 'data[photographer][address1]');">住所検索</button>
                     </div>
             </div>
           </div>

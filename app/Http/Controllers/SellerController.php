@@ -6,6 +6,7 @@ use App\ValidateRequest\ValidateRequestOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use App\Repositories\SellerRepository;
+use App\Repositories\SellerCarRepository;
 use App\Helper\FileHelper;
 /*****************************************************************************
 * Controller management seller
@@ -17,8 +18,32 @@ use App\Helper\FileHelper;
 ****************************************************************************/
 class SellerController extends Controller
 {
+    /*****************************************************************************
+    * Created: 2018/04/16
+    * Edit seller information
+    ***************************************************************************
+    * @author: Nguyen. Return result json: success or fail
+    ****************************************************************************/
+    public function add(Request $p_request){
+        ValidateRequestOrder::validateSeller($p_request);
+        $sellerCarRepository = new SellerCarRepository();
+        if($p_request->input('id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['id' => $arr_id['seller_id']]);
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
+        return $this->edit($p_request);
+    }
+
 	/*****************************************************************************
-    * Created: 2018/04/16* Edit seller information
+    * Created: 2018/04/16
+    * Edit seller information
     ***************************************************************************
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
@@ -70,13 +95,37 @@ class SellerController extends Controller
         $status = $sellerRepo->update($id,$seller);
         $result = [
             "status" => true,
-            "message" => "success"
+            "message" => "success",
+            "new_id" => $p_request->input('arr_id')
         ];
         if($status == false){
             $result["status"] = false;
             $result["message"] = "fail";
         }
         return Response::json($result);
+    }
+
+    /*****************************************************************************
+    * Created: 2018/04/22
+    * Edit seller information
+    ***************************************************************************
+    * @author: Nguyen. Return result json: success or fail
+    ****************************************************************************/
+    public function addAccount(Request $p_request){
+        ValidateRequestOrder::validateAccount($p_request);
+        $sellerCarRepository = new SellerCarRepository();
+        if($p_request->input('id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['id' => $arr_id['seller_id']]);
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
+        return $this->editAccount($p_request);
     }
 
     /*****************************************************************************

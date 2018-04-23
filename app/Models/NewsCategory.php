@@ -12,7 +12,7 @@ use Kyslik\ColumnSortable\Sortable;
 * @author  Creator:bugs - bugs.vietvang.net@gmail.com  
 * @author  Updater:bugs - bugs.vietvang.net@gmail.com  
 */ 
-class NewCategory extends Model
+class NewsCategory extends Model
 {
 	use Sortable;
     protected $table = "news_category";

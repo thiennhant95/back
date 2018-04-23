@@ -17,7 +17,7 @@ class SellerCarInformation extends Model
 	use Sortable;
     protected $table = 'seller_car_information';
     public $timestamps = false;
-    public $sortable = ['car_name', 'car_year'];
+    public $sortable = ['car_name', 'car_year','mileage', 'displacement'];
     protected $fillable = [
 		'seller_car_id',
 		'car_name',

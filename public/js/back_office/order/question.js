@@ -2,7 +2,7 @@ $(document).ready(function() {
     $("#question_form").validate({
             rules : {
                 question_input:{
-                    requỉed:true,
+                    required:true,
                 },
             }, tooltip_options: {
             }
@@ -25,6 +25,9 @@ $(document).ready(function() {
                     $("#question_content").append(html);
                 }else{
                     alert("fail");
+                }
+                if(result['new_id'] != null && result["new_id"].length != 0){
+                        renewId(result['new_id']);
                 }
             },
             error:function(result){

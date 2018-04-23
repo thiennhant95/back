@@ -7,6 +7,7 @@ use App\Repositories\AssessRepository;
 use App\Repositories\EreaRepository;
 use App\Repositories\ZoneRepository;
 use App\ValidateRequest\ValidateRequestAssess;
+use App\Repositories\ZipcodeRepository;
 use Session;
 
 /**
@@ -17,7 +18,7 @@ use Session;
 * This is a controller management assess
 *
 ***************************************************************************
-* @author: Duy
+* @author: Duy Viet Vang
 ***************************************************************************
 */
 class AssessController extends Controller
@@ -28,40 +29,39 @@ class AssessController extends Controller
           $this->assessRepository = new AssessRepository;
           $this->ereaRepository = new EreaRepository;
           $this->zoneRepository = new ZoneRepository;
+          $this->ZipcodeRepository= new ZipcodeRepository;
     }
 
     /**
-    ***************************************************************************
-    * Created: 2018/04/16
-    * Show and Search Information Assess
-    ***************************************************************************
-    * @author: Duy
-    * 
-    ***************************************************************************
-    */
-    public function index(Request $request)
+     * Function index
+     * Get all information of an object
+     * @param
+     * @param array of object information
+     * @access public
+     */
+    public function index(Request $p_request)
     {
         $list_zone = $this->zoneRepository->GetZoneAll();
-        $data['list_zone'] = $list_zone;
+        $oData['list_zone'] = $list_zone;
         foreach($list_zone as $zone)
         {
             $list_erea[$zone->id] = array();
             $list_erea[$zone->id] = $this->ereaRepository->GetZoneErea($zone->id);
         }
-        $data['list_erea'] = $list_erea;
-    	$data['list_assess'] = $this->assessRepository->getPaginate(5);
-        $search = $request->input('data');
+        $oData['list_erea'] = $list_erea;
+    	$oData['list_assess'] = $this->assessRepository->getPaginate(5);
+        $search = $p_request->input('data');
         $pagination_url = 'assess?';
-        if($request->isMethod('post'))
+        if($p_request->isMethod('post'))
         {
-            $data['list_assess'] = $this->assessRepository->GetSearchAssess($search['photographer']['photographer_cd'],$search['photographer']['name'],$search['photographer']['phone_number'],$search['photographer']['email'],$search['photographer']['pref_id'],$search['photographer']['address'],5);
+            $oData['list_assess'] = $this->assessRepository->GetSearchAssess($search['photographer']['photographer_cd'],$search['photographer']['name'],$search['photographer']['phone_number'],$search['photographer']['email'],$search['photographer']['pref_id'],$search['photographer']['address'],5);
             $pagination_url .= ($search['photographer']['photographer_cd'] !== '') ? 'n=' . $search['photographer']['photographer_cd'] : null;
             $pagination_url .= ($search['photographer']['name'] !== '') ? '&t=' . $search['photographer']['name'] : null;
             $pagination_url .= ($search['photographer']['phone_number'] !== '') ? '&p=' . $search['photographer']['phone_number'] : null;
             $pagination_url .= ($search['photographer']['email'] !== '') ? '&e=' . $search['photographer']['email'] : null;
             $pagination_url .= ($search['photographer']['pref_id'] !== '') ? '&r=' . $search['photographer']['pref_id'] : null;
             $pagination_url .= ($search['photographer']['address'] !== '') ? '&z=' . $search['photographer']['address'] : null;
-            $data['list_assess']->setPath($pagination_url);
+            $oData['list_assess']->setPath($pagination_url);
         }
         else
         {
@@ -73,88 +73,82 @@ class AssessController extends Controller
                 $e = $_GET['e'];
                 $r = $_GET['r'];
                 $z = $_GET['z'];
-                $data['list_assess'] = $this->assessRepository->GetSearchAssess($n,$t,$p,$e,$r,$z,5);
+                $oData['list_assess'] = $this->assessRepository->GetSearchAssess($n,$t,$p,$e,$r,$z,5);
                 $pagination_url .= ($n !== '') ? 'n=' . $n : 'n=';
                 $pagination_url .= ($t !== '') ? '&t=' . $t : '&t=';
                 $pagination_url .= ($p !== '') ? '&p=' . $p : '&p=';
                 $pagination_url .= ($e !== '') ? '&e=' . $e : '&e=';
                 $pagination_url .= ($r !== '') ? '&r=' . $r : '&r=';
                 $pagination_url .= ($z !== '') ? '&z=' . $z : '&z=';
-                $data['list_assess']->setPath($pagination_url);
+                $oData['list_assess']->setPath($pagination_url);
             }
             if(isset($_GET['col']) && isset($_GET['sort']))
             {
                 $col = $_GET['col'];
                 $sort = $_GET['sort'];
-                $data['list_assess'] = $this->assessRepository->GetSort($col,$sort,5);
+                $oData['list_assess'] = $this->assessRepository->GetSort($col,$sort,5);
                 $pagination_url .= ($col !== '') ? 'col=' . $col : 'col=';
                 $pagination_url .= ($sort !== '') ? '&sort=' . $sort : '&sort=';
-                $data['list_assess']->setPath($pagination_url);
+                $oData['list_assess']->setPath($pagination_url);
             }
         }
-    	return view('assess.index',$data);
+    	return view('assess.index',$oData);
     }
 
     /**
-    ***************************************************************************
-    * Created: 2018/04/16
-    * Sort Information Assess
-    ***************************************************************************
-    * @author: Duy
-    * 
-    ***************************************************************************
-    */
-    public function sort(Request $request)
+     * Function sort
+     * sort infomation assess
+     * @return result json: success or fail
+     * @param array of object information
+     * @access public
+     */
+    public function sort(Request $p_request)
     {
-        if($request->isMethod('post'))
+        if($p_request->isMethod('post'))
         {
-            $sort = $request->input('sort');
-            $column = $request->input('column');
+            $sort = $p_request->input('sort');
+            $column = $p_request->input('column');
             $list_assess = $this->assessRepository->GetSort($column,$sort,5);
             $content = '';
             $pagination_url = 'assess?';
-            $data['count_list_assess'] = count($list_assess);
+            $oData['count_list_assess'] = count($list_assess);
             foreach ($list_assess as $assess)
             {
-                $data['id'][] = $assess->id;
-                $data['name'][] = $assess->name;
-                $data['phone1'][] = $assess->phone1;
-                $data['email1'][] = $assess->email1;
-                $data['assessment_frequency'][] = $assess->assessment_frequency;
-                $data['report_delivery_method'][] = $assess->report_delivery_method;
-                $data['number_complain'][] = $assess->number_complain;
+                $oData['id'][] = $assess->id;
+                $oData['name'][] = $assess->name;
+                $oData['phone1'][] = $assess->phone1;
+                $oData['email1'][] = $assess->email1;
+                $oData['assessment_frequency'][] = $assess->assessment_frequency;
+                $oData['report_delivery_method'][] = $assess->report_delivery_method;
+                $oData['number_complain'][] = $assess->number_complain;
             }
             $pagination_url .= ($column !== '' && $sort !== '') ? 'col=' . $column . '&sort=' . $sort : null;
             $list_assess->setPath($pagination_url);
-            $data['content'] = $content;
-            $data['pagination'] = $list_assess->links('layouts.pagination')->toHtml();
-            return json_encode( $data );
+            $oData['content'] = $content;
+            $oData['pagination'] = $list_assess->links('layouts.pagination')->toHtml();
+            return json_encode( $oData );
         }
     }
 
     /**
-    ***************************************************************************
-    * Created: 2018/04/17
-    * Add Information Assess
-    ***************************************************************************
-    * @author: Duy
-    * 
-    ***************************************************************************
-    */
-    public function add(Request $request)
+     * Controller Add new record assess
+     * @access public
+     * @return id new record
+     */
+    public function add(Request $p_request)
     {
         $list_zone = $this->zoneRepository->GetZoneAll();
-        $data['list_zone'] = $list_zone;
+        $oData['list_zone'] = $list_zone;
         foreach($list_zone as $zone)
         {
             $list_erea[$zone->id] = array();
             $list_erea[$zone->id] = $this->ereaRepository->GetZoneErea($zone->id);
         }
-        $data['list_erea'] = $list_erea;
-        if($request->isMethod('post'))
+        $oData['list_erea'] = $list_erea;
+        if($p_request->isMethod('post'))
         {
-           // ValidateRequestAssess::validateAssess($request);
-            $data = $request->input('data');
+            ValidateRequestAssess::validateAssess($p_request);
+            $data = $p_request->input('data');
             $list_corresponding_erea = '';
             if(isset($data['photographer']['corresponding_erea']))
             {
@@ -224,16 +218,13 @@ class AssessController extends Controller
     }
 
     /**
-    ***************************************************************************
-    * Created: 2018/04/18
-    * Show and edit detail asess
-    ***************************************************************************
-    * @author: Duy
-    * 
-    ***************************************************************************
-    */
+     * Controller edit record assess
+     * @param int $id the object ID
+     * @access public
+     * @return boolean
+     */
 
-    public function edit(Request $request, $id)
+    public function edit(Request $p_request, $id)
     {
         $list_zone = $this->zoneRepository->GetZoneAll();
         $data['list_zone'] = $list_zone;
@@ -256,10 +247,10 @@ class AssessController extends Controller
         $corresponding_erea = explode(',',$assess->corresponding_erea);
         $data['corresponding_erea'] = $corresponding_erea;
         $data['assess'] = $assess;
-        if($request->isMethod('post'))
+        if($p_request->isMethod('post'))
         {
-            ValidateRequestAssess::validateAssess($request);
-            $data = $request->input('data');
+            ValidateRequestAssess::validateAssess($p_request);
+            $data = $p_request->input('data');
             $list_corresponding_erea = '';
             if(isset($data['photographer']['corresponding_erea']))
             {
@@ -329,34 +320,25 @@ class AssessController extends Controller
     }
 
     /**
-    ***************************************************************************
-    * Created: 2018/04/19
-    * Create session first name , family name
-    ***************************************************************************
-    * @author: Duy
-    * 
-    ***************************************************************************
-    */
-    public function getinfo(Request $request)
+     * Create session first name , family name on assess area
+     * @access public
+     */
+    public function getinfo(Request $p_request)
     {
-        $request->session()->put('assess_first_name',$request->input('first_name'));
-        $request->session()->put('assess_family_name',$request->input('family_name'));
-        if($request->input('corresponding_erea')  !== null)
+        $p_request->session()->put('assess_first_name',$p_request->input('first_name'));
+        $p_request->session()->put('assess_family_name',$p_request->input('family_name'));
+        if($p_request->input('corresponding_erea')  !== null)
         {
-            $request->session()->put('corresponding_erea',$request->input('corresponding_erea'));
+            $p_request->session()->put('corresponding_erea',$p_request->input('corresponding_erea'));
         }
     }
 
     /**
-    ***************************************************************************
-    * Created: 2018/04/19
-    * Create list zone by request id
-    ***************************************************************************
-    * @author: Duy
-    * 
-    ***************************************************************************
-    */
-    public function area(Request $request)
+     * Controller edit return view assess erea
+     * @return view zone assess erea
+     * @access public
+     */
+    public function area(Request $p_request)
     {
         $list_zone = $this->zoneRepository->GetZoneAll();
         $data['list_zone'] = $list_zone;
@@ -364,17 +346,13 @@ class AssessController extends Controller
     }
 
     /**
-    ***************************************************************************
-    * Created: 2018/04/19
-    * Ajax list area 
-    ***************************************************************************
-    * @author: Duy
-    * 
-    ***************************************************************************
-    */
-    public function ajaxerea(Request $request)
+     * Controller edit return view assess erea
+     * @return view erea assess erea
+     * @access public
+     */
+    public function ajaxerea(Request $p_request)
     {
-        $select_erea = $request->input('select_erea');
+        $select_erea = $p_request->input('select_erea');
         $get_erea = $this->ereaRepository->GetZoneErea($select_erea);
         $count_erea = count($get_erea);
         $data = $get_erea;
@@ -384,53 +362,55 @@ class AssessController extends Controller
 
 
     /**
-    ***************************************************************************
-    * Created: 2018/04/19
-    * Save area select
-    ***************************************************************************
-    * @author: Duy
-    * 
-    ***************************************************************************
-    */
-    public function saveerea(Request $request)
+     * Controller save erea selected by session
+     * @access public
+     */
+    public function saveerea(Request $p_request)
     {
-        $request->session()->put('save_erea',$request->input('save_erea'));
+        $p_request->session()->put('save_erea',$p_request->input('save_erea'));
     }
 
     /**
-    ***************************************************************************
-    * Created: 2018/04/19
-    * Load zone edit assess
-    ***************************************************************************
-    * @author: Duy
-    * 
-    ***************************************************************************
-    */
-    public function loadzone(Request $request)
+     * Controller load zone assess
+     * @access public
+     */
+    public function loadzone(Request $p_request)
     {
-        $erea = $request->input('erea');
+        $erea = $p_request->input('erea');
         $get_erea = $this->zoneRepository->GetZoneByName($erea);
         if($get_erea->name != null)
         {
-            $request->session()->put('zone',$get_erea->name);
+            $p_request->session()->put('zone',$get_erea->name);
         }
     }
 
     /**
-    ***************************************************************************
-    * Created: 2018/04/19
-    * Load zone edit assess
-    ***************************************************************************
-    * @author: Duy
-    * 
-    ***************************************************************************
-    */
+     * Controller detele assess
+     * @access public
+     */
     public function delete($id)
     {
         $delete = $this->assessRepository->destroy($id);
         if($delete)
         {
             return redirect('assess');
+        }
+    }
+
+    /**
+     * Check exist zip code
+     * @access public
+     */
+    public function check_Zipcode(Request $p_request,$zip_code)
+    {
+        $izip=$this->ZipcodeRepository->GetZipcode($zip_code);
+        if ($izip)
+        {
+            return json_encode(['status'=>1]);
+        }
+        else
+        {
+            return json_encode(['status'=>0]);
         }
     }
 }

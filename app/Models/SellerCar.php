@@ -17,7 +17,7 @@ class SellerCar extends Model
 	use Sortable;
     protected $table = 'seller_car';
     public $timestamps = false;
-    public $sortable = ['seller_id', 'remark','displacement', 'mileage'];
+    public $sortable = ['seller_id', 'remark','displacement', 'mileage','updated_date'];
     protected $fillable = [
 		'seller_id',
 		'assess_id',
@@ -65,7 +65,8 @@ class SellerCar extends Model
 		'inspection_photo',
 		'inspection_register_date',
 		'document_photo',
-		'document_register_date'
+		'document_register_date',
+		'updated_date'
     ];
     public function seller()
     {

@@ -47,6 +47,30 @@ $(document).ready(function() {
         })
         return false;
 	})
+    $("#add_retrieval").click(function(){
+        if(!$('#retrieval_form').valid() || !$('#retrieval_form').data("validator")){
+            return false;
+        }
+        $.ajax({
+            url: base_url+'/seller-car/add-retrieval',
+            data: getRetrievalData(),
+            method:"POST",
+            success:function(result){
+                if(result != null && result['status'] == true){
+                    alert("success");
+                    if(result['new_id'] != null && result["new_id"].length != 0){
+                        renewId(result['new_id']);
+                    }
+                }else{
+                    alert("fail");
+                }
+            },
+            error:function(result){
+
+            }
+        })
+        return false;
+    })
 	function getRetrievalData(){
 		var data = {};
         data.id =  $("#retrieval_id").val();

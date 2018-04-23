@@ -44,25 +44,47 @@ class InquiryController extends Controller
     */
     public function index(Request $request)
     {
-        $data['list_inquiries'] = $this->sellerCarRepository->getPaginateSortable(50);
-        $data['displacement'] = ['----------',
-                                '1,000cc未満',
-                                '1,000～1,999cc',
-                                '2,000～2,999cc',
-                                '3,000～3,999cc',
-                                '4,000～4,999cc',
-                                '5,000cc以上'];
-        $data['status'] = ['----------',
-                            '失注',
-                            '新規',
-                            '連絡待ち',
-                            '要再TEL',
-                            'メール済',
-                            '査定後TEL',
-                            '後追い長期不在',
-                            '成約'];
         $data['sellers'] = $this->sellerRepository->getAll();
-
+        if ($request->isMethod('post')){
+            $requestData = $request->input('data');
+            if (!array_key_exists('listingAccuracy', $requestData)) {
+                $requestData['listingAccuracy'] = '';
+            }
+            if (!array_key_exists('selfRunning', $requestData)) {
+                $requestData['selfRunning'] = '';
+            }
+            if (!array_key_exists('assessmentService', $requestData)) {
+                $requestData['assessmentService'] = '';
+            }
+            $data['list_inquiries'] = $this->sellerCarRepository->getSeach(50, $requestData);
+            $data['sellers'] = $this->sellerRepository->getAll();
+            $data['requestSearch'] = $requestData;
+        }else{
+            $data['list_inquiries'] = $this->sellerCarRepository->getPaginateSortable(50);
+            $data['requestSearch'] = ['name' => '', 
+                                    'phone' => '',
+                                    'address' => '',
+                                    'email' => '',
+                                    'carName' => '',
+                                    'displacement' => 0,
+                                    'freeword' => '',
+                                    'firstinquiryStart' => '',
+                                    'firstinquiryEnd' => '',
+                                    'lastinquiryStart' => '',
+                                    'lastinquiryEnd' => '',
+                                    'proposalStart' => '',
+                                    'proposalEnd' => '',
+                                    'retelDateStart' => '',
+                                    'retelDateEnd' => '',
+                                    'assessmentFrequency' => '',
+                                    'status' => 0,
+                                    'registrant' => 0,
+                                    'updater' => '',
+                                    'listingAccuracy' => '',
+                                    'selfRunning' => '',
+                                    'assessmentService' =>'' ];
+        }
+        
     	return view('inquiries.index',$data);
     }
 
@@ -76,33 +98,7 @@ class InquiryController extends Controller
     */
     public function search(Request $request)
     {
-        $param = ['','',
-                    '','','ya','','','','','','','','','','','','','','','','',''];
-        $data['list_inquiries'] = $this->sellerCarRepository->getSeach(50, $param);
-        echo '<pre>';
-        print_r($data['list_inquiries']);
-        echo '</pre>';
-        die();
-        $data['list_inquiries'] = $this->sellerCarRepository->getPaginateSortable(50);
-        $data['displacement'] = ['----------',
-                                '1,000cc未満',
-                                '1,000～1,999cc',
-                                '2,000～2,999cc',
-                                '3,000～3,999cc',
-                                '4,000～4,999cc',
-                                '5,000cc以上'];
-        $data['status'] = ['----------',
-                            '失注',
-                            '新規',
-                            '連絡待ち',
-                            '要再TEL',
-                            'メール済',
-                            '査定後TEL',
-                            '後追い長期不在',
-                            '成約'];
-        $data['sellers'] = $this->sellerRepository->getAll();
         
-
         return view('inquiries.index',$data);
     }
 

@@ -34,6 +34,32 @@ use App\Repositories\OrderDetailRepository;
 ****************************************************************************/
 class SellerCarController extends Controller
 {
+    /*****************************************************************************
+    * Created: 2018/04/22
+    * Add seller car status
+    ***************************************************************************
+    * @author: Nguyen. Return result json: success or fail
+    ****************************************************************************/
+    public function addStatus(Request $p_request){
+        // Validate request
+        ValidateRequestOrder::validateStatus($p_request);
+        // Create a new empty seller car
+        $sellerCarRepository = new SellerCarRepository();
+        if($p_request->input('id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['id' => $arr_id['status_id']]);
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
+        //Call edit function
+        return $this->editStatus($p_request);
+    }
+
 	/*****************************************************************************
     * Created: 2018/04/16
     * Edit seller car status
@@ -41,7 +67,9 @@ class SellerCarController extends Controller
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
     public function editStatus(Request $p_request){
+        // Validate request
         ValidateRequestOrder::validateStatus($p_request);
+        // Processing
         $id = $p_request->input('id');
         $carStatus['status'] = $p_request->input('status');
         $carStatus['listing_accuracy'] = $p_request->input('listing_accuracy');
@@ -54,9 +82,11 @@ class SellerCarController extends Controller
         $carStatus['word_preparation'] = $p_request->input('word_preparation');
         $sellerCarStatusRepo = new SellerCarStatusRepository();
         $status = $sellerCarStatusRepo->update($id,$carStatus);
+        // Return result success or fail
         $result = [
             "status" => true,
-            "message" => "success"
+            "message" => "success",
+            "new_id" => $p_request->input('arr_id')
         ];
         if($status == false){
             $result["status"] = false;
@@ -66,13 +96,41 @@ class SellerCarController extends Controller
     }
 
     /*****************************************************************************
+    * Created: 2018/04/22
+    * Add seller car document
+    ***************************************************************************
+    * @author: Nguyen. Return result json: success or fail
+    ****************************************************************************/
+    public function addDocument(Request $p_request){
+        // Validate request
+        ValidateRequestOrder::validateDocument($p_request);
+        // Create a new empty seller car
+        $sellerCarRepository = new SellerCarRepository();
+        if($p_request->input('id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['id' => $arr_id['document_id']]);
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
+        // Call edit function
+        return $this->editDocument($p_request);
+    }
+
+    /*****************************************************************************
     * Created: 2018/04/16
     * Edit seller car document
     ***************************************************************************
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
      public function editDocument(Request $p_request){
+        // Validate request
         ValidateRequestOrder::validateDocument($p_request);
+        // Processing
         $id = $p_request->input('id');
         $carDocument['cancel_type'] = $p_request->input('cancel_type');
         $carDocument['document_arrival'] = $p_request->input('document_arrival');
@@ -89,9 +147,11 @@ class SellerCarController extends Controller
         $carDocument['remark'] = $p_request->input('remark');
         $sellerCarDocumentRepo = new SellerCarDocumentRepository();
         $status = $sellerCarDocumentRepo->update($id,$carDocument);
+        // Return result success or fail
         $result = [
             "status" => true,
-            "message" => "success"
+            "message" => "success",
+            "new_id" => $p_request->input('arr_id')
         ];
         if($status == false){
             $result["status"] = false;
@@ -101,13 +161,41 @@ class SellerCarController extends Controller
     }
 
     /*****************************************************************************
+    * Created: 2018/04/22
+    * Add seller car vehicle information
+    ***************************************************************************
+    * @author: Nguyen. Return result json: success or fail
+    ****************************************************************************/
+    public function addInformation(Request $p_request){
+        // Validate request
+        ValidateRequestOrder::validateInformation($p_request);
+        // Create a new empty seller car
+        $sellerCarRepository = new SellerCarRepository();
+        if($p_request->input('id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['id' => $arr_id['infor_id']]);
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
+        // Call edit function
+        return $this->editInformation($p_request);
+    }
+
+    /*****************************************************************************
     * Created: 2018/04/17
     * Edit seller car vehicle information
     ***************************************************************************
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
      public function editInformation(Request $p_request){
+        // Validate request
         ValidateRequestOrder::validateInformation($p_request);
+        // Processing
         $id = $p_request->input('id');
         $seller_car_id = $p_request->input('seller_car_id');
         $carInformation['car_name'] = $p_request->input('car_name');
@@ -171,14 +259,18 @@ class SellerCarController extends Controller
         $sellerCarEquipmentRepo->destroyByWhere([
             ["seller_car_id","=",$seller_car_id]
         ]);
-        foreach ($equipment as $key => $value) {
-            $carEquipment['equipment_id'] = $value;
-            $carEquipment['seller_car_id'] = $seller_car_id;
-            $sellerCarEquipmentRepo->insert($carEquipment);
+        if($equipment != null){
+            foreach ($equipment as $key => $value) {
+                $carEquipment['equipment_id'] = $value;
+                $carEquipment['seller_car_id'] = $seller_car_id;
+                $sellerCarEquipmentRepo->insert($carEquipment);
+            }
         }
+        // Return result success or fail
         $result = [
             "status" => true,
-            "message" => "success"
+            "message" => "success",
+            "new_id" => $p_request->input('arr_id')
         ];
         if($status == false){
             $result["status"] = false;
@@ -195,7 +287,21 @@ class SellerCarController extends Controller
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
      public function addHistory(Request $p_request){
-        ValidateRequestOrder::validateDocument($p_request);
+        // Validate request
+        ValidateRequestOrder::validateHistory($p_request);
+        $sellerCarRepository = new SellerCarRepository();
+        // Create a new empty seller car
+        if($p_request->input('seller_car_id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
+        // Processing
         $carHítory['type'] = $p_request->input('type');
         $carHítory['name'] = \Auth::user()->name;
         $carHítory['content'] = $p_request->input('content');
@@ -204,10 +310,12 @@ class SellerCarController extends Controller
         $sellerCarHistoryRepo = new SellerCarCorrespondenceHistoryRepository();
         $status = $sellerCarHistoryRepo->insert($carHítory);
         unset($carHítory['seller_car_id']);
+        // Return success or fail
         $result = [
             "status" => true,
             "message" => "success",
-            'data' =>$carHítory
+            'data' =>$carHítory,
+            "new_id" => $p_request->input('arr_id')
         ];
         if($status == false){
             $result["status"] = false;
@@ -217,13 +325,41 @@ class SellerCarController extends Controller
     }
 
     /*****************************************************************************
+    * Created: 2018/04/22
+    * Add seller car retrieval
+    ***************************************************************************
+    * @author: Nguyen. Return result json: success or fail
+    ****************************************************************************/
+    public function addRetrieval(Request $p_request){
+        // Validate request
+        ValidateRequestOrder::validateRetrieval($p_request);
+        // Create a new empty seller car
+        $sellerCarRepository = new SellerCarRepository();
+        if($p_request->input('id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['id' => $arr_id['retrieval_id']]);
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
+        // Call edit function
+        return $this->editRetrieval($p_request);
+    }
+
+    /*****************************************************************************
     * Created: 2018/04/16
-    * Edit seller car status
+    * Edit seller car retrieval
     ***************************************************************************
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
     public function editRetrieval(Request $p_request){
+        // Validate request
         ValidateRequestOrder::validateRetrieval($p_request);
+        // Processing
         $id = $p_request->input('id');
         $carRetrieval['status'] = $p_request->input('status');
         $carRetrieval['first_date'] = $p_request->input('first_date');
@@ -242,9 +378,11 @@ class SellerCarController extends Controller
         $carRetrieval['end_quotation'] = $p_request->input('end_quotation');
         $sellerCarRetrievalRepo = new SellerCarRetrievalRepository();
         $status = $sellerCarRetrievalRepo->update($id,$carRetrieval);
+        // Return success or fail
         $result = [
             "status" => true,
-            "message" => "success"
+            "message" => "success",
+            "new_id" => $p_request->input('arr_id')
         ];
         if($status == false){
             $result["status"] = false;
@@ -260,7 +398,21 @@ class SellerCarController extends Controller
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
      public function addQuestion(Request $p_request){
+        // Validate request
         ValidateRequestOrder::validateQuestion($p_request);
+        // Create a new empty seller car
+        $sellerCarRepository = new SellerCarRepository();
+        if($p_request->input('seller_car_id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
+        // Processing
         if($p_request->input('trader_id') == null){
             $carQuestion['user_id'] = \Auth::user()->id;
             $carQuestion['name'] = \Auth::user()->name;
@@ -275,10 +427,12 @@ class SellerCarController extends Controller
         $status = $sellerCarQuestionRepo->insert($carQuestion);
         $carQuestion['date'] = date('d/m/Y(H:i)');
         unset($carQuestion['seller_car_id']);
+        // Return success or fail
         $result = [
             "status" => true,
             "message" => "success",
-            'data' =>$carQuestion
+            'data' =>$carQuestion,
+            "new_id" => $p_request->input('arr_id')
         ];
         if($status == false){
             $result["status"] = false;
@@ -288,13 +442,41 @@ class SellerCarController extends Controller
     }
 
     /*****************************************************************************
+    * Created: 2018/04/22
+    * Add seller car reception
+    ***************************************************************************
+    * @author: Nguyen. Return result json: success or fail
+    ****************************************************************************/
+    public function addReception(Request $p_request){
+        // Request validate
+        ValidateRequestOrder::validateReception($p_request);
+        // Create a new empty seller car
+        $sellerCarRepository = new SellerCarRepository();
+        if($p_request->input('id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['id' => $arr_id['reception_id']]);
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
+        // Call edit function
+        return $this->editReception($p_request);
+    }
+
+    /*****************************************************************************
     * Created: 2018/04/18
     * Edit seller car reception
     ***************************************************************************
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
     public function editReception(Request $p_request){
+        // Request validate
         ValidateRequestOrder::validateReception($p_request);
+        // Processing
         $id = $p_request->input('id');
         $carReception['term_consent'] = $p_request->input('term_consent');
         $carReception['confirm_method'] = $p_request->input('confirm_method');
@@ -308,9 +490,11 @@ class SellerCarController extends Controller
         $carReception['remark2'] = $p_request->input('remark2');
         $sellerCarReceptionRepo = new SellerCarReceptionRepository();
         $status = $sellerCarReceptionRepo->update($id,$carReception);
+        // Return success or fail
         $result = [
             "status" => true,
-            "message" => "success"
+            "message" => "success",
+            "new_id" => $p_request->input('arr_id')
         ];
         if($status == false){
             $result["status"] = false;
@@ -320,13 +504,41 @@ class SellerCarController extends Controller
     }
 
     /*****************************************************************************
+    * Created: 2018/04/22
+    * Add seller car sale
+    ***************************************************************************
+    * @author: Nguyen. Return result json: success or fail
+    ****************************************************************************/
+    public function addSale(Request $p_request){
+        // Request validate
+        ValidateRequestOrder::validateSale($p_request);
+        // Create a new seller car
+        $sellerCarRepository = new SellerCarRepository();
+        if($p_request->input('id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['id' => $arr_id['sale_id']]);
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
+        // Call edit function
+        return $this->editSale($p_request);
+    }
+
+    /*****************************************************************************
     * Created: 2018/04/18
     * Edit seller car sale
     ***************************************************************************
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
     public function editSale(Request $p_request){
+        // Request validate
         ValidateRequestOrder::validateSale($p_request);
+        // Processing
         $id = $p_request->input('id');
         $carSale['sale_date'] = $p_request->input('sale_date');
         $carSale['accounting_method'] = $p_request->input('accounting_method');
@@ -344,11 +556,14 @@ class SellerCarController extends Controller
         $carSale['receivable_date'] = $p_request->input('receivable_date');
         $carSale['billing_date'] = $p_request->input('billing_date');
         $carSale['golden_date'] = $p_request->input('golden_date');
+        $carSale['final_charge_amount'] = $carSale['amount']+$carSale['body_price']*1.08+$carSale['recycling_fee']+$carSale['bid_fee']+$carSale['refund_fee']+$carSale['delete_agent_cost'];
         $sellerCarSaleRepo = new SellerCarSaleRepository();
         $status = $sellerCarSaleRepo->update($id,$carSale);
+        // Return success or fail
         $result = [
             "status" => true,
-            "message" => "success"
+            "message" => "success",
+            "new_id" => $p_request->input('arr_id')
         ];
         if($status == false){
             $result["status"] = false;
@@ -358,13 +573,41 @@ class SellerCarController extends Controller
     }
 
     /*****************************************************************************
+    * Created: 2018/04/22
+    * Add seller car sale confirm
+    ***************************************************************************
+    * @author: Nguyen. Return result json: success or fail
+    ****************************************************************************/
+    public function addSaleConfirm(Request $p_request){
+        // Validate request
+        ValidateRequestOrder::validateSaleConfirm($p_request);
+        // Create a new empty seller car
+        $sellerCarRepository = new SellerCarRepository();
+        if($p_request->input('id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['id' => $arr_id['sale_id']]);
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
+        // Call edit function
+        return $this->editSaleConfirm($p_request);
+    }
+
+    /*****************************************************************************
     * Created: 2018/04/18
     * Edit seller car sale confirm
     ***************************************************************************
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
     public function editSaleConfirm(Request $p_request){
+        // Request validate
         ValidateRequestOrder::validateSaleConfirm($p_request);
+        // Processting
         $id = $p_request->input('id');
         $carSale['body_price'] = $p_request->input('body_price');
         $carSale['established_amount'] = $p_request->input('established_amount');
@@ -375,15 +618,43 @@ class SellerCarController extends Controller
         $carSale['remark2'] = $p_request->input('remark2');
         $sellerCarSaleRepo = new SellerCarSaleRepository();
         $status = $sellerCarSaleRepo->update($id,$carSale);
+        // Return success or fail
         $result = [
             "status" => true,
-            "message" => "success"
+            "message" => "success",
+            "new_id" => $p_request->input('arr_id')
         ];
         if($status == false){
             $result["status"] = false;
             $result["message"] = "fail";
         }
         return Response::json($result);
+    }
+
+    /*****************************************************************************
+    * Created: 2018/04/22
+    * Add seller car assessment
+    ***************************************************************************
+    * @author: Nguyen. Return result json: success or fail
+    ****************************************************************************/
+    public function addAssessment(Request $p_request){
+        // Request validate
+        ValidateRequestOrder::validateAssessment($p_request);
+        // Create a new empty seller car
+        $sellerCarRepository = new SellerCarRepository();
+        if($p_request->input('id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['id' => $arr_id['assessment_id']]);
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
+        // Call edit seller car
+        return $this->editAssessment($p_request);
     }
 
      /*****************************************************************************
@@ -393,7 +664,9 @@ class SellerCarController extends Controller
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
     public function editAssessment(Request $p_request){
+        // Request validate
         ValidateRequestOrder::validateAssessment($p_request);
+        // Processing
         $id = $p_request->input('id');
         $sellerCarAssessmentRepo = new SellerCarAssessmentRepository();
         $assessmentInfor = $sellerCarAssessmentRepo->getById($id);
@@ -431,16 +704,44 @@ class SellerCarController extends Controller
             FileHelper::deleteImage($assessmentInfor->table_img);
         }
         $status = $sellerCarAssessmentRepo->update($id,$carAssessment);
+        // Return success or fail
         $result = [
             "status" => true,
             "message" => "success",
-            "data" => array("table_img" => $table_img)
+            "data" => array("table_img" => $table_img),
+            "new_id" => $p_request->input('arr_id')
         ];
         if($status == false){
             $result["status"] = false;
             $result["message"] = "fail";
         }
         return Response::json($result);
+    }
+
+    /*****************************************************************************
+    * Created: 2018/04/22
+    * Add seller car transfer
+    ***************************************************************************
+    * @author: Nguyen. Return result json: success or fail
+    ****************************************************************************/
+    public function addTransfer(Request $p_request){
+        // Request validate
+        ValidateRequestOrder::validateTransfer($p_request);
+        // Create a new empty seller car
+        $sellerCarRepository = new SellerCarRepository();
+        if($p_request->input('id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['id' => $arr_id['sale_id']]);
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
+        // Call edit function
+        return $this->editTransfer($p_request);
     }
 
     /*****************************************************************************
@@ -450,15 +751,19 @@ class SellerCarController extends Controller
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
     public function editTransfer(Request $p_request){
+        // Request validate
         ValidateRequestOrder::validateTransfer($p_request);
+        // Processing
         $id = $p_request->input('id');
         $carTransfer['determine_amount'] = $p_request->input('determine_amount');
         $carTransfer['remark3'] = $p_request->input('remark3');
         $sellerCarSaleRepo = new SellerCarSaleRepository();
         $status = $sellerCarSaleRepo->update($id,$carTransfer);
+        // Return success or fail
         $result = [
             "status" => true,
-            "message" => "success"
+            "message" => "success",
+            "new_id" => $p_request->input('arr_id')
         ];
         if($status == false){
             $result["status"] = false;
@@ -468,13 +773,41 @@ class SellerCarController extends Controller
     }
 
     /*****************************************************************************
+    * Created: 2018/04/22
+    * Add seller car order
+    ***************************************************************************
+    * @author: Nguyen. Return result json: success or fail
+    ****************************************************************************/
+    public function addOrder(Request $p_request){
+        // Request validate
+        ValidateRequestOrder::validateOrder($p_request);
+        // Create a new empty seller car
+        $sellerCarRepository = new SellerCarRepository();
+        if($p_request->input('id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['id' => $arr_id['order_id']]);
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
+        // Call edit function
+        return $this->editOrder($p_request);
+    }
+
+    /*****************************************************************************
     * Created: 2018/04/19
     * Edit seller car transfer
     ***************************************************************************
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
     public function editOrder(Request $p_request){
+        // Request validate
         ValidateRequestOrder::validateOrder($p_request);
+        // Processing
         $id = $p_request->input('id');
         $carOrder['status'] = $p_request->input('status');
         $carOrder['asking_price'] = $p_request->input('asking_price');
@@ -482,9 +815,11 @@ class SellerCarController extends Controller
         $carOrder['remark'] = $p_request->input('remark');
         $orderRepo = new OrderRepository();
         $status = $orderRepo->update($id,$carOrder);
+        // Return success or fail
         $result = [
             "status" => true,
-            "message" => "success"
+            "message" => "success",
+            "new_id" => $p_request->input('arr_id')
         ];
         if($status == false){
             $result["status"] = false;
@@ -500,7 +835,21 @@ class SellerCarController extends Controller
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
      public function addBid(Request $p_request){
+        // Request validate
         ValidateRequestOrder::validateAddBid($p_request);
+        // Create a new seller car
+        $sellerCarRepository = new SellerCarRepository();
+        if($p_request->input('seller_car_id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
+        // Processing
         $addBid['seller_car_id'] = $p_request->input('seller_car_id');
         $addBid['name'] = $p_request->input('name');
         $addBid['price'] = $p_request->input('price');
@@ -508,10 +857,12 @@ class SellerCarController extends Controller
         $orderDetailRepo = new OrderDetailRepository();
         $status = $orderDetailRepo->insert($addBid);
         unset($addBid['seller_car_id']);
+        // Return success or fail
         $result = [
             "status" => true,
             "message" => "success",
-            'data' =>$addBid
+            'data' =>$addBid,
+            "new_id" => $p_request->input('arr_id')
         ];
         if($status == false){
             $result["status"] = false;
@@ -522,16 +873,19 @@ class SellerCarController extends Controller
 
     /*****************************************************************************
     * Created: 2018/04/19
-    * add seller car question
+    * Remove a order_detail
     ***************************************************************************
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
      public function removeBid(Request $p_request){
+        // Request validate
         ValidateRequestOrder::validateAddBid($p_request);
+        // Processing
         $id = $p_request->input('id');
         $removeBid['status'] = 0;
         $orderDetailRepo = new OrderDetailRepository();
         $status = $orderDetailRepo->update($id,$removeBid);
+        // Return success or fail
         $result = [
             "status" => true,
             "message" => "success"
@@ -545,12 +899,26 @@ class SellerCarController extends Controller
 
     /*****************************************************************************
     * Created: 2018/04/19
-    * add seller car question
+    * add seller car various cost
     ***************************************************************************
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
      public function addVariousCost(Request $p_request){
+        // Request validate
         ValidateRequestOrder::validateVariousCost($p_request);
+        // Create a new empty seller car
+        $sellerCarRepository = new SellerCarRepository();
+        if($p_request->input('seller_car_id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
+        // Processing
         $addVariousCost['seller_car_id'] = $p_request->input('seller_car_id');
         $addVariousCost['date'] = $p_request->input('date');
         $addVariousCost['classification'] = $p_request->input('classification');
@@ -559,10 +927,12 @@ class SellerCarController extends Controller
         $sellerCarVariousCostRepo = new SellerCarVariousCostRepository();
         $status = $sellerCarVariousCostRepo->insert($addVariousCost);
         unset($addVariousCost['seller_car_id']);
+        // Return success or fail
         $result = [
             "status" => true,
             "message" => "success",
-            'data' =>$addVariousCost
+            'data' =>$addVariousCost,
+            "new_id" => $p_request->input('arr_id')
         ];
         if($status == false){
             $result["status"] = false;
@@ -571,23 +941,52 @@ class SellerCarController extends Controller
         return Response::json($result);
     }
 
+    /*****************************************************************************
+    * Created: 2018/04/22
+    * Add seller car recycling
+    ***************************************************************************
+    * @author: Nguyen. Return result json: success or fail
+    ****************************************************************************/
+    public function addRecycling(Request $p_request){
+        // Request validate
+        ValidateRequestOrder::validateRecycling($p_request);
+        // Create a new seller car
+        $sellerCarRepository = new SellerCarRepository();
+        if($p_request->input('id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['id' => $arr_id['sale_id']]);
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
+        // Call edit function
+        return $this->editRecycling($p_request);
+    }
 
     /*****************************************************************************
     * Created: 2018/04/19
-    * Edit seller car transfer
+    * Edit seller car recycling
     ***************************************************************************
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
     public function editRecycling(Request $p_request){
+        // Request validate
         ValidateRequestOrder::validateRecycling($p_request);
+        // Processing
         $id = $p_request->input('id');
         $carRecycling['deposite_situation'] = $p_request->input('deposite_situation');
         $carRecycling['recycling_fee'] = $p_request->input('recycling_fee');
         $sellerCarSaleRepo = new SellerCarSaleRepository();
         $status = $sellerCarSaleRepo->update($id,$carRecycling);
+        // Return success or fail
         $result = [
             "status" => true,
-            "message" => "success"
+            "message" => "success",
+            "new_id" => $p_request->input('arr_id')
         ];
         if($status == false){
             $result["status"] = false;
@@ -597,13 +996,41 @@ class SellerCarController extends Controller
     }
 
     /*****************************************************************************
+    * Created: 2018/04/22
+    * Add seller car refund
+    ***************************************************************************
+    * @author: Nguyen. Return result json: success or fail
+    ****************************************************************************/
+    public function addRefund(Request $p_request){
+        // Request validate
+        ValidateRequestOrder::validateRefund($p_request);
+        // Create a new empty seller car
+        $sellerCarRepository = new SellerCarRepository();
+        if($p_request->input('id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['id' => $arr_id['refund_id']]);
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
+        // Call edit function
+        return $this->editRefund($p_request);
+    }
+
+    /*****************************************************************************
     * Created: 2018/04/19
-    * Edit seller car transfer
+    * Edit seller car refund
     ***************************************************************************
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
     public function editRefund(Request $p_request){
+        // Request validate
         ValidateRequestOrder::validateRefund($p_request);
+        // Processing
         $id = $p_request->input('id');
         $carRefund['return_responsitory'] = $p_request->input('return_responsitory');
         $carRefund['weight_tax_refund'] = $p_request->input('weight_tax_refund');
@@ -612,9 +1039,11 @@ class SellerCarController extends Controller
         $carRefund['automobile_refund'] = $p_request->input('automobile_refund');
         $sellerCarRefundRepo = new SellerCarRefundRepository();
         $status = $sellerCarRefundRepo->update($id,$carRefund);
+        // Return success or fail
         $result = [
             "status" => true,
-            "message" => "success"
+            "message" => "success",
+            "new_id" => $p_request->input('arr_id')
         ];
         if($status == false){
             $result["status"] = false;
@@ -625,12 +1054,14 @@ class SellerCarController extends Controller
 
     /*****************************************************************************
     * Created: 2018/04/19
-    * Edit seller car transfer
+    * Edit seller car image
     ***************************************************************************
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
     public function editImage(Request $p_request){
+        // Request validate
         ValidateRequestOrder::validateImage($p_request);
+        // Processing
         $id = $p_request->input('id');
         $sellerCarImageRepo = new SellerCarImageRepository();
         $imageInfor = $sellerCarImageRepo->getById($id);
@@ -650,6 +1081,7 @@ class SellerCarController extends Controller
         }
         $status = $sellerCarImageRepo->update($id,$carImage);
         unset($carImage['seller_car_id']);
+        // Return success or fail
         $result = [
             "status" => true,
             "message" => "success",
@@ -664,12 +1096,25 @@ class SellerCarController extends Controller
 
     /*****************************************************************************
     * Created: 2018/04/19
-    * Edit seller car transfer
+    * Add seller car image
     ***************************************************************************
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
     public function addImage(Request $p_request){
+        // Request validate
         ValidateRequestOrder::validateImage($p_request);
+        // Create a new empty seller car
+        $sellerCarRepository = new SellerCarRepository();
+        if($p_request->input('seller_car_id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
         $carImage['name'] = $p_request->input('name');
         $carImage['index'] = $p_request->input('index');
         $carImage['seller_car_id'] = $p_request->input('seller_car_id');
@@ -684,10 +1129,12 @@ class SellerCarController extends Controller
             $carImage['id'] = $status;
         }
         unset($carImage['seller_car_id']);
+        // Return success or fail
         $result = [
             "status" => true,
             "message" => "success",
-            "data" => $carImage
+            "data" => $carImage,
+            "new_id" => $p_request->input('arr_id')
         ];
         if($status == false){
             $result["status"] = false;
@@ -698,12 +1145,14 @@ class SellerCarController extends Controller
 
     /*****************************************************************************
     * Created: 2018/04/20
-    * Edit seller car transfer
+    * Remove seller car image
     ***************************************************************************
     * @author: Nguyen. Return result json: success or fail
     ****************************************************************************/
     public function removeImage(Request $p_request){
+        // Request validate
         ValidateRequestOrder::validateRemoveImage($p_request);
+        // Processing
         $id = $p_request->input('id');
         $sellerCarImageRepo = new SellerCarImageRepository();
         $imageInfor = $sellerCarImageRepo->getById($id);
@@ -717,9 +1166,81 @@ class SellerCarController extends Controller
         if($status != false){
             FileHelper::deleteImage($imageInfor->url);
         }
+        // Return success or fail
         $result = [
             "status" => true,
             "message" => "success",
+        ];
+        if($status == false){
+            $result["status"] = false;
+            $result["message"] = "fail";
+        }
+        return Response::json($result);
+    }
+
+    /*****************************************************************************
+    * Created: 2018/04/23
+    * Add seller car photo self
+    ***************************************************************************
+    * @author: Nguyen. Return result json: success or fail
+    ****************************************************************************/
+    public function addPhoto(Request $p_request){;
+        // Request validate
+        ValidateRequestOrder::validatePhoto($p_request);
+        // Create a new empty seller car
+        $sellerCarRepository = new SellerCarRepository();
+        if($p_request->input('seller_car_id') == null){
+            $arr_id = $sellerCarRepository->createSellerCar();
+            if($arr_id == null){
+                return Response::json([
+                    "status" => false,
+                    "message" => "fail"
+                ]);
+            }
+            $p_request->request->add(['seller_car_id' => $arr_id['seller_car_id']]);
+            $p_request->request->add(['arr_id' => $arr_id]);
+        }
+        // Call edit function
+        return $this->editPhoto($p_request);
+    }
+
+    /*****************************************************************************
+    * Created: 2018/04/23
+    * Edit seller car photo self
+    ***************************************************************************
+    * @author: Nguyen. Return result json: success or fail
+    ****************************************************************************/
+    public function editPhoto(Request $p_request){
+        // Request validate
+        ValidateRequestOrder::validatePhoto($p_request);
+        // Processing
+
+        $sellerCarRepo = new SellerCarRepository();
+        $sellerCarInfor = $sellerCarRepo->getById($p_request->input('seller_car_id'));
+        if($sellerCarInfor == null){
+            return Response::json([
+                        "status" => false,
+                        "message" => "fail"
+                    ]);
+        }
+        $id = $p_request->input('seller_car_id');
+        $inspection_photo = FileHelper::saveImage($p_request,'inspection_photo','scip',$id);
+        if($inspection_photo != null){
+            $sellerCar['inspection_photo'] = $inspection_photo;
+            FileHelper::deleteImage($sellerCarInfor->inspection_photo);
+        }
+        $document_photo = FileHelper::saveImage($p_request,'document_photo','scdp',$id);
+        if($document_photo != null){
+            $sellerCar['document_photo'] = $document_photo;
+            FileHelper::deleteImage($sellerCarInfor->document_photo);
+        }
+        $status = $sellerCarRepo->update($id,$sellerCar);
+        // Return success or fail
+        $result = [
+            "status" => true,
+            "message" => "success",
+            "data" => $sellerCar,
+            "new_id" => $p_request->input('arr_id')
         ];
         if($status == false){
             $result["status"] = false;

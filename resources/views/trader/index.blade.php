@@ -235,65 +235,75 @@
         </div>
             <div class="paging">
                 {{ $list_trader->links('layouts.pagination') }}
+                <?php
+                    if (isset($_GET['name'])){
+                        $url_page="&name=".$_GET['name']."&phone=".$_GET['phone']."&email=".$_GET['email']."&status=".$_GET['status']."&erea=".$_GET['erea']."&service_start=".$_GET['service_start']."&curio_start=".$_GET['curio_start']."&bring=".$_GET['bring']."&classification=".$_GET['classification']."&service_end=".$_GET['service_end']."&curio_end=".$_GET['curio_end'];
+                    }
+                    else if (!isset($_GET['name']) && isset($url))
+                        {
+                            $url_page='&'.$url;
+                        }
+                    else
+                        {
+                            $url_page='';
+                        }
+                        if (isset($_GET['deficit']))
+                        {
+                            $url_page.="&deficit=".$_GET['deficit'];
+                        }
+                        if (isset($_GET['bid']))
+                        {
+                            $url_page.="&bid=".$_GET['bid'];
+                        }
+                ?>
             </div>
         </div>
+    <?php
+            if (!isset($_GET['sort']))
+             {
+                 $sort='asc';
+             }
+            else if ($_GET['sort']=='asc')
+             {
+                 $sort='desc';
+             }
+             else if ($_GET['sort']=='desc')
+             {
+                 $sort='asc';
+             }
+
+
+    ?>
         <div class="col col-md-12">
             <table class="table table-striped table-bordered table-hover table-condensed">
                 <thead>
                 <tr>
-                    {{--<th><a class="sort" id="id" href="">@sortablelink('id','業者コード')</a></th>--}}
-                    {{--<th style="width: 180px;"><a id="name" class="sort" href="">@sortablelink('name','業者名')</a></th>--}}
-                    {{--<th style="width: 85px;"><a class="sort" href="#">@sortablelink('zip_code','郵便番号')</a></th>--}}
-                    {{--<th style="width: 170px;"><a class="sort" href="#">@sortablelink('address','住所')</a></th>--}}
-                    {{--<th style="width: 150px;"><a class="sort" href="#">@sortablelink('phone','電話番号')</a></th>--}}
-                    {{--<th style="width: 125px;"><a class="sort" href="#">@sortablelink('fax','FAX番号')</a></th>--}}
-                    {{--<th style="width: 100px;"><a class="sort" href="#">@sortablelink('member_status','会員状況')</a></th>--}}
-                    {{--<th style="width: 100px;"><a class="sort" href="#">@sortablelink('credit','与信額')</a></th>--}}
-                    {{--<th style="width: 100px;"><a class="sort" href="#">@sortablelink('excess_deficit money','過不足金額')</a></th>--}}
-                    {{--<th style="width: 50px;"><a class="sort" href="#">@sortablelink('bring_assessment','持込査定可否区分')</a></th>--}}
-                    {{--<th style="width: 50px;"><a class="sort" href="#">@sortablelink('assessment_classification','出張査定可否区分')</a></th>--}}
-                    {{--<th style="width: 50px;"><a class="sort" href="#">@sortablelink('bid_approva','入札可否区分')</a></th>--}}
-                    {{--<th style="width: 50px;"><a class="sort" href="#">買取台数（累積）</a></th>--}}
-                    {{--<th style="width: 50px;"><a class="sort" href="#">買取台数（当月）</a></th>--}}
-                    {{--<th style="width: 50px;"><a class="sort" href="#">入札数（累積）</a></th>--}}
-                    {{--<th style="width: 50px;"><a class="sort" href="#">入札数（当月）</a></th>--}}
-                    {{--<th style="width: 50px;"><a class="sort" href="#">落札台数（累積）</a></th>--}}
-                    {{--<th style="width: 50px;"><a class="sort" href="#">落札台数（当月）</a></th>--}}
-                    {{--<th style="width: 50px;"><a class="sort" href="#">@sortablelink('complaint_count','顧客クレーム回数')</a></th>--}}
-                    {{--<th style="width: 50px;"><a class="sort" href="#">@sortablelink('claim_number','業者クレーム回数')</a></th>--}}
-                    {{--<th style="width: 50px;"><a class="sort" href="#">@sortablelink('furigana_phone','営業TEL回数')</a></th>--}}
-                    {{--<th style="width: 100px;"><a class="sort" href="#">@sortablelink('service_date','営業再TEL日')</a></th>--}}
-                    {{--<th style="width: 50px;"><a class="sort" href="#">@sortablelink('curio_date','営業前回TEL日')</a></th>--}}
-                    {{--<th style="width: 100px;"><a class="sort" href="#">@sortablelink('account_holder','営業TEL最終対応者')</a></th>--}}
-                    {{--<th style="width: 150px;"><a class="sort" href="#">@sortablelink('remark','営業架電備考')</a></th>--}}
-                    {{--<th style="width: 150px;"><a class="sort" href="#">@sortablelink('remark1','備考')</a></th>--}}
-
-                    <th><a class="sort" id="id" href="#">業者コード</a></th>
-                    <th style="width: 180px;"><a id="name" class="sort" href="#">業者名</a></th>
-                    <th style="width: 85px;"><a class="sort" href="#">郵便番号</a></th>
-                    <th style="width: 170px;"><a class="sort" href="#">住所</a></th>
-                    <th style="width: 150px;"><a class="sort" href="#">電話番号</a></th>
-                    <th style="width: 125px;"><a class="sort" href="#">FAX番号</a></th>
-                    <th style="width: 100px;"><a class="sort" href="#">会員状況</a></th>
-                    <th style="width: 100px;"><a class="sort" href="#">与信額</a></th>
-                    <th style="width: 100px;"><a class="sort" href="#">過不足金額</a></th>
-                    <th style="width: 50px;"><a class="sort" href="#">持込査定可否区分</a></th>
-                    <th style="width: 50px;"><a class="sort" href="#">出張査定可否区分</a></th>
-                    <th style="width: 50px;"><a class="sort" href="#">入札可否区分</a></th>
-                    <th style="width: 50px;"><a class="sort" href="#">買取台数（累積）</a></th>
-                    <th style="width: 50px;"><a class="sort" href="#">買取台数（当月）</a></th>
-                    <th style="width: 50px;"><a class="sort" href="#">入札数（累積）</a></th>
-                    <th style="width: 50px;"><a class="sort" href="#">入札数（当月）</a></th>
-                    <th style="width: 50px;"><a class="sort" href="#">落札台数（累積）</a></th>
-                    <th style="width: 50px;"><a class="sort" href="#">落札台数（当月）</a></th>
-                    <th style="width: 50px;"><a class="sort" href="#">顧客クレーム回数</a></th>
-                    <th style="width: 50px;"><a class="sort" href="#">業者クレーム回数</a></th>
-                    <th style="width: 50px;"><a class="sort" href="#">営業TEL回数</a></th>
-                    <th style="width: 100px;"><a class="sort" href="#">営業再TEL日</a></th>
-                    <th style="width: 50px;"><a class="sort" href="#">営業前回TEL日</a></th>
-                    <th style="width: 100px;"><a class="sort" href="#">営業TEL最終対応者</a></th>
-                    <th style="width: 150px;"><a class="sort" href="#">営業架電備考</a></th>
-                    <th style="width: 150px;"><a class="sort" href="#">備考</a></th>
+                    <th><a class="sort" id="id" href="trader/?column=id&sort=<?php echo $sort ?><?php echo $url_page ?>">業者コード</a></th>
+                    <th style="width: 180px;"><a id="name" class="sort" href="trader/?column=name&sort=<?php echo $sort ?><?php echo $url_page ?>">業者名</a></th>
+                    <th style="width: 85px;"><a class="sort" href="trader/?column=zip_code&sort=<?php echo $sort ?><?php echo $url_page ?>">郵便番号</a></th>
+                    <th style="width: 170px;"><a class="sort" href="trader/?column=address&sort=<?php echo $sort ?><?php echo $url_page ?>">住所</a></th>
+                    <th style="width: 150px;"><a class="sort" href="trader/?column=phone&sort=<?php echo $sort ?><?php echo $url_page ?>">電話番号</a></th>
+                    <th style="width: 125px;"><a class="sort" href="trader/?column=fax&sort=<?php echo $sort ?><?php echo $url_page ?>">FAX番号</a></th>
+                    <th style="width: 100px;"><a class="sort" href="trader/?column=member_status&sort=<?php echo $sort ?><?php echo $url_page ?>">会員状況</a></th>
+                    <th style="width: 100px;"><a class="sort" href="trader/?column=credit&sort=<?php echo $sort ?><?php echo $url_page ?>">与信額</a></th>
+                    <th style="width: 100px;"><a class="sort" href="trader/?column=excess_deficit_money&sort=<?php echo $sort ?><?php echo $url_page ?>">過不足金額</a></th>
+                    <th style="width: 50px;"><a class="sort" href="trader/?column=bring_assessment&sort=<?php echo $sort ?><?php echo $url_page ?>">持込査定可否区分</a></th>
+                    <th style="width: 50px;"><a class="sort" href="trader/?column=assessment_classification&sort=<?php echo $sort ?><?php echo $url_page ?>">出張査定可否区分</a></th>
+                    <th style="width: 50px;"><a class="sort" href="trader/?column=assessment_classification&sort=<?php echo $sort ?><?php echo $url_page ?>">入札可否区分</a></th>
+                    <th style="width: 50px;"><a class="sort" href="trader/?column=name&sort=<?php echo $sort ?><?php echo $url_page ?>">買取台数（累積）</a></th>
+                    <th style="width: 50px;"><a class="sort" href="trader/?column=name&sort=<?php echo $sort ?><?php echo $url_page ?>">買取台数（当月）</a></th>
+                    <th style="width: 50px;"><a class="sort" href="trader/?column=name&sort=<?php echo $sort ?><?php echo $url_page ?>">入札数（累積）</a></th>
+                    <th style="width: 50px;"><a class="sort" href="trader/?column=name&sort=<?php echo $sort ?><?php echo $url_page ?>">入札数（当月）</a></th>
+                    <th style="width: 50px;"><a class="sort" href="trader/?column=name&sort=<?php echo $sort ?><?php echo $url_page ?>">落札台数（累積）</a></th>
+                    <th style="width: 50px;"><a class="sort" href="trader/?column=complaint_count&sort=<?php echo $sort ?><?php echo $url_page ?>">落札台数（当月）</a></th>
+                    <th style="width: 50px;"><a class="sort" href="trader/?column=complaint_count&sort=<?php echo $sort ?><?php echo $url_page ?>">顧客クレーム回数</a></th>
+                    <th style="width: 50px;"><a class="sort" href="trader/?column=claim_number&sort=<?php echo $sort ?><?php echo $url_page ?>">業者クレーム回数</a></th>
+                    <th style="width: 50px;"><a class="sort" href="trader/?column=furigana_phone&sort=<?php echo $sort ?><?php echo $url_page ?>">営業TEL回数</a></th>
+                    <th style="width: 100px;"><a class="sort" href="trader/?column=service_date&sort=<?php echo $sort ?><?php echo $url_page ?>">営業再TEL日</a></th>
+                    <th style="width: 50px;"><a class="sort" href="trader/?column=curio_date&sort=<?php echo $sort ?><?php echo $url_page ?>">営業前回TEL日</a></th>
+                    <th style="width: 100px;"><a class="sort" href="trader/?column=account_holder&sort=<?php echo $sort ?><?php echo $url_page ?>">営業TEL最終対応者</a></th>
+                    <th style="width: 150px;"><a class="sort" href="trader/?column=remark&sort=<?php echo $sort ?><?php echo $url_page ?>">営業架電備考</a></th>
+                    <th style="width: 150px;"><a class="sort" href="trader/?column=remark1&sort=<?php echo $sort ?><?php echo $url_page ?>">備考</a></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -313,9 +323,6 @@
                             </div>
                             <div class="col col-md-3 text-center" style="border-bottom: 1px dashed rgb(192, 192, 192);"> <a href="/crm/Traders" class="call_phone" incoming_number="03-5937-4886" dial_number="0676707744" speaker_cd="T00120003"><span class="glyphicon glyphicon-phone-alt"></span></a><br>
                             </div>
-                            {{--<div class="col col-md-9 text-left" style="padding-left: 0px;">03-5937-4886</div>--}}
-                            {{--<div class="col col-md-3 text-center"> <a href="/crm/Traders" class="call_phone" incoming_number="03-5937-4886" dial_number="0676707744" speaker_cd="T00120003"><span class="glyphicon glyphicon-phone-alt"></span></a><br>--}}
-                            {{--</div>--}}
                         </td>
                         <td>
                             <div class="col col-md-12 text-left" style="padding-left: 0px; border-bottom: 1px dashed rgb(192, 192, 192);">{{$row_trader['fax']}}<br>

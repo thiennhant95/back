@@ -18,8 +18,9 @@
 
 Route::get('login.html', ['as' => 'login.html', 'uses' => 'UserController@GetLogin']);
 Route::post('checkLogin', 'UserController@PostLogin');
+
 //route middleware adminLogin
-Route::group(['middleware' => 'adminLogin'], function () {
+Route::group(['middleware' => ['adminLogin','ipcheck']], function () {
 
     Route::get('/', 'InquiryController@index');
     // Route::get('inquiries', function () {
@@ -27,6 +28,8 @@ Route::group(['middleware' => 'adminLogin'], function () {
     // });
     #router order
     Route::get('order',"OrderController@index");
+    Route::post('order', 'OrderController@index');
+    Route::post('order-sort', 'OrderController@sort');
     Route::get('order/detail.html',"OrderController@orderDetail");
     Route::post('seller/edit',"SellerController@edit");
     Route::post('seller/edit-account',"SellerController@editAccount");
@@ -49,7 +52,25 @@ Route::group(['middleware' => 'adminLogin'], function () {
     Route::post('seller-car/edit-refund',"SellerCarController@editRefund");
     Route::post('seller-car/add-image',"SellerCarController@addImage");
     Route::post('seller-car/edit-image',"SellerCarController@editImage");
+    Route::post('seller-car/edit-photo',"SellerCarController@editPhoto");
     Route::post('seller-car/remove-image',"SellerCarController@removeImage");
+    Route::get('order/add',"OrderController@addOrder");
+    Route::post('seller/add',"SellerController@add");
+    Route::post('seller/add-account',"SellerController@addAccount");
+    Route::post('seller-car/add-status',"SellerCarController@addStatus");
+    Route::post('seller-car/add-document',"SellerCarController@addDocument");
+    Route::post('seller-car/add-information',"SellerCarController@addInformation");
+    Route::post('seller-car/add-retrieval',"SellerCarController@addRetrieval");
+    Route::post('seller-car/add-reception',"SellerCarController@addReception");
+    Route::post('seller-car/add-sale',"SellerCarController@addSale");
+    Route::post('seller-car/add-sale-confirm',"SellerCarController@addSaleConfirm");
+    Route::post('seller-car/add-assessment',"SellerCarController@addAssessment");
+    Route::post('seller-car/add-transfer',"SellerCarController@addTransfer");
+    Route::post('seller-car/add-order',"SellerCarController@addOrder");
+    Route::post('seller-car/add-recycling',"SellerCarController@addRecycling");
+    Route::post('seller-car/add-refund',"SellerCarController@addRefund");
+    Route::post('seller-car/add-photo',"SellerCarController@addPhoto");
+
     #route car
     Route::get('car/get-by-maker',"CarController@getByMaker");
     #route trader
@@ -89,17 +110,17 @@ Route::group(['middleware' => 'adminLogin'], function () {
         return view('user.detail');
     });
 
-    Route::get('news', 'NewController@index');
-    Route::post('news', 'NewController@index');
-    Route::get('news/edit/{id}', 'NewController@edit');
-    Route::post('news/edit/{id}', 'NewController@edit');
-    Route::get('news/add', 'NewController@add');
-    Route::post('news/add', 'NewController@add');
-    Route::post('news/updateShow', 'NewController@updateShow');
-    Route::post('news/deleteNew', 'NewController@deleteNew');
+    Route::get('news', 'NewsController@index');
+    Route::post('news', 'NewsController@index');
+    Route::get('news/edit/{id}', 'NewsController@edit');
+    Route::post('news/edit/{id}', 'NewsController@edit');
+    Route::get('news/add', 'NewsController@add');
+    Route::post('news/add', 'NewsController@add');
+    Route::post('news/updateShow', 'NewsController@updateShow');
+    Route::post('news/deleteNew', 'NewsController@deleteNew');
     Route::get('inquiries', 'InquiryController@index');
+    Route::post('inquiries', 'InquiryController@index');
     Route::post('inquiries/deleteInquiry', 'InquiryController@deleteInquiry');
-    Route::get('inquiries/search', 'InquiryController@search');
 
     Route::get('logout', 'UserController@GetLogOut');
 

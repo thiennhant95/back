@@ -19,8 +19,8 @@ class News extends Model
     public $timestamps = false;
     protected $fillable = ['news_category_id','date_display','title','content','image','expand','show'];
     public $sortable = ['news_category_id','date_display','title','show'];
-    public function newCategory()
+    public function newsCategory()
     {
-        return $this->belongsTo('App\Models\NewCategory', 'news_category_id');
+        return $this->belongsTo('App\Models\NewsCategory', 'news_category_id');
     }
 }

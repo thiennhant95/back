@@ -3,25 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Repositories\NewRepository;
-use App\Repositories\NewCategoryRepository;
-
+use App\Repositories\NewsRepository;
+use App\Repositories\NewsCategoryRepository;
+use App\ValidateRequest\ValidateRequestNews;
 /**  
-* Class name: NewController  
+* Class name: NewsController  
 *  
 * This is a controller management new
 *    
 * @author  Creator:bugs - bugs.vietvang.net@gmail.com  
 * @author  Updater:bugs - bugs.vietvang.net@gmail.com  
 */ 
-class NewController extends Controller
+class NewsController extends Controller
 {
     protected $newRepository;
     protected $newCategoryRepository;
     public function __construct()
     {
-          $this->newRepository = new NewRepository;
-          $this->newCategoryRepository = new NewCategoryRepository;
+          $this->newsRepository = new NewsRepository;
+          $this->newsCategoryRepository = new NewsCategoryRepository;
     }
 
     /**  
@@ -34,8 +34,8 @@ class NewController extends Controller
     */
     public function index(Request $request)
     {
-    	$data['list_news'] = $this->newRepository->getPaginateSortable(50);
-    	return view('new.index',$data);
+    	$data['list_news'] = $this->newsRepository->getPaginateSortable(50);
+    	return view('news.index',$data);
     }
 
     
@@ -55,10 +55,10 @@ class NewController extends Controller
             return redirect('news');
         }
         // get category
-        $categories = $this->newCategoryRepository->getAll();
+        $categories = $this->newsCategoryRepository->getAll();
         
         // get new
-        $new = $this->newRepository->getById($id);
+        $new = $this->newsRepository->getById($id);
         // get data days
         $days = [];
         for ($i=0; $i < 31; $i++) { 
@@ -79,7 +79,7 @@ class NewController extends Controller
         $data['month'] = $arrDisplayDate[1];
         $data['day'] = $arrDisplayDate[2];
         $data['id'] = $new->id;
-        $data['news_category_id'] = $new->news_category_id;
+        $data['news_category_id'] = $new->newss_category_id;
         $data['date_display'] = $new->date_display;
         $data['title'] = $new->title;
         $data['content'] = $new->content;
@@ -111,7 +111,7 @@ class NewController extends Controller
             }else{
                 $data['image'] = $new->image;
             }
-            $update = $this->newRepository->update($id,$data);
+            $update = $this->newsRepository->update($id,$data);
             if($update)
             {
                 return redirect('news/edit/'.$id)->with(['results' => 'success', 'flash_messages' => 'Update Success']);
@@ -124,7 +124,7 @@ class NewController extends Controller
         }
 
         
-        return view('new.detail',$data);
+        return view('news.detail',$data);
     }
 
     /**  
@@ -148,7 +148,7 @@ class NewController extends Controller
             if ( $request->input('show') == '0') {
                 $show = '1';
             }
-            $results = $this->newRepository->updateShow($request->input('id'),$show);
+            $results = $this->newsRepository->updateShow($request->input('id'),$show);
             return $results;
         }else{
             return 'false';
@@ -164,13 +164,13 @@ class NewController extends Controller
     * @return  view _ return list of news  
     *   
     */
-    public function deleteNew(Request $request)
+    public function deleteNews(Request $request)
     {
         if ($request->isMethod('post')){
             if ($request->input('id') == '') {
                 return 'false';
             }
-            $results = $this->newRepository->destroy($request->input('id'));
+            $results = $this->newsRepository->destroy($request->input('id'));
             if ($results == 1) {
                 return 'true';
             }else{
@@ -193,8 +193,9 @@ class NewController extends Controller
     */
     public function add(Request $request)
     {
+
         // get category
-        $categories = $this->newCategoryRepository->getAll();
+        $categories = $this->newsCategoryRepository->getAll();
         
         // get data days
         $days = [];
@@ -230,6 +231,8 @@ class NewController extends Controller
         $data['method'] = '/news/add';
         $data1=[];
         if ($request->isMethod('post')) {
+            // Validate request
+            ValidateRequestNews::validateNews($request);
             $data_request = $request->input('data');
             $data = [];
             $data['news_category_id'] = $data_request['category'];
@@ -245,10 +248,9 @@ class NewController extends Controller
             if ($request->hasFile('upfile')) {
                 $path = $request->upfile->store('images/img_kupac','uploads');
                 $data['image'] = $path;
-            }else{
-                $data['image'] = $new->image;
             }
-            $results = $this->newRepository->insert($data);
+            $results = $this->newsRepository->insert($data);
+            
             if($results)
             {
                 return redirect('news/add/')->with(['results' => 'success', 'flash_messages' => 'Add Success']);
@@ -260,7 +262,7 @@ class NewController extends Controller
             
         }
 
-        return view('new.detail',$data);
+        return view('news.detail',$data);
     }
 
 }

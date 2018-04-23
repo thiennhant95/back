@@ -43,6 +43,9 @@ $(document).ready(function() {
         		}else{
         			alert("fail");
         		}
+                if(result['new_id'] != null && result["new_id"].length != 0){
+                    renewId(result['new_id']);
+                }
         	},
         	error:function(result){
 

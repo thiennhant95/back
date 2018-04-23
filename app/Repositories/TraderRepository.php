@@ -15,8 +15,6 @@ use App\Models\Trader;
  * This is a repository to query Erea data
  *
  ***************************************************************************
- * @author: Nhan Viet Vang JSC
- ***************************************************************************
  */
 class TraderRepository extends BaseRepository
 {
@@ -42,8 +40,8 @@ class TraderRepository extends BaseRepository
         $query =Trader::select('trader.id','trader.name','trader.zip_code','trader.address','trader.phone','trader.fax','trader.member_status',
             'trader.credit','trader.excess_deficit_money','trader.bring_asssessment','trader.assessment_classification','trader.bid_approval',
             'trader.complaint_count','trader.claim_number','trader.furigana_phone','trader.service_date','trader.curio_date','trader.account_holder',
-            'trader.remark','trader.remark1','order.trader_id','order.status','order.date')
-            ->leftJoin('order','trader.id','=','order.trader_id')
+            'trader.remark','trader.remark1','order_detail.trader_id','order_detail.status','order_detail.date')
+            ->leftJoin('order_detail','trader.id','=','order_detail.trader_id')
             ->paginate($n);
         return $query;
     }
@@ -64,11 +62,8 @@ class TraderRepository extends BaseRepository
      * Created: 2018/04/17
      * Query Search Trader
      ***************************************************************************
-     * @author: Nhan Viet Vang
-     *
      ***************************************************************************
      */
-
     public function GetSearchTrader($search,$n,$column=null, $sort=null)
     {
         $name = '%'.$search['name'].'%';
@@ -95,7 +90,7 @@ class TraderRepository extends BaseRepository
         {
             $query = $query->where('erea_id','=',$search['pref_id']);
         }
-        if (isset($search['bid_approval']))
+        if (isset($search['bid_approval']) && $search['bid_approval']!=null)
         {
             $query =$query->where('bid_approval',$search['bid_approval']);
         }
@@ -123,22 +118,18 @@ class TraderRepository extends BaseRepository
 
         #search excess
 
-        if (isset($search['excess_deficit_money']) && $search['excess_deficit_money']==0)
+        if (isset($search['excess_deficit_money']) && $search['excess_deficit_money']!=null)
         {
-            $query=$query->where('excess_deficit_money','0');
-        }
-        elseif (isset($search['excess_deficit_money']) && $search['excess_deficit_money']==1)
-        {
-            $query=$query->where('excess_deficit_money','!=','null');
+            $query=$query->where('excess_deficit_money',$search['excess_deficit_money']);
         }
 
         if ($column!=null && $sort!=null)
         {
-            $query =Trader::orderBy($column,$sort)->paginate($n);
+            $query =$query->orderBy($column,$sort)->paginate($n);
         }
         else
         {
-            $query = $query->sortable()->paginate($n);
+            $query = $query->paginate($n);
         }
 
         return $query;
@@ -148,12 +139,8 @@ class TraderRepository extends BaseRepository
      ***************************************************************************
      * Created: 2018/04/18
      * Query Sort Trader
-     ***************************************************************************
-     * @author: Nhan Viet Vang
-     *
-     ***************************************************************************
+         ***************************************************************************
      */
-
     public function GetSort($column, $sort, $n)
     {
         $query =Trader::orderBy($column,$sort)->paginate($n);

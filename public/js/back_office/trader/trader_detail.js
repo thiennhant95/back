@@ -1,43 +1,43 @@
-// $(document).ready(function() {
-//     $.validator.addMethod(
-//         "myDateFormat",
-//         function(value, element) {
-//             // yyyy-mm-dd
-//             var re = /^\d{4}-\d{1,2}-\d{1,2}$/;
-//
-//             // valid if optional and empty OR if it passes the regex test
-//             return (this.optional(element) && value=="") || re.test(value);
-//         },'Please enter a valid date format YYYY-MM-DD'
-//     );
-//     $("#TraderEditForm").validate({
-//         rules : {
-//             'data[trader][name]':{required:true},
-//             'data[trader][zip_code]':{required:true},
-//             'data[trader][pref_id]':{required:true},
-//             'data[trader][address]':{required:true},
-//             'data[trader][phone_number]':{required:true,number:true, digits: true,minlength:8},
-//             'data[trader][fax_number]':{required:true,number:true, digits: true,minlength:8},
-//             'data[trader][email]':{required:true,email: true},
-//             'data[trader][website]':{required:true,url: true},
-//             'data[trader][service_date]':{required:true,myDateFormat:true},
-//             'data[trader][curio_date]':{required:true,myDateFormat:true},
-//             'data[trader][document_confirmation_date]':{myDateFormat:true},
-//             'data[trader][new_email]':{required:true,email: true},
-//             'data[trader][promotion_email]':{required:true,email: true},
-//             'data[trader][business_email]':{required:true,email: true},
-//             'data[trader][business_type]':{required:true},
-//             'data[trader][category][]':{required:true},
-//             'data[trader][additional_correspondence][]':{required:true},
-//             'data[trader][withdraw_method]':{required:true},
-//             'data[trader][payment_closing_date]':{required:true},
-//             'data[trader][customer_degree]':{required:true},
-//             'data[trader][method_statement]':{required:true},
-//             'data[trader][assessment_price]':{number:true},
-//             'data[trader][bought_price]':{number:true},
-//         }, tooltip_options: {
-//         }
-//     });
-// });
+$(document).ready(function() {
+    $.validator.addMethod(
+        "myDateFormat",
+        function(value, element) {
+            // yyyy-mm-dd
+            var re = /^\d{4}-\d{1,2}-\d{1,2}$/;
+
+            // valid if optional and empty OR if it passes the regex test
+            return (this.optional(element) && value=="") || re.test(value);
+        },'Please enter a valid date format YYYY-MM-DD'
+    );
+    $("#TraderEditForm").validate({
+        rules : {
+            'data[trader][name]':{required:true},
+            'data[trader][zip_code]':{required:true},
+            'data[trader][pref_id]':{required:true},
+            'data[trader][address]':{required:true},
+            'data[trader][phone_number]':{required:true,number:true, digits: true,minlength:8},
+            'data[trader][fax_number]':{required:true,number:true, digits: true,minlength:8},
+            'data[trader][email]':{required:true,email: true},
+            'data[trader][website]':{required:true,url: true},
+            'data[trader][service_date]':{required:true,myDateFormat:true},
+            'data[trader][curio_date]':{required:true,myDateFormat:true},
+            'data[trader][document_confirmation_date]':{myDateFormat:true},
+            'data[trader][new_email]':{required:true,email: true},
+            'data[trader][promotion_email]':{required:true,email: true},
+            'data[trader][business_email]':{required:true,email: true},
+            'data[trader][business_type]':{required:true},
+            'data[trader][category][]':{required:true},
+            'data[trader][additional_correspondence][]':{required:true},
+            'data[trader][withdraw_method]':{required:true},
+            'data[trader][payment_closing_date]':{required:true},
+            'data[trader][customer_degree]':{required:true},
+            'data[trader][method_statement]':{required:true},
+            'data[trader][assessment_price]':{number:true},
+            'data[trader][bought_price]':{number:true},
+        }, tooltip_options: {
+        }
+    });
+});
 
 //number format money
 String.prototype.reverse = function () {

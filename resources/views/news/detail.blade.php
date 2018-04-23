@@ -3,7 +3,7 @@
 (10)社内システム:問合管理
 @endsection
 @section('script')
-
+<script type="text/javascript" src="{{ url('js/back_office/news/index.js') }}"></script>
 @endsection
 @section('content')
 <div id="container">

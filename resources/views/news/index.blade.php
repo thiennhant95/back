@@ -25,7 +25,7 @@
                     <tr>
                         <th style="width: 100px;">@sortablelink('date_display', '表示日付')</th>
                         <th style="width: 100px;">画像</th>
-                        <th style="width: 200px;">@sortablelink('newCategory.name', 'カテゴリー')</th>
+                        <th style="width: 200px;">@sortablelink('newsCategory.name', 'カテゴリー')</th>
                         <th style="width: 400px;">@sortablelink('title', 'タイトル')</th>
                         <th style="width: 100px;">編集</th>
                         <th style="width: 100px;">@sortablelink('title', '表示状態')</th>
@@ -40,9 +40,9 @@
                         <td><img src="{{ url($news->image)}}" alt="" class="imgresize" style="width:80px !important"></td>
                         <td>
                             @if($news->news_category_id === 1)
-                                <span class="spanclpink">{{$news->newCategory->name}}</span>
+                                <span class="spanclpink">{{$news->newsCategory->name}}</span>
                             @else
-                                <span class="spanclpink" style="background:#337ab7 !important">{{$news->newCategory->name}}</span>
+                                <span class="spanclpink" style="background:#337ab7 !important">{{$news->newsCategory->name}}</span>
                             @endif
                         </td>
                         <td>{{$news->title}}</td>

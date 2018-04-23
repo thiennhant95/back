@@ -67,22 +67,6 @@ $(document).ready(function() {
 		if(!$('#seller_form').valid() || !$('#seller_form').data("validator")){
             return false;
         }
-        /*$.ajax({
-        	url: base_url+'/seller/edit',
-        	data: getSellerData(),
-        	method:"POST",
-        	success:function(result){
-        		if(result != null && result['status'] == true){
-        			alert("success");
-        		}else{
-        			alert("fail");
-        		}
-        	},
-        	error:function(result){
-
-        	}
-        })*/
-        
 		$.ajax({
 		    url:  base_url+'/seller/edit',
 		    data: getSellerData(),
@@ -92,6 +76,7 @@ $(document).ready(function() {
 		    success:function(result){
         		if(result != null && result['status'] == true){
         			alert("success");
+                    
         		}else{
         			alert("fail");
         		}
@@ -102,6 +87,32 @@ $(document).ready(function() {
 		});
         return false;
 	})
+    $("#add_seller").click(function(){
+        if(!$('#seller_form').valid() || !$('#seller_form').data("validator")){
+            return false;
+        }
+        $.ajax({
+            url:  base_url+'/seller/add',
+            data: getSellerData(),
+            type: 'POST',
+            contentType: false, 
+            processData: false, 
+            success:function(result){
+                if(result != null && result['status'] == true){
+                    alert("success");
+                    if(result['new_id'] != null && result["new_id"].length != 0){
+                        renewId(result['new_id']);
+                    }
+                }else{
+                    alert("fail");
+                }
+            },
+            error:function(result){
+
+            }
+        });
+        return false;
+    })
 	function getSellerData(){
 		var data = {};
 		data.id = $("#seller_seller_id").val();
@@ -131,7 +142,9 @@ $(document).ready(function() {
 		data.email2 = $("#seller_seller_email2").val();
 		data.gender = $("#seller_seller_gender1").is(":checked")?1:0;
 		data.license = $("#seller_seller_license").val();
-		data.license_img = $("#seller_seller_license_img")[0].files[0];
+        data.license_img = "";
+        if($("#seller_seller_license_img")[0].files[0] != null)
+		  data.license_img = $("#seller_seller_license_img")[0].files[0];
 		data.register_date = $("#seller_seller_register_date").val();
 		data._token = token;
 

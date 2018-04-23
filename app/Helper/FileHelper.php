@@ -19,7 +19,7 @@ class FileHelper
 	public static function saveImage(Request $p_request,$input,$type,$id){
 		$file = $p_request->file($input);
 		if($file == null){
-			return false;
+			return null;
 		}
 		$extensionn = $file->getClientOriginalExtension();
 		$name = $type."_".strtotime(Carbon::now())."_".$id.".".$extensionn;

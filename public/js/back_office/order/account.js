@@ -46,6 +46,31 @@ $(document).ready(function() {
         })
         return false;
 	})
+
+    $("#add_account").click(function(){
+        if(!$('#account_form').valid() || !$('#account_form').data("validator")){
+            return false;
+        }
+        $.ajax({
+            url: base_url+'/seller/add-account',
+            data: getAccountData(),
+            method:"POST",
+            success:function(result){
+                if(result != null && result['status'] == true){
+                    alert("success");
+                    if(result['new_id'] != null && result["new_id"].length != 0){
+                        renewId(result['new_id']);
+                    }
+                }else{
+                    alert("fail");
+                }
+            },
+            error:function(result){
+
+            }
+        })
+        return false;
+    })
 	function getAccountData(){
 		var data = {};
 		data.id = $("#seller_seller_id").val();

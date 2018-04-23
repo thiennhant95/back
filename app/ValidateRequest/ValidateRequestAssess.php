@@ -29,7 +29,7 @@ class ValidateRequestAssess extends ValidateRequest
             'data.photographer.email2'=>'required|email',
             'data.photographer.report_method'=>'required',
             'data.photographer.gender'=>'required',
-            'data.photographer.level'=>'required',
+            'data.photographer.rank'=>'required',
             'data.photographer.price'=>'required',
             'data.photographer.assessment_frequency'=>'required',
             'data.photographer.bank'=>'required',

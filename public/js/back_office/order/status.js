@@ -3,6 +3,9 @@ $(document).ready(function() {
             rules : {
             	status_word_preparation:{
             		maxlength:50,
+            	},
+            	status_re_tel_date:{
+            		date:true
             	}
             }, tooltip_options: {
             }
@@ -18,6 +21,30 @@ $(document).ready(function() {
         	success:function(result){
         		if(result != null && result['status'] == true){
         			alert("success");
+        		}else{
+        			alert("fail");
+        		}
+        	},
+        	error:function(result){
+
+        	}
+        })
+        return false;
+	})
+	$("#add_status").click(function(){
+		if(!$('#status_form').valid() || !$('#status_form').data("validator")){
+            return false;
+        }
+        $.ajax({
+        	url: base_url+'/seller-car/add-status',
+        	data: getStatusData(),
+        	method:"POST",
+        	success:function(result){
+        		if(result != null && result['status'] == true){
+        			alert("success");
+        			if(result['new_id'] != null && result["new_id"].length != 0){
+                        renewId(result['new_id']);
+                    }
         		}else{
         			alert("fail");
         		}

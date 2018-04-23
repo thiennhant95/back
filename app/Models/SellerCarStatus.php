@@ -14,9 +14,10 @@ use Kyslik\ColumnSortable\Sortable;
 ****************************************************************************/
 class SellerCarStatus extends Model
 {
+	use Sortable;
     protected $table = 'seller_car_status';
     public $timestamps = false;
-    public $sortable = ['re_tel_date', 'first_inquiry_date', 'listing_accuracy', 'tel_number_again'];
+    public $sortable = ['re_tel_date', 'first_inquiry_date', 'listing_accuracy', 'tel_number_again', 'status'];
     protected $fillable = [
 		'seller_car_id',
 		'first_inquiry_date',
@@ -32,5 +33,9 @@ class SellerCarStatus extends Model
     public function sellerCar()
     {
         return $this->belongsTo('App\Models\SellerCar', 'seller_car_id');
+    }
+    public function situation()
+    {
+        return $this->belongsTo('App\Models\Situation', 'status');
     }
 }

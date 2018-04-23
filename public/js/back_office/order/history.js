@@ -24,6 +24,9 @@ $(document).ready(function() {
                     html += '<td>'+result['data']['content']+'</td>';
         			html += "</html>";
         			$("#history_content").append(html);
+                    if(result['new_id'] != null && result["new_id"].length != 0){
+                        renewId(result['new_id']);
+                    }
         		}else{
         			alert("fail");
         		}

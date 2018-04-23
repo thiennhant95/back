@@ -5,10 +5,7 @@ use Illuminate\Http\Request;
 /*****************************************************************************
  * ValidateRequestAssess
  ****************************************************************************
- *
- *
  **************************************************************************
- * @author: Nhan Viet Vang
  ****************************************************************************/
 
 class ValidateRequestTrader extends ValidateRequest
@@ -36,9 +33,7 @@ class ValidateRequestTrader extends ValidateRequest
             'data.trader.payment_closing_date'=>'required',
             'data.trader.customer_degree'=>'required',
             'data.trader.method_statement'=>'required',
-            'data.trader.document_confirmation_date'=>'required',
-//            'data.trader.assessment_price'=>'regex:/^\d*(\.\d{2})?$/',
-//            'data.trader.bought_price'=>'regex:/^\d*(\.\d{2})?$/'
+            'data.trader.document_confirmation_date'=>'required'
             ];
         self::setRule($arr_rule);
         self::validate($request);

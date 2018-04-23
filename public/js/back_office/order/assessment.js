@@ -85,14 +85,47 @@ $(document).ready(function() {
         })
         return false;
 	})
+
+    $("#add_assessment").click(function(){
+        if(!$('#assessment_form').valid() || !$('#assessment_form').data("validator")){
+            return false;
+        }
+        $.ajax({
+            url: base_url+'/seller-car/add-assessment',
+            data: getAssessmentData(),
+            method:"POST",
+            contentType: false, 
+            processData: false, 
+            success:function(result){
+                if(result != null && result['status'] == true){
+                    alert("success");
+                    if(result['data']['table_img'] != null){
+                        $("#assessment_show_table").attr("src",base_url+"/"+result['data']['table_img']);
+                        $("#assessment_show_table_a").attr("href",base_url+"/"+result['data']['table_img']);
+                    }
+                    if(result['new_id'] != null && result["new_id"].length != 0){
+                        renewId(result['new_id']);
+                    }
+                }else{
+                    alert("fail");
+                }
+            },
+            error:function(result){
+
+            }
+        })
+        return false;
+    })
 	function getAssessmentData(){
 		var data = {};
 		data.id = $("#assessment_id").val();
+        data.advance = "";
 		if($("#assessment_advance1").is(":checked")){
             data.advance = 1;
         }else if($("#assessment_advance2").is(":checked")){
             data.advance = 2;
         }
+        data.advance_method = "";
         if($("#assessment_advance_method1").is(":checked")){
             data.advance_method = 1;
         }else if($("#assessment_advance_method2").is(":checked")){
@@ -118,7 +151,9 @@ $(document).ready(function() {
         data.comment = $("#assessment_comment").val();
         data.rater = $("#assessment_rater").val();
         data.remark2 = $("#assessment_remark2").val();
-        data.table_img = $("#assessment_table_img")[0].files[0];
+        data.table_img = "";
+        if($("#assessment_table_img")[0].files[0] != null)
+            data.table_img = $("#assessment_table_img")[0].files[0];
 		data._token = token;
 
         var formData = new FormData();

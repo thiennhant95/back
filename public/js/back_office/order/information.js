@@ -54,6 +54,10 @@ $(document).ready(function() {
             	infor_owner:{
             		maxlength:50
             	},
+            	infor_speed:{
+            		number:true,
+            		min:0
+            	},
             	infor_residence:{
             		maxlength:100
             	},
@@ -94,6 +98,30 @@ $(document).ready(function() {
         	success:function(result){
         		if(result != null && result['status'] == true){
         			alert("success");
+        		}else{
+        			alert("fail");
+        		}
+        	},
+        	error:function(result){
+
+        	}
+        })
+        return false;
+	})
+	$("#add_infor").click(function(){
+		if(!$('#infor_form').valid() || !$('#infor_form').data("validator")){
+            return false;
+        }
+        $.ajax({
+        	url: base_url+'/seller-car/add-information',
+        	data: getInforData(),
+        	method:"POST",
+        	success:function(result){
+        		if(result != null && result['status'] == true){
+        			alert("success");
+        			if(result['new_id'] != null && result["new_id"].length != 0){
+                        renewId(result['new_id']);
+                    }
         		}else{
         			alert("fail");
         		}
