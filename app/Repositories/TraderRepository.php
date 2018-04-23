@@ -30,11 +30,29 @@ class TraderRepository extends BaseRepository
     }
 
     /**
-     * Function: getPaginateSortable
-     * get list news with limit
+     * Function: get trader
+     * get list trader with limit
      *
      * @param   Request   $request
-     * @return  view _ return list of news
+     * @return  view _ return list of trader
+     *
+     */
+    public function Trader($n)
+    {
+        $query =Trader::select('trader.id','trader.name','trader.zip_code','trader.address','trader.phone','trader.fax','trader.member_status',
+            'trader.credit','trader.excess_deficit_money','trader.bring_asssessment','trader.assessment_classification','trader.bid_approval',
+            'trader.complaint_count','trader.claim_number','trader.furigana_phone','trader.service_date','trader.curio_date','trader.account_holder',
+            'trader.remark','trader.remark1','order.trader_id','order.status','order.date')
+            ->leftJoin('order','trader.id','=','order.trader_id')
+            ->paginate($n);
+        return $query;
+    }
+    /**
+     * Function: getPaginateSortable
+     * get list trader with limit
+     *
+     * @param   Request   $request
+     * @return  view _ return list of trader
      *
      */
     public function getPaginateSortable($n)
@@ -51,13 +69,13 @@ class TraderRepository extends BaseRepository
      ***************************************************************************
      */
 
-    public function GetSearchTrader($search,$n)
+    public function GetSearchTrader($search,$n,$column=null, $sort=null)
     {
         $name = '%'.$search['name'].'%';
         $phone_number = '%'.$search['phone_number'].'%';
         $email = '%'.$search['email'].'%';
         $status = '%'.$search['staff'].'%';
-        $bring_assessment='%'.$search['bring_assessment'].'%';
+        $bring_assessment=$search['bring_assessment'];
         $assessment_classification='%'.$search['assessment_classification'].'%';
         $query = Trader::select('trader.*')
             ->where('trader.name','like',$name)
@@ -73,7 +91,7 @@ class TraderRepository extends BaseRepository
         {
             $query=$query->where('bring_asssessment','like',$bring_assessment);
         }
-        if($search['pref_id'] != '')
+        if ($search['pref_id'] != '')
         {
             $query = $query->where('erea_id','=',$search['pref_id']);
         }
@@ -109,11 +127,20 @@ class TraderRepository extends BaseRepository
         {
             $query=$query->where('excess_deficit_money','0');
         }
-        else if (isset($search['excess_deficit_money']) && $search['excess_deficit_money']==1)
+        elseif (isset($search['excess_deficit_money']) && $search['excess_deficit_money']==1)
         {
             $query=$query->where('excess_deficit_money','!=','null');
         }
-        $query = $query->paginate($n);
+
+        if ($column!=null && $sort!=null)
+        {
+            $query =Trader::orderBy($column,$sort)->paginate($n);
+        }
+        else
+        {
+            $query = $query->sortable()->paginate($n);
+        }
+
         return $query;
     }
 

@@ -61,7 +61,8 @@ class TraderController extends Controller
         }
         #get list erea
         $data['list_erea'] = $list_erea;
-        $data['list_trader'] = $this->TraderRepository->getPaginate(2);
+        $data['list_trader'] = $this->TraderRepository->Trader(2);
+        $data['list_trader1'] = $this->customTrader($data['list_trader']);
         $search = $request->input('data');
         $pagination_url = 'trader?';
         //search
@@ -120,8 +121,8 @@ class TraderController extends Controller
                 $pagination_url .= ($search['trader']['curio_end_date'] !== '') ? '&curio_end=' . $search['trader']['curio_end_date'] : '&curio_end=';
                 $pagination_url .= ($search['trader']['bring_assessment'] !== '') ? '&bring=' .$search['trader']['bring_assessment']: '&bring=';
                 $pagination_url .= ($search['trader']['assessment_classification'] !== '') ? '&classification=' . $search['trader']['assessment_classification'] : '&classification=';
-                $pagination_url .= (isset($search['trader']['excess_deficit_money']) && $search['trader']['excess_deficit_money'] !== '') ? '&excess_deficit_money=' . $search['trader']['excess_deficit_money'] : '&excess_deficit_money=';
-                $pagination_url .= (isset($search['trader']['bid_approval']) && $search['trader']['bid_approval'] !== '') ? '&bid=' . $search['trader']['bid_approval'] : '&bid=';
+                $pagination_url .= (isset($search['trader']['excess_deficit_money']) && $search['trader']['excess_deficit_money'] !== '') ? '&excess_deficit_money=' . $search['trader']['excess_deficit_money'] : '';
+                $pagination_url .= (isset($search['trader']['bid_approval']) && $search['trader']['bid_approval'] !== '') ? '&bid=' . $search['trader']['bid_approval'] : '';
                 $data['list_trader']->setPath($pagination_url);
             }
 
@@ -147,10 +148,10 @@ class TraderController extends Controller
      */
     public function sort(Request $request)
     {
-        if($request->isMethod('post'))
-        {
-            $sort = $request->input('sort');
-            $column = $request->input('column');
+//        if($request->isMethod('post'))
+//        {
+            echo $sort = $request->input('sort');
+            echo $column = $request->input('column');
             $list_trader = $this->TraderRepository->GetSort($column,$sort,5);
             $content = '';
             $pagination_url = 'trader?';
@@ -190,6 +191,7 @@ class TraderController extends Controller
 //                $data['report_delivery_method'][] = $trader->report_delivery_method;
 //                $data['number_complain'][] = $trader->number_complain;
             }
+            echo "<pre>";
             print_r($data);
             exit();
             $pagination_url .= ($column !== '' && $sort !== '') ? 'col=' . $column . '&sort=' . $sort : null;
@@ -197,7 +199,7 @@ class TraderController extends Controller
             $data['content'] = $content;
             $data['pagination'] = $list_trader->links()->toHtml();
             return json_encode( $data);
-        }
+//        }
     }
 
     /**
@@ -304,6 +306,10 @@ class TraderController extends Controller
             //if insert data trader success
             if ($insert = $this->TraderRepository->store($info_trader))
             {
+                session()->forget('zone');
+                session()->forget('save_erea');
+                session()->forget('corresponding_erea');
+                $request->session()->forget('save_erea');
                 return redirect('trader')->with('message','Inserted!');
             }
             //if insert data trader fail
@@ -419,6 +425,10 @@ class TraderController extends Controller
             //if update data trader success
             if ($insert = $this->TraderRepository->update($id,$info_trader))
             {
+                session()->forget('zone');
+                session()->forget('save_erea');
+                session()->forget('corresponding_erea');
+                $request->session()->forget('save_erea');
                 return redirect('trader')->with('message','Updated!');
             }
             //if update data trader fail
@@ -497,16 +507,15 @@ class TraderController extends Controller
         $data=['erea'=>$erea=session()->get('save_erea')];
         echo json_encode($data);
         $request->session()->forget('save_erea');
-        $request->session()->flush();
         die();
     }
 
     /**
      ***************************************************************************
      * Created: 2018/04/19
-     * Load zone edit assess
+     * Load zone edit Trader
      ***************************************************************************
-     * @author: Duy
+     * @author: Nhan Viet Vang
      *
      ***************************************************************************
      */
@@ -540,5 +549,37 @@ class TraderController extends Controller
         {
             return json_encode(['status'=>0]);
         }
+    }
+
+
+    /**
+     * Group by trader by status and date of order
+     * @access public
+     * @author Nhan- VietVang JSC
+     */
+    public function customTrader($adata)
+    {
+//        echo "<pre>";
+//        print_r($adata);
+//        die();
+        $status_buy=0;
+        foreach ($adata as $row)
+        {
+            if ($row['id']==$row['trader_id'])
+            {
+                if ($row['status']==0)
+                {
+                    $status_buy++;
+                }
+                if ($row['status']==1)
+                {
+
+                }
+            }
+        }
+        echo   $status_buy;
+
+
+//        die();
     }
 }
