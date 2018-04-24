@@ -59,7 +59,7 @@ class TraderController extends Controller
         #get list erea
         $data['list_erea'] = $list_erea;
         if (!isset($_GET['column']) && !isset($_GET['sort']) && !isset($_GET['name'])) {
-            $data['list_trader'] = $this->TraderRepository->Trader(2);
+            $data['list_trader'] = $this->TraderRepository->getPaginate(2);
         }
         $search = $request->input('data');
         $pagination_url = 'trader?';
@@ -244,7 +244,7 @@ class TraderController extends Controller
             $info_trader['account_holder'] = $data['trader']['account_holder'];
 
             //if password!=null
-            if (isset($data['trader']['password']))
+            if (isset($data['trader']['password']) &&  $data['trader']['password']!=null)
             {
                 $info_trader['password'] = Hash::make($data['trader']['password']);
             }
@@ -364,7 +364,7 @@ class TraderController extends Controller
             $info_trader['account_holder'] = $data['trader']['account_holder'];
 
             //if password!=null
-            if (isset($data['trader']['password']))
+            if (isset($data['trader']['password']) &&  $data['trader']['password']!=null)
             {
                 $info_trader['password'] = Hash::make($data['trader']['password']);
             }

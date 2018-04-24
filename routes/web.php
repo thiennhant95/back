@@ -74,17 +74,17 @@ Route::group(['middleware' => ['adminLogin','ipcheck']], function () {
     #route car
     Route::get('car/get-by-maker',"CarController@getByMaker");
     #route trader
-    Route::get('trader', "TraderController@index");
+    Route::get('trader', "TraderController@index")->name('trader');
     Route::post('trader', "TraderController@index");
     Route::post('trader-sort', "TraderController@sort");
-    Route::get('trader/add.html', "TraderController@add");
+    Route::get('trader/add.html', "TraderController@add")->name('trader-add');
     Route::post('trader/add.html', "TraderController@add");
     Route::get('trader/area','TraderController@area');
     Route::post('trader/getinfo','TraderController@getinfo');
     Route::post('trader/ajaxerea','TraderController@ajaxerea');
     Route::post('trader/saveerea','TraderController@saveerea');
     Route::post('trader/getErea','TraderController@getErea');
-    Route::get('trader/edit/{id}', 'TraderController@edit');
+    Route::get('trader/edit/{id}', 'TraderController@edit')->name('trader-edit');
     Route::post('trader/edit/{id}', 'TraderController@edit');
     Route::post('trader/loadzone','TraderController@loadzone');
     Route::post('trader/check_Zipcode/{id}','TraderController@check_Zipcode');

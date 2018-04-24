@@ -747,10 +747,10 @@
               </div>
             </div>
             <input type="hidden" name="data[trader][parent_trader_cd]" class="form-control" id="parent_trader_cd"/>
-            <div class="form-group col col-md-12">
-              <label class="col col-md-2 control-label"> <a href="javascript:void(0);" class="btn btn-default btn-xs" id="changePassword">パスワード変更</a></label>
-              <div class="col col-md-10" id="inputPassword"> </div>
-            </div>
+              <div class="form-group col col-md-12">
+                  <label class="col col-md-2 control-label">パスワード変更</label>
+                  <div><div class="col col-md-2"><input name="data[trader][password]" maxLength="50" id="trader_password" class="form-control" type="password"/></div></div>
+              </div>
             <div class="form-group col col-md-12">
               <label class="col col-md-2 control-label">主業態</label>
               <div class="col col-md-7">

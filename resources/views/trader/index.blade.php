@@ -89,7 +89,10 @@
         </div>
         <div class="row" style="margin-right: 0px; margin-left: 0px;">
             <div class="col col-md-4">
-                <a href="trader/add.html" class="btn btn-primary btn-small" style="margin: 0px 15px 20px 0px;"><span class="glyphicon glyphicon-plus"></span> 新規業者登録</a></div>
+                <?php
+                $url_add = route('trader-add');
+                ?>
+                <a href="{{$url_add}}" class="btn btn-primary btn-small" style="margin: 0px 15px 20px 0px;"><span class="glyphicon glyphicon-plus"></span> 新規業者登録</a></div>
         </div>
         @if(count($errors)>0)
             <div class="alert alert-danger">
@@ -313,8 +316,11 @@
                     </tr>
                 @endif
                 @foreach($list_trader as $row_trader)
+                    <?php
+                    $url_edit = route('trader-edit', ['id' => $row_trader['id']]);
+                    ?>
                     <tr>
-                        <td><a href="trader/edit/{{$row_trader['id']}}">{{$row_trader['id']}}</a></td>
+                        <td><a href="{{$url_edit}}">{{$row_trader['id']}}</a></td>
                         <td>{{$row_trader['name']}}<br></td>
                         <td>{{$row_trader['zip_code']}}</td>
                         <td> {{$row_trader['address']}}<br><br></td>
